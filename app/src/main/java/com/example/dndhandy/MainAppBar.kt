@@ -5,6 +5,7 @@ import com.example.dndhandy.search.SearchWidgetState
 
 @Composable
 fun MainAppBar(
+    titleState: String,
     searchWidgetState: SearchWidgetState,
     searchTextState: String,
     onTextChange: (String) -> Unit,
@@ -15,6 +16,7 @@ fun MainAppBar(
     when(searchWidgetState) {
         SearchWidgetState.CLOSED -> {
             DefaultAppBar(
+                title = titleState,
                 onSearchClicked = onSearchTriggered
             )
         }

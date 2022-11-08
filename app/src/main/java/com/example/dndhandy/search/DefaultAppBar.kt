@@ -9,10 +9,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.dndhandy.ui.theme.DndHandyTheme
 
 @Composable
-fun DefaultAppBar(onSearchClicked: () -> Unit) {
+fun DefaultAppBar(
+    title: String,
+    onSearchClicked: () -> Unit
+) {
     TopAppBar (
         title = {
-            Text(text = "Handy DnD database")
+            Text(text = title)
         },
         navigationIcon = {
             IconButton(onClick = { /*TODO*/ }) {
@@ -40,6 +43,9 @@ fun DefaultAppBar(onSearchClicked: () -> Unit) {
 @Composable
 fun DefaultAppBarPreview() {
     DndHandyTheme {
-        DefaultAppBar(onSearchClicked = {})
+        DefaultAppBar(
+            title = "Handy DnD database",
+            onSearchClicked = {}
+        )
     }
 }

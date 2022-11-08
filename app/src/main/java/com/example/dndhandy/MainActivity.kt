@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,13 +15,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dndhandy.api.ApiNullScreen
 import com.example.dndhandy.api.ApiScreen
-import com.example.dndhandy.search.SearchViewModel
 import com.example.dndhandy.search.SearchWidgetState
 import com.example.dndhandy.ui.theme.DndHandyTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,18 +30,20 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     topBar = {
-                        val searchWidgetState by searchViewModel.searchWidgetState
-                        val searchTextState by searchViewModel.searchTextState
+                        val titleState by mainViewModel.titleState
+                        val searchWidgetState by mainViewModel.searchWidgetState
+                        val searchTextState by mainViewModel.searchTextState
 
                         MainAppBar(
+                            titleState,
                             searchWidgetState,
                             searchTextState,
                             onTextChange = {
-                                searchViewModel.updateSearchTextState(newValue = it)
+                                mainViewModel.updateSearchTextState(newValue = it)
                             },
                             onCloseClicked = {
-                                searchViewModel.updateSearchTextState(newValue = "")
-                                searchViewModel.updateSearchWidgetState(SearchWidgetState.CLOSED)
+                                mainViewModel.updateSearchTextState(newValue = "")
+                                mainViewModel.updateSearchWidgetState(SearchWidgetState.CLOSED)
                             },
                             onSearchClicked = {
                                 navController.navigate(
@@ -56,17 +57,22 @@ class MainActivity : ComponentActivity() {
                                 )
                             },
                             onSearchTriggered = {
-                                searchViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
+                                mainViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
                             },
                         )
                     }
                 ) {
                     NavHost(
-                        navController = navController,
+                        navController,
                         startDestination = "api"
                     ) {
                         composable("api") {
-                            Text(text = "Welcome!")
+                            mainViewModel.updateTitleState(newValue = "Handy DnD database")
+
+                            Text(
+                                text = "Welcome!",
+                                fontSize = MaterialTheme.typography.h3.fontSize,
+                            )
                         }
 
                         composable(
@@ -80,8 +86,9 @@ class MainActivity : ComponentActivity() {
                             nav.arguments?.getString("url")
                                 ?.let {
                                     ApiScreen(
-                                        navController = navController,
                                         requestPath = it.replace('.', '/'),
+                                        navController,
+                                        mainViewModel,
                                     )
                                 } ?: ApiNullScreen("null")
                         }

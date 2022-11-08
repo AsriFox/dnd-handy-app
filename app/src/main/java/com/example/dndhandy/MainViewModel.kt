@@ -1,11 +1,21 @@
-package com.example.dndhandy.search
+package com.example.dndhandy
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.dndhandy.search.SearchWidgetState
 
-class SearchViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
+
+    // TitleState
+    private val _titleState: MutableState<String> =
+        mutableStateOf("Handy DnD database")
+    val titleState: State<String> = _titleState
+
+    fun updateTitleState(newValue: String) {
+        _titleState.value = newValue
+    }
 
     // SearchWidgetState
     private val _searchWidgetState: MutableState<SearchWidgetState> =

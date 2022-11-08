@@ -3,6 +3,9 @@ package com.example.dndhandy.api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
 fun sendGetRequest(requestPath: String) = runBlocking {
     withContext(Dispatchers.Default) {
@@ -13,11 +16,12 @@ fun sendGetRequest(requestPath: String) = runBlocking {
             null
         }
     }
-}?.let {
-    try {
-        org.json.JSONObject(it)
-    }
-    catch (e: org.json.JSONException) {
-        null
-    }
 }
+
+internal fun String.toJsonObject() =
+    try { JSONObject(this) }
+    catch (e: JSONException) { null }
+
+internal fun String.toJsonArray() =
+    try { JSONArray(this) }
+    catch (e: JSONException) { null }
