@@ -13,20 +13,26 @@ class ArticlePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var paragraphs = description
-      ?.map((p) => Text(p))
-        .toList()
+      ?.map((p) => Text(p,
+          textAlign: TextAlign.justify,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
+        )).toList()
       ?? List<Widget>.empty();
 
     paragraphs.add(
       Text(
         "Category: $category",
-        style: const TextStyle(
+        style: const TextStyle (
+          fontSize: 18,
           fontStyle: FontStyle.italic
         )
       )
     );
 
     return ListView(
+      padding: const EdgeInsets.all(10.0),
       children: paragraphs,
     );
   }

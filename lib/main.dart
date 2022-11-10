@@ -1,7 +1,6 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_handy_flutter/api_service.dart';
-import 'package:dnd_handy_flutter/search.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:dnd_handy_flutter/search_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,52 +24,6 @@ class DndHandyApp extends StatelessWidget {
         theme: theme,
         darkTheme: darkTheme,
         home: const SearchScreen(),
-      ),
-    );
-  }
-}
-
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  final ApiService apiService = ApiService();
-
-  final String queryNullText = "Use search";
-  Widget? _queryResult;
-  void queryResult(String? path) {
-    setState(() {
-      _queryResult = path == null
-        ? Text(queryNullText)
-        : apiService.build(path);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Handy DnD database'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(),
-              ).then((value) =>
-                queryResult(value)
-              );
-            },
-            icon: const Icon(Icons.search),
-          )
-        ],
-      ),
-      body: Center(
-        child: _queryResult
       ),
     );
   }

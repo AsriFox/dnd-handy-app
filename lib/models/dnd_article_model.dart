@@ -1,14 +1,13 @@
-class DndArticle {
+import 'package:dnd_handy_flutter/models/base_dnd_model.dart';
+
+class DndArticle extends BaseDndModel {
   const DndArticle({
-    this.index,
-    this.name,
-    this.url,
+    super.index,
+    super.name,
+    super.url,
     this.desc
   });
 
-  final String? index;
-  final String? name;
-  final String? url;
   final List<String>? desc;
 
   factory DndArticle.fromJson(Map<String, dynamic> json) {
