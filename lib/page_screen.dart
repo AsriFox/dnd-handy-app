@@ -1,5 +1,5 @@
+import 'package:dnd_handy_flutter/pages/desc_list_page.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_handy_flutter/search_bar.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
@@ -57,19 +57,18 @@ class PageScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data is List<dynamic>) {
-              return RefListPage.fromJsonArray(snapshot.data as List<dynamic>);
-            } 
-            if (snapshot.data is Map<String, dynamic>) {
-              final json = snapshot.data as Map<String, dynamic>;
-              if (json.containsKey('desc')) {
-                return ArticlePage.fromJson(json);
-              }
-              if (json.containsKey('results')) {
-                return RefListPage.fromJsonArray(json['results'] as List<dynamic>);
-              }
+              return RefListPage.fromJsonArray(
+                snapshot.data as List<dynamic>
+              );
             }
-            return const Center(
-              child: Text('Nothing found')
+            return selectAndBuildPage(
+              snapshot.data as Map<String, dynamic>, 
+              title
+            ) ?? Center(
+              child: Text(
+                'Nothing found', 
+                style: Theme.of(context).textTheme.titleLarge,
+              )
             );
           } else {
             return const Center(
@@ -80,4 +79,35 @@ class PageScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+const descListNames = [
+  "Ability scores",
+  "Alignments",
+  "Conditions",
+  "Damage types",
+  "Feats",
+  "Features",
+  "Languages",
+  "Magic items",
+  "Magic schools",
+  "Rule sections",
+  "Rules",
+  "Skills",
+  "Traits",
+  "Weapon properties",
+];
+
+Widget? selectAndBuildPage(Map<String, dynamic> json, String title) {
+  if (json.containsKey('desc')) {
+    return ArticlePage.fromJson(json);
+  }
+  if (json.containsKey('results')) {
+    final array = json['results'] as List<dynamic>;
+    if (descListNames.contains(title)) {
+      return DescListPage.fromJsonArray(array);
+    }
+    return RefListPage.fromJsonArray(array);
+  }
+  return null;
 }
