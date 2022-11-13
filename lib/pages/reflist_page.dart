@@ -1,4 +1,5 @@
 import 'package:dnd_handy_flutter/page_screen.dart';
+import 'package:dnd_handy_flutter/pages/desc_popup.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
@@ -6,15 +7,18 @@ class RefListPage extends StatelessWidget {
   const RefListPage({
     super.key,
     required this.results,
+    this.isDescList = false,
   });
 
   final List<DndRef> results;
+  final bool isDescList;
 
-  factory RefListPage.fromJsonArray(List<dynamic> array) =>
+  factory RefListPage.fromJsonArray(List<dynamic> array, {bool isDescList = false}) =>
     RefListPage(
       results: array.map(
           (it) => DndRef.fromJson(it),
         ).toList(growable: false),
+      isDescList: isDescList,
     );
 
   @override
@@ -26,13 +30,18 @@ class RefListPage extends StatelessWidget {
     }
     return ListView.builder(
       itemCount: results.length,
-      itemBuilder: (context, index) => 
+      itemBuilder: (ctx, index) => 
         results[index].build(
-          onTap: (it) => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => PageScreen.request(it.url),
+          onTap: isDescList
+            ? (it) => showDialog(
+              context: ctx,
+              builder: (c) => descPopup(c, it),
             )
-          )
+            : (it) => Navigator.of(ctx).push(
+              MaterialPageRoute(
+                builder: (_) => PageScreen.request(it.url),
+              )
+            )
         ),
     );
   }

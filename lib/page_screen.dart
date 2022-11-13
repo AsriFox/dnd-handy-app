@@ -1,4 +1,3 @@
-import 'package:dnd_handy_flutter/pages/desc_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
@@ -82,20 +81,38 @@ class PageScreen extends StatelessWidget {
 }
 
 const descListNames = [
-  "Ability scores",
-  "Alignments",
+// Short and simple articles:
+  "Alignments", 
   "Conditions",
   "Damage types",
+  "Magic schools",
+  "Weapon properties",
+// Short articles with small additions:
+  "Ability scores",
   "Feats",
   "Features",
   "Languages",
-  "Magic items",
-  "Magic schools",
-  "Rule sections",
-  "Rules",
   "Skills",
-  "Traits",
-  "Weapon properties",
+// Medium-complexity articles (?):
+  // "Proficiencies",
+  // "Traits",
+// Complex articles:
+  // "Backgrounds",
+  // "Equipment",
+  // "Magic items",
+  // "Monsters",
+  // "Races",
+  // "Spells",
+  // "Subraces",
+// Sublists for 'Equipment':
+  // "Equipment categories",
+// VERY complex articles:
+  // "Classes",
+  // "Subclasses",
+// Long text articles:
+  // "Rule sections",
+// Sublists for 'Rule sections':
+  // "Rules",
 ];
 
 Widget? selectAndBuildPage(Map<String, dynamic> json, String title) {
@@ -103,11 +120,10 @@ Widget? selectAndBuildPage(Map<String, dynamic> json, String title) {
     return ArticlePage.fromJson(json);
   }
   if (json.containsKey('results')) {
-    final array = json['results'] as List<dynamic>;
-    if (descListNames.contains(title)) {
-      return DescListPage.fromJsonArray(array);
-    }
-    return RefListPage.fromJsonArray(array);
+    return RefListPage.fromJsonArray(
+      json['results'] as List<dynamic>,
+      isDescList: descListNames.contains(title),
+    );
   }
   return null;
 }

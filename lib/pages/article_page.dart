@@ -1,34 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'articles/skills_subpage.dart';
 
 class ArticlePage extends StatelessWidget {
   const ArticlePage({
     super.key,
-    this.description,
+    required this.description,
+    this.children,
   });
 
-  final List<String>? description;
+  final String description;
+  final List<Widget>? children;
 
-  factory ArticlePage.fromJson(Map<String, dynamic> json) =>
-    ArticlePage(
-      description: json['desc'] is Iterable<dynamic>
-        ? List<String>.from(json['desc'] as Iterable<dynamic>) 
-        : List<String>.generate(1, (_) => json['desc'] as String),
+  factory ArticlePage.fromJson(Map<String, dynamic> json) {
+    List<Widget>? children;
+    if (json.containsKey('ability_score')) {
+      children = skillsArticleSubpage(
+        json['ability_score']
+      );
+    }
+
+    if (json['desc'] is String) {
+      return ArticlePage(
+        description: json['desc'] as String,
+        children: children,
+      );
+    }
+    var description = "";
+    for (var s in (json['desc'] as Iterable<dynamic>)) {
+      description += "${s as String}\n\n";
+    }
+    return ArticlePage(
+      description: description,
+      children: children,
     );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var paragraphs = description
-      ?.map((p) => Text(p,
-          textAlign: TextAlign.justify,
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-        )).toList()
-      ?? List<Widget>.empty();
-
-    return ListView(
+    // styleSheet: MarkdownStyleSheet.largeFromTheme(Theme.of(context)),
+    final desc = MarkdownBody(data: description);
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(10.0),
-      children: paragraphs,
+      child: children == null ? desc 
+        : Column(
+          children: <Widget>[desc] + children!
+        ),
     );
   }
 }
