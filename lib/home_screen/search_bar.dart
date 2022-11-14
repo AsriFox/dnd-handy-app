@@ -24,13 +24,14 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               context: context,
               delegate: CustomSearchDelegate(),
             ).then((url) {
-              final nav = Navigator.of(context);
-              nav.push(
-                MaterialPageRoute(
-                  builder: (context) => 
-                    PageScreen.request(url),
-                )
-              );
+              if (url != null) { 
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => 
+                      PageScreen.request(url),
+                  )
+                );
+              }
             }).catchError((e) {
               ScaffoldMessenger.of(context)
                 .showSnackBar(

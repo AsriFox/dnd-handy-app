@@ -53,7 +53,7 @@ class CustomSearchDelegate extends SearchDelegate {
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) => 
-        matchQuery[index].build(
+        matchQuery[index].buildListTile(
           onTap: (it) => close(context, it),
         ),
     );
@@ -65,7 +65,7 @@ class CustomSearchDelegate extends SearchDelegate {
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) => 
-        matchQuery[index].build(
+        matchQuery[index].buildListTile(
           onTap: (it) => query = it.url,
         ),
     );

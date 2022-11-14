@@ -4,7 +4,10 @@ import 'package:dnd_handy_flutter/pages/desc_popup.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> skillsArticleSubpage(Map<String, dynamic> json) => [
-  GoverningAbilityRef(ref: DndRef.fromJson(json)),
+  Padding(
+    padding: const EdgeInsets.only(top: 8.0), 
+    child: GoverningAbilityRef(ref: DndRef.fromJson(json)),
+  ),
 ];
 
 class GoverningAbilityRef extends StatelessWidget {
@@ -20,19 +23,12 @@ class GoverningAbilityRef extends StatelessWidget {
     return Row(
       children: [
         const Text("Governing ability: "),
-        TextButton(
-          child: Text(
-            ref.name,
-            style: const TextStyle(
-              color: Colors.lightBlueAccent,
-              fontSize: 18.0,
-            ),
-          ),
-          onPressed: () {
+        ref.buildTextButton(
+          onPressed: (it) {
             // Navigator.of(context).pop();
             showDialog(
               context: context,
-              builder: (ctx) => descPopup(ctx, ref),
+              builder: (ctx) => descPopup(ctx, it),
             );
           } 
         ),

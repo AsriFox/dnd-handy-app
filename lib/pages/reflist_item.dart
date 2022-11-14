@@ -18,12 +18,31 @@ class DndRef {
       url: json['url'] as String,
     );
 
-  Widget build({void Function(DndRef)? onTap}) {
+  Widget buildListTile({
+    void Function(DndRef)? onTap,
+    VisualDensity visualDensity = VisualDensity.comfortable,
+  }) {
     return ListTile(
       title: Text(name),
       onTap: onTap != null  
         ? () => onTap(this)
         : () {},
+        visualDensity: visualDensity,
+    );
+  }
+
+  Widget buildTextButton({void Function(DndRef)? onPressed}) {
+    return TextButton(
+      onPressed: onPressed != null 
+        ? () => onPressed(this)
+        : () {},
+      child: Text(
+        name,
+        style: const TextStyle(
+          color: Colors.lightBlueAccent,
+          fontSize: 18.0,
+        ),
+      ),
     );
   }
 }

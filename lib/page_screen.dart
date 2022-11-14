@@ -125,5 +125,8 @@ Widget? selectAndBuildPage(Map<String, dynamic> json, String title) {
       isDescList: descListNames.contains(title),
     );
   }
+  if (json.containsKey('equipment')) {
+    return RefListPage.fromJsonArray(json['equipment']);
+  }
   return null;
 }
