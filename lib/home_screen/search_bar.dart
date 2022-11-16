@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/page_screen.dart';
 import 'package:dnd_handy_flutter/search_delegate.dart';
@@ -21,18 +22,24 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           onPressed: () {
             showSearch(
-              context: context,
+              context: context, 
               delegate: CustomSearchDelegate(),
-            ).then((url) {
-              if (url != null) { 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => 
-                      PageScreen.request(url),
-                  )
-                );
-              }
-            }).catchError((e) {
+            ).then((query) async => 
+              query is String
+                ? DndRef(
+                  index: query.split('/').last,
+                  name: PageScreen.getTitle(query),
+                  url: query,
+                )
+                : query as DndRef
+            ).then((ref) => 
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => 
+                    PageScreen.request(ref),
+                )
+              )
+            ).catchError((e) {
               ScaffoldMessenger.of(context)
                 .showSnackBar(
                   SnackBar(

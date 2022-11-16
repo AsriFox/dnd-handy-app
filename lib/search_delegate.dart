@@ -52,10 +52,11 @@ class CustomSearchDelegate extends SearchDelegate {
     final matchQuery = buildMatchQuery();
     return ListView.builder(
       itemCount: matchQuery.length,
-      itemBuilder: (context, index) => 
-        matchQuery[index].buildListTile(
-          onTap: (it) => close(context, it),
-        ),
+      itemBuilder: (_, index) =>
+        ListTileRef(
+          ref: matchQuery[index],
+          onTap: (ctx, ref) => close(ctx, ref),
+        ), 
     );
   }
 
@@ -64,9 +65,10 @@ class CustomSearchDelegate extends SearchDelegate {
     final matchQuery = buildMatchQuery();
     return ListView.builder(
       itemCount: matchQuery.length,
-      itemBuilder: (context, index) => 
-        matchQuery[index].buildListTile(
-          onTap: (it) => query = it.url,
+      itemBuilder: (_, index) => 
+        ListTileRef(
+          ref: matchQuery[index],
+          onTap: (_, ref) => query = ref.url,
         ),
     );
   }

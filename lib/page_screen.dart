@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
@@ -13,10 +14,10 @@ class PageScreen extends StatelessWidget {
   final String title;
   final Future<dynamic> request;
 
-  factory PageScreen.request(String url) => 
+  factory PageScreen.request(DndRef ref) => 
     PageScreen(
-      title: getTitle(url),
-      request: getApiRequest(url)
+      title: ref.name,
+      request: getApiRequest(ref.url)
         .catchError((_) => null),
     );
 
@@ -53,7 +54,7 @@ class PageScreen extends StatelessWidget {
       ),
       body: FutureBuilder(
         future: request,
-        builder: (context, snapshot) {
+        builder: (ctx, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data is List<dynamic>) {
               return RefListPage.fromJsonArray(
@@ -66,7 +67,7 @@ class PageScreen extends StatelessWidget {
             ) ?? Center(
               child: Text(
                 'Nothing found', 
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(ctx).textTheme.titleLarge,
               )
             );
           } else {
@@ -90,15 +91,15 @@ const descListNames = [
 // Short articles with small additions:
   "Ability scores",
   "Feats",
-  "Features",
   "Languages",
+  "Proficiencies",
   "Skills",
 // Medium-complexity articles (?):
-  // "Proficiencies",
   // "Traits",
 // Complex articles:
   // "Backgrounds",
   // "Equipment",
+  // "Features",
   // "Magic items",
   // "Monsters",
   // "Races",

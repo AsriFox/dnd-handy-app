@@ -6,33 +6,17 @@ import 'package:flutter/material.dart';
 List<Widget> skillsArticleSubpage(Map<String, dynamic> json) => [
   Padding(
     padding: const EdgeInsets.only(top: 8.0), 
-    child: GoverningAbilityRef(ref: DndRef.fromJson(json)),
-  ),
-];
-
-class GoverningAbilityRef extends StatelessWidget {
-  const GoverningAbilityRef({
-    super.key,
-    required this.ref,
-  });
-
-  final DndRef ref;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+    child: Row(
       children: [
         const Text("Governing ability: "),
-        ref.buildTextButton(
-          onPressed: (it) {
-            // Navigator.of(context).pop();
-            showDialog(
-              context: context,
-              builder: (ctx) => descPopup(ctx, it),
-            );
-          } 
-        ),
-      ],
-    );
-  }
-}
+        TextButtonRef(
+          ref: DndRef.fromJson(json),
+          onPressed: (ctx, ref) => showDialog(
+            context: ctx, 
+            builder: (context) => descPopup(context, ref),
+          ),
+        )
+      ]
+    ),
+  ),
+];

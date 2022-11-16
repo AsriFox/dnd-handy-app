@@ -45,19 +45,19 @@ class RefListPage extends StatelessWidget {
     }
     return ListView.builder(
       itemCount: results.length,
-      itemBuilder: (ctx, index) => 
-        results[index].buildListTile(
-          visualDensity: visualDensity,
+      itemBuilder: (_, index) => 
+        ListTileRef(
+          ref: results[index],
           onTap: isDescList
-            ? (it) => showDialog(
+            ? (ctx, ref) => showDialog(
               context: ctx,
-              builder: (c) => descPopup(c, it),
+              builder: (ctx2) => descPopup(ctx2, ref)
             )
-            : (it) => Navigator.of(ctx).push(
-              MaterialPageRoute(
-                builder: (_) => PageScreen.request(it.url),
+            : (ctx, ref) => Navigator.of(ctx).push(
+                MaterialPageRoute(
+                  builder: (_) => PageScreen.request(ref),
+                )
               )
-            )
         ),
     );
   }

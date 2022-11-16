@@ -40,8 +40,8 @@ class HomeRefList extends StatelessWidget {
     json.forEach((key, value) => children.add(
       DndRef(
         index: key,
-        name: key,
         url: value as String,
+        name: PageScreen.getTitle(value),
       )
     ));
     return HomeRefList(items: children);
@@ -50,10 +50,11 @@ class HomeRefList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: items.map((it) => it.buildListTile(
-        onTap: (it) => Navigator.of(context).push(
+      children: items.map((it) => ListTileRef(
+        ref: it,
+        onTap: (ctx, ref) => Navigator.of(ctx).push(
           MaterialPageRoute(
-            builder: (context) => PageScreen.request(it.url)
+            builder: (_) => PageScreen.request(ref),
           )
         )
       )).toList(),

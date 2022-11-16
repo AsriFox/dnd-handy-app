@@ -18,7 +18,7 @@ AlertDialog descPopup(BuildContext context, DndRef it) =>
       width: double.maxFinite,
       child: FutureBuilder(
         future: getApiRequest(it.url),
-        builder: (context, snapshot) {
+        builder: (_, snapshot) {
           if (snapshot.hasData) {
             try {
               return ArticlePage.fromJson(

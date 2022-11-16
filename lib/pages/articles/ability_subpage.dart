@@ -13,25 +13,11 @@ List<Widget> abilityArticleSubpage(List<dynamic> array) =>
       ),
     )
   ] + array.map(
-      (it) => AssociatedSkillRef(ref: DndRef.fromJson(it))
+      (it) => ListTileRef(
+        ref: DndRef.fromJson(it),
+        visualDensity: ListDensity.veryDense.d,
+        onTap: (ctx, ref) => showDialog(
+          context: ctx,
+          builder: (context) => descPopup(context, ref)),
+      )
     ).toList();
-
-class AssociatedSkillRef extends StatelessWidget {
-  const AssociatedSkillRef({
-    super.key,
-    required this.ref,
-  });
-
-  final DndRef ref;
-
-  @override
-  Widget build(BuildContext context) {
-    return ref.buildListTile(
-      visualDensity: ListDensity.veryDense.d,
-      onTap: (it) => showDialog(
-        context: context,
-        builder: (ctx) => descPopup(ctx, it),
-      ),
-    );
-  }
-}

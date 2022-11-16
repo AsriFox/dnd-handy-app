@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/pages/articles/proficiency_subpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/skills_subpage.dart';
@@ -31,6 +32,9 @@ class ArticlePage extends StatelessWidget {
     }
     if (json.containsKey('typical_speakers')) {
       children = languageArticleSubpage(json);
+    }
+    if (json.containsKey('classes') && json.containsKey('races') && json.containsKey('reference')) {
+      children = proficiencyArticleSubpage(json);
     }
 
     if (!json.containsKey('desc')) {
