@@ -11,10 +11,7 @@ List<Widget> skillsArticleSubpage(Map<String, dynamic> json) => [
         const Text("Governing ability: "),
         TextButtonRef(
           ref: DndRef.fromJson(json),
-          onPressed: (ctx, ref) => showDialog(
-            context: ctx, 
-            builder: (context) => descPopup(context, ref),
-          ),
+          onPressed: (ctx, ref) => showDescPopup(ctx, ref),
         )
       ]
     ),

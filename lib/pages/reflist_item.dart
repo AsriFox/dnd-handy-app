@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+enum ListDensity {
+  veryDense(VisualDensity.minimumDensity);
+
+  const ListDensity(this.value);
+  final double value;
+  VisualDensity get d => VisualDensity(vertical: value);
+}
+
 class DndRef {
   const DndRef({
     required this.index,
@@ -25,11 +33,13 @@ class ListTileRef extends StatelessWidget {
     required this.ref,
     this.onTap,
     this.visualDensity = VisualDensity.comfortable,
+    this.trailing,
   }); 
 
   final DndRef ref;
   final void Function(BuildContext, DndRef)? onTap;
   final VisualDensity visualDensity;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +49,7 @@ class ListTileRef extends StatelessWidget {
         ? () => onTap!(context, ref)
         : () {},
       visualDensity: visualDensity,
+      trailing: trailing,
     );
   }
 }
@@ -56,14 +67,18 @@ class TextButtonRef extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        visualDensity: ListDensity.veryDense.d,
+      ),
       onPressed: onPressed != null
         ? () => onPressed!(context, ref)
         : () {},
       child: Text(
         ref.name,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.lightBlueAccent,
-          fontSize: 18.0,
+          fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
         ),
       ),
     );

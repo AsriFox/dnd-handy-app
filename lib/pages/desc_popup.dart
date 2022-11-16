@@ -3,6 +3,12 @@ import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
+Future showDescPopup(BuildContext context, DndRef it) =>
+  showDialog(
+    context: context,
+    builder: (ctx) => descPopup(ctx, it),
+  );
+
 AlertDialog descPopup(BuildContext context, DndRef it) => 
   AlertDialog(
     title: Text(

@@ -4,6 +4,13 @@ import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 
+Future showPageScreen(BuildContext context, DndRef it) =>
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => PageScreen.request(it),
+    )
+  );
+
 class PageScreen extends StatelessWidget {
   const PageScreen({
     super.key,
@@ -94,17 +101,16 @@ const descListNames = [
   "Languages",
   "Proficiencies",
   "Skills",
-// Medium-complexity articles (?):
-  // "Traits",
 // Complex articles:
   // "Backgrounds",
-  // "Equipment",
+  "Equipment",
   // "Features",
   // "Magic items",
   // "Monsters",
   // "Races",
   // "Spells",
   // "Subraces",
+  // "Traits",
 // Sublists for 'Equipment':
   // "Equipment categories",
 // VERY complex articles:

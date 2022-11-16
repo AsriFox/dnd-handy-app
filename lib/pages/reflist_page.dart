@@ -3,14 +3,6 @@ import 'package:dnd_handy_flutter/pages/desc_popup.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
-enum ListDensity {
-  veryDense(VisualDensity.minimumDensity);
-
-  const ListDensity(this.value);
-  final double value;
-  VisualDensity get d => VisualDensity(vertical: value);
-}
-
 class RefListPage extends StatelessWidget {
   const RefListPage({
     super.key,
@@ -48,16 +40,9 @@ class RefListPage extends StatelessWidget {
       itemBuilder: (_, index) => 
         ListTileRef(
           ref: results[index],
-          onTap: isDescList
-            ? (ctx, ref) => showDialog(
-              context: ctx,
-              builder: (ctx2) => descPopup(ctx2, ref)
-            )
-            : (ctx, ref) => Navigator.of(ctx).push(
-                MaterialPageRoute(
-                  builder: (_) => PageScreen.request(ref),
-                )
-              )
+          onTap: isDescList 
+            ? showDescPopup 
+            : showPageScreen,
         ),
     );
   }

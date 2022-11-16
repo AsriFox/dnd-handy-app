@@ -1,6 +1,5 @@
 import 'package:dnd_handy_flutter/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 
 const bold = TextStyle(fontWeight: FontWeight.bold);
@@ -24,11 +23,7 @@ List<Widget> proficiencyArticleSubpage(Map<String, dynamic> json) {
           const Text("Subject: ", style: bold),
           TextButtonRef(
             ref: DndRef.fromJson(json['reference']),
-            onPressed: (ctx, ref) => Navigator.of(ctx).push(
-              MaterialPageRoute(
-                builder: (_) => PageScreen.request(ref),
-              )
-            ),
+            onPressed: showPageScreen,
           ),
         ],
       ),
@@ -52,10 +47,6 @@ List<Widget> buildEmbeddedRefList(String title, List<dynamic> items) => <Widget>
     return ListTileRef(
       ref: reference,
       visualDensity: ListDensity.veryDense.d,
-      onTap: (ctx, ref) => Navigator.of(ctx).push(
-        MaterialPageRoute(
-          builder: (_) => PageScreen.request(ref),
-        )
-      ),
+      onTap: (ctx, ref) => showPageScreen,
     );
   }).toList();

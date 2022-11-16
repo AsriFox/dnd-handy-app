@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/pages/articles/equipment_subpage.dart';
 import 'package:dnd_handy_flutter/pages/articles/proficiency_subpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -18,22 +19,21 @@ class ArticlePage extends StatelessWidget {
   factory ArticlePage.fromJson(Map<String, dynamic> json) {
     // TODO: optimize selection of article types
     List<Widget>? children;
-    if (json.containsKey('ability_score')) {
+    if (json.containsKey('equipment_category')) {
+      children = equipmentArticleSubpage(json);
+    } else if (json.containsKey('ability_score')) {
       children = skillsArticleSubpage(
         json['ability_score']
       );
-    } 
-    if (json.containsKey('skills')) {
+    } else if (json.containsKey('skills')) {
       if (json.containsKey('full_name')) {
         children = abilityArticleSubpage(
           json['skills']
         );
       }
-    }
-    if (json.containsKey('typical_speakers')) {
+    } else if (json.containsKey('typical_speakers')) {
       children = languageArticleSubpage(json);
-    }
-    if (json.containsKey('classes') && json.containsKey('races') && json.containsKey('reference')) {
+    } else if (json.containsKey('classes') && json.containsKey('races') && json.containsKey('reference')) {
       children = proficiencyArticleSubpage(json);
     }
 

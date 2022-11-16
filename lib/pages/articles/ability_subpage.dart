@@ -1,6 +1,5 @@
 import 'package:dnd_handy_flutter/pages/desc_popup.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> abilityArticleSubpage(List<dynamic> array) => 
@@ -16,8 +15,6 @@ List<Widget> abilityArticleSubpage(List<dynamic> array) =>
       (it) => ListTileRef(
         ref: DndRef.fromJson(it),
         visualDensity: ListDensity.veryDense.d,
-        onTap: (ctx, ref) => showDialog(
-          context: ctx,
-          builder: (context) => descPopup(context, ref)),
+        onTap: (ctx, ref) => showDescPopup(ctx, ref),
       )
     ).toList();

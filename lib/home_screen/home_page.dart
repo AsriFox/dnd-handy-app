@@ -52,11 +52,7 @@ class HomeRefList extends StatelessWidget {
     return ListView(
       children: items.map((it) => ListTileRef(
         ref: it,
-        onTap: (ctx, ref) => Navigator.of(ctx).push(
-          MaterialPageRoute(
-            builder: (_) => PageScreen.request(ref),
-          )
-        )
+        onTap: showPageScreen,
       )).toList(),
     );
   }

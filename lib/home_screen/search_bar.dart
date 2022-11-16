@@ -32,13 +32,8 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                   url: query,
                 )
                 : query as DndRef
-            ).then((ref) => 
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => 
-                    PageScreen.request(ref),
-                )
-              )
+            ).then(
+              (ref) => showPageScreen(context, ref)
             ).catchError((e) {
               ScaffoldMessenger.of(context)
                 .showSnackBar(
