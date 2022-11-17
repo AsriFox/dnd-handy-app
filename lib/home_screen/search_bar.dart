@@ -1,7 +1,7 @@
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_handy_flutter/page_screen.dart';
-import 'package:dnd_handy_flutter/search_delegate.dart';
+import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
+import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchAppBar({
@@ -28,12 +28,12 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               query is String
                 ? DndRef(
                   index: query.split('/').last,
-                  name: PageScreen.getTitle(query),
+                  name: getTitle(query),
                   url: query,
                 )
                 : query as DndRef
             ).then(
-              (ref) => showPageScreen(context, ref)
+              (ref) => gotoPage(context, ref)
             ).catchError((e) {
               ScaffoldMessenger.of(context)
                 .showSnackBar(

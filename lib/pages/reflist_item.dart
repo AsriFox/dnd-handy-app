@@ -68,7 +68,8 @@ class TextButtonRef extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        minimumSize: const Size(0.0, 0.0),
+        padding: const EdgeInsets.all(4.0),
         visualDensity: ListDensity.veryDense.d,
       ),
       onPressed: onPressed != null

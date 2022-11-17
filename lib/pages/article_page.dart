@@ -1,75 +1,98 @@
-import 'package:dnd_handy_flutter/pages/articles/equipment_subpage.dart';
-import 'package:dnd_handy_flutter/pages/articles/proficiency_subpage.dart';
 import 'package:flutter/material.dart';
+import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
 import 'articles/language_subpage.dart';
+import 'articles/equipment_subpage.dart';
+import 'articles/proficiency_subpage.dart';
 
-class ArticlePage extends StatelessWidget {
+class ArticlePage extends DndPageBuilder {
   const ArticlePage({
     super.key,
-    required this.description,
-    this.children,
+    required super.request,
   });
 
-  final String description;
-  final List<Widget>? children;
-
-  factory ArticlePage.fromJson(Map<String, dynamic> json) {
-    // TODO: optimize selection of article types
-    List<Widget>? children;
-    if (json.containsKey('equipment_category')) {
-      children = equipmentArticleSubpage(json);
-    } else if (json.containsKey('ability_score')) {
-      children = skillsArticleSubpage(
-        json['ability_score']
-      );
-    } else if (json.containsKey('skills')) {
-      if (json.containsKey('full_name')) {
-        children = abilityArticleSubpage(
-          json['skills']
-        );
-      }
-    } else if (json.containsKey('typical_speakers')) {
-      children = languageArticleSubpage(json);
-    } else if (json.containsKey('classes') && json.containsKey('races') && json.containsKey('reference')) {
-      children = proficiencyArticleSubpage(json);
+  factory ArticlePage.variant({
+    required Future<dynamic> request,
+    String category = ""
+  }) {
+    switch (category) {
+      case "skills":
+        return SkillArticlePage(request: request);
+      case "ability_scores":
+        return AbilityArticlePage(request: request);
+      case "languages":
+        return LanguageArticlePage(request: request);
+      case "equipment":
+        return EquipmentArticlePage(request: request);
+      case "proficiencies":
+        return ProficiencyArticlePage(request: request);
+      default:
+        return ArticlePage(request: request);
     }
-
-    if (!json.containsKey('desc')) {
-      return ArticlePage(
-        description: "",
-        children: children,
-      );
-    }
-    if (json['desc'] is String) {
-      return ArticlePage(
-        description: json['desc'] as String,
-        children: children,
-      );
-    }
-    var description = "";
-    for (var s in (json['desc'] as Iterable<dynamic>)) {
-      description += "${s as String}\n\n";
-    }
-    return ArticlePage(
-      description: description,
-      children: children,
-    );
   }
 
+  List<Widget>? buildChildren(Map<String, dynamic> json) => null;
+
   @override
-  Widget build(BuildContext context) {
-    // styleSheet: MarkdownStyleSheet.largeFromTheme(Theme.of(context)),
-    final desc = MarkdownBody(data: description);
+  Widget buildPage(Map<String, dynamic> json) {
+    var desc = "";
+    if (json.containsKey('desc')) {
+      if (json['desc'] is String) {
+        desc = json['desc'];
+      } else if (json['desc'] is Iterable<dynamic>) {
+        for (var s in json['desc']) {
+          desc += "${s as String}\n\n";
+        }
+      }
+    }
+    final body = MarkdownBody(data: desc);
+
+    final children = buildChildren(json);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(10.0),
-      child: children == null ? desc 
+      child: children == null ? body 
         : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[desc] + children!
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+              child: body,
+            ),
+          ] + children
         ),
     );
   }
+}
+
+const pad = EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0);
+
+Widget annotatedLine({
+  required String annotation, 
+  Widget? content,
+  List<Widget>? contents,
+  EdgeInsetsGeometry padding = pad,
+}) { 
+  var children = <Widget>[
+    Text(
+      annotation,
+      style: const TextStyle(fontWeight: FontWeight.bold)
+    ),
+  ];
+  if (content != null) {
+    children.add(content);
+  }
+  if (contents != null) {
+    children += contents;
+  }
+
+  return Padding(
+    padding: pad,
+    child: Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: children,
+    )
+  );
 }
