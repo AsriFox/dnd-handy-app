@@ -35,21 +35,6 @@ class RaceArticlePage extends ArticlePage {
       ),
       Padding(padding: pad, child: Text(json['size_description'])),
     ];
-
-    final startingProficiencies = json['starting_proficiencies'] as List<dynamic>;
-    if (startingProficiencies.isNotEmpty) {
-      children.add(annotatedLine(
-        annotation: "Starting proficiencies: ",
-        contents: startingProficiencies.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
-      ));
-    } else {
-      children.add(annotatedLine(
-        annotation: "Starting proficiencies: ",
-        content: const Text("none"),
-      ));
-    }
       
     final traits = json['traits'] as List<dynamic>;
     if (traits.isNotEmpty) {
@@ -62,6 +47,35 @@ class RaceArticlePage extends ArticlePage {
     } else {
       children.add(annotatedLine(
         annotation: "Traits: ",
+        content: const Text("none"),
+      ));
+    }
+
+    final startingProficiencies = json['starting_proficiencies'] as List<dynamic>;
+    if (startingProficiencies.isNotEmpty) {
+      children.add(annotatedLine(
+        annotation: "Starting proficiencies: ",
+        contents: startingProficiencies.map(
+          (it) => TextButtonRef.fromJson(it)
+        ).toList(),
+      ));
+    } 
+    
+    if (json.containsKey('starting_proficiency_options')) {
+      final options = json['starting_proficiency_options'] as Map<String, dynamic>;
+      children.add(annotatedLine(
+          annotation: "Proficiency options: ",
+          content: Text("choose ${options['choose'].toString()} from:"),
+      ));
+      children += (options['from']['options'] as List<dynamic>).map(
+          (it) => ListTileRef.fromJson(it['item'], dense: true)
+        ).toList();
+      if (options.containsKey('desc')) {
+        children.add(Padding(padding: pad, child: Text(options['desc'])));
+      }
+    } else if (startingProficiencies.isEmpty) {
+      children.add(annotatedLine(
+        annotation: "Starting proficiencies: ",
         content: const Text("none"),
       ));
     }

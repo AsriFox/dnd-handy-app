@@ -35,24 +35,28 @@ class ListTileRef extends StatelessWidget {
     this.onTap = gotoPage,
     this.visualDensity = VisualDensity.comfortable,
     this.trailing,
+    this.dense = false,
   }); 
 
   final DndRef ref;
   final void Function(BuildContext, DndRef) onTap;
   final VisualDensity visualDensity;
   final Widget? trailing;
+  final bool dense;
 
   factory ListTileRef.fromJson(
     Map<String, dynamic> json, {
     Function(BuildContext, DndRef) onTap = gotoPage,
     VisualDensity? visualDensity,
     Widget? trailing,
+    bool dense = false,
   }) =>
     ListTileRef(
       ref: DndRef.fromJson(json),
       onTap: onTap,
       trailing: trailing,
       visualDensity: visualDensity ?? ListDensity.veryDense.d,
+      dense: dense,
     );
 
   @override
@@ -62,6 +66,7 @@ class ListTileRef extends StatelessWidget {
       onTap: () => onTap(context, ref),
       visualDensity: visualDensity,
       trailing: trailing,
+      dense: dense,
     );
   }
 }

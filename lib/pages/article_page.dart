@@ -3,9 +3,11 @@ import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
+import 'articles/trait_subpage.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
 import 'articles/feature_subpage.dart';
+import 'articles/subrace_subpage.dart';
 import 'articles/language_subpage.dart';
 import 'articles/equipment_subpage.dart';
 import 'articles/magic_item_subpage.dart';
@@ -40,6 +42,10 @@ class ArticlePage extends DndPageBuilder {
         return RaceArticlePage(request: request);
       case "skills":
         return SkillArticlePage(request: request);
+      case "subraces":
+        return SubraceArticlePage(request: request);
+      case "traits":
+        return TraitArticlePage(request: request);
       default:
         return ArticlePage(request: request);
     }

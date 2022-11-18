@@ -57,8 +57,8 @@ const descListNames = [
   // "Monsters",
   // "Races",
   // "Spells",
-  // "Subraces",
-  // "Traits",
+  "subraces",
+  "traits",
 // Sublists for 'Equipment':
   // "Equipment categories",
 // VERY complex articles:
