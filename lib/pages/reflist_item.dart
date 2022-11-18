@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter/material.dart';
 
 enum ListDensity {
@@ -31,23 +32,34 @@ class ListTileRef extends StatelessWidget {
   const ListTileRef({
     super.key,
     required this.ref,
-    this.onTap,
+    this.onTap = gotoPage,
     this.visualDensity = VisualDensity.comfortable,
     this.trailing,
   }); 
 
   final DndRef ref;
-  final void Function(BuildContext, DndRef)? onTap;
+  final void Function(BuildContext, DndRef) onTap;
   final VisualDensity visualDensity;
   final Widget? trailing;
+
+  factory ListTileRef.fromJson(
+    Map<String, dynamic> json, {
+    Function(BuildContext, DndRef) onTap = gotoPage,
+    VisualDensity? visualDensity,
+    Widget? trailing,
+  }) =>
+    ListTileRef(
+      ref: DndRef.fromJson(json),
+      onTap: onTap,
+      trailing: trailing,
+      visualDensity: visualDensity ?? ListDensity.veryDense.d,
+    );
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(ref.name),
-      onTap: onTap != null
-        ? () => onTap!(context, ref)
-        : () {},
+      onTap: () => onTap(context, ref),
       visualDensity: visualDensity,
       trailing: trailing,
     );
@@ -58,11 +70,20 @@ class TextButtonRef extends StatelessWidget {
   const TextButtonRef({
     super.key,
     required this.ref,
-    this.onPressed,
+    this.onPressed = gotoPage,
   });
 
   final DndRef ref;
-  final void Function(BuildContext, DndRef)? onPressed;
+  final void Function(BuildContext, DndRef) onPressed;
+
+  factory TextButtonRef.fromJson(
+    Map<String, dynamic> json, {
+    Function(BuildContext, DndRef) onPressed = gotoPage,
+  }) => 
+    TextButtonRef(
+      ref: DndRef.fromJson(json),
+      onPressed: onPressed,
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +93,7 @@ class TextButtonRef extends StatelessWidget {
         padding: const EdgeInsets.all(4.0),
         visualDensity: ListDensity.veryDense.d,
       ),
-      onPressed: onPressed != null
-        ? () => onPressed!(context, ref)
-        : () {},
+      onPressed: () => onPressed(context, ref),
       child: Text(
         ref.name,
         style: TextStyle(

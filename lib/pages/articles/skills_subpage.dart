@@ -11,16 +11,11 @@ class SkillArticlePage extends ArticlePage {
 
   @override
   List<Widget>? buildChildren(Map<String, dynamic> json) => [
-    Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0), 
-      child: Row(
-        children: [
-          const Text("Governing ability: "),
-          TextButtonRef(
-            ref: DndRef.fromJson(json),
-            onPressed: gotoPage,
-          )
-        ]
+    annotatedLine(
+      annotation: "Governing ability: ",
+      content: TextButtonRef(
+        ref: DndRef.fromJson(json),
+        onPressed: gotoPage,
       ),
     ),
   ];

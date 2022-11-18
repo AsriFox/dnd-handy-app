@@ -52,8 +52,8 @@ const descListNames = [
 // Complex articles:
   // "Backgrounds",
   "equipment",
+  "features",
   "magic items",
-  // "Features",
   // "Monsters",
   // "Races",
   // "Spells",

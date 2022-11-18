@@ -1,4 +1,3 @@
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +17,7 @@ class ProficiencyArticlePage extends ArticlePage {
       ),
       annotatedLine(
         annotation: "Subject: ",
-        content: TextButtonRef(
-          ref: DndRef.fromJson(json['reference']),
-          onPressed: gotoPage,
-        ),
+        content: TextButtonRef.fromJson(json['reference']),
       ),
     ];
     final races = json['races'] as List<dynamic>;
@@ -39,11 +35,6 @@ class ProficiencyArticlePage extends ArticlePage {
 List<Widget> buildEmbeddedRefList(String title, List<dynamic> items) => 
   <Widget>[
     annotatedLine(annotation: title),
-  ] + items.map((it) { 
-    final reference = DndRef.fromJson(it);
-    return ListTileRef(
-      ref: reference,
-      visualDensity: ListDensity.veryDense.d,
-      onTap: (ctx, ref) => gotoPage,
-    );
-  }).toList();
+  ] + items.map(
+      (it) => ListTileRef.fromJson(it)
+    ).toList();

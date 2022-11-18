@@ -1,9 +1,7 @@
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
-const bold = TextStyle(fontWeight: FontWeight.bold);
 const padButt = EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0);
 
 class EquipmentArticlePage extends ArticlePage {
@@ -18,10 +16,7 @@ class EquipmentArticlePage extends ArticlePage {
       annotatedLine(
         annotation: "Category: ",
         padding: padButt,
-        content: TextButtonRef(
-          ref: DndRef.fromJson(json['equipment_category']),
-          onPressed: gotoPage,
-        ),
+        content: TextButtonRef.fromJson(json['equipment_category']),
       ),
     ];
     if (json.containsKey('weapon_category')) {
@@ -67,10 +62,7 @@ List<Widget> weaponEquipmentArticleSubpage(Map<String, dynamic> json) {
       padding: padButt,
       contents: [
         Text("${json['damage']['damage_dice']} "),
-        TextButtonRef(
-          ref: DndRef.fromJson(json['damage']['damage_type']),
-          onPressed: gotoPage,
-        ),
+        TextButtonRef.fromJson(json['damage']['damage_type']),
       ],
     ),
   ];
@@ -82,10 +74,7 @@ List<Widget> weaponEquipmentArticleSubpage(Map<String, dynamic> json) {
         contents: [
           const Text("2H Damage: ", style: bold),
           Text("${json['damage']['damage_dice']} "),
-          TextButtonRef(
-            ref: DndRef.fromJson(json['damage']['damage_type']),
-            onPressed: gotoPage,
-          ),
+          TextButtonRef.fromJson(json['damage']['damage_type']),
         ],
       )
     );
@@ -97,10 +86,7 @@ List<Widget> weaponEquipmentArticleSubpage(Map<String, dynamic> json) {
         annotation: "Properties: ",
         padding: padButt,
         contents: properties.map(
-          (it) => TextButtonRef(
-            ref: DndRef.fromJson(it),
-            onPressed: gotoPage,
-          )
+          (it) => TextButtonRef.fromJson(it)
         ).toList(),
       )
     );
@@ -130,10 +116,7 @@ List<Widget> gearEquipmentArticleSubpage(Map<String, dynamic> json) {
   var children = <Widget>[
     Padding(
       padding: pad,
-      child: TextButtonRef(
-        ref: DndRef.fromJson(json['gear_category']), 
-        onPressed: gotoPage,
-      ),
+      child: TextButtonRef.fromJson(json['gear_category']),
     )
   ];
   if (json.containsKey('contents')) {
@@ -142,11 +125,11 @@ List<Widget> gearEquipmentArticleSubpage(Map<String, dynamic> json) {
       child: Text("Contents:", style: bold),
     ));
     children += contents.map((it) => 
-      ListTileRef(
-        ref: DndRef.fromJson(it['item']),
-        onTap: gotoPage,
-        visualDensity: ListDensity.veryDense.d,
-        trailing: Text(it['quantity'].toString()),
+      ListTileRef.fromJson(it['item'],
+        trailing: Text(
+          it['quantity'].toString(),
+          style: const TextStyle(fontSize: 16.0),
+        ),
       ),
     ).toList();
   }

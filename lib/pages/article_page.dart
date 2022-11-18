@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'articles/feat_subpage.dart';
+import 'articles/race_subpage.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
+import 'articles/feature_subpage.dart';
 import 'articles/language_subpage.dart';
 import 'articles/equipment_subpage.dart';
+import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
 class ArticlePage extends DndPageBuilder {
@@ -18,16 +22,24 @@ class ArticlePage extends DndPageBuilder {
     String category = ""
   }) {
     switch (category) {
-      case "skills":
-        return SkillArticlePage(request: request);
-      case "ability_scores":
+      case "ability scores":
         return AbilityArticlePage(request: request);
-      case "languages":
-        return LanguageArticlePage(request: request);
       case "equipment":
         return EquipmentArticlePage(request: request);
+      case "feats":
+        return FeatArticlePage(request: request);
+      case "features":
+        return FeatureArticlePage(request: request);
+      case "languages":
+        return LanguageArticlePage(request: request);
+      case "magic items":
+        return MagicItemArticlePage(request: request);
       case "proficiencies":
         return ProficiencyArticlePage(request: request);
+      case "races":
+        return RaceArticlePage(request: request);
+      case "skills":
+        return SkillArticlePage(request: request);
       default:
         return ArticlePage(request: request);
     }
@@ -51,6 +63,19 @@ class ArticlePage extends DndPageBuilder {
 
     final children = buildChildren(json);
 
+    if (desc.isEmpty) {
+      if (children != null) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
+          ),
+        );
+      }
+      return const Center(child: Text("Empty page"));
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(10.0),
       child: children == null ? body 
@@ -68,6 +93,7 @@ class ArticlePage extends DndPageBuilder {
 }
 
 const pad = EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0);
+const bold = TextStyle(fontWeight: FontWeight.bold);
 
 Widget annotatedLine({
   required String annotation, 
@@ -76,10 +102,7 @@ Widget annotatedLine({
   EdgeInsetsGeometry padding = pad,
 }) { 
   var children = <Widget>[
-    Text(
-      annotation,
-      style: const TextStyle(fontWeight: FontWeight.bold)
-    ),
+    Text(annotation, style: bold),
   ];
   if (content != null) {
     children.add(content);
