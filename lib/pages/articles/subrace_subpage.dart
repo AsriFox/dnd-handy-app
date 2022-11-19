@@ -1,4 +1,3 @@
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +62,7 @@ class SubraceArticlePage extends ArticlePage {
       children.add(annotatedLine(
         annotation: "Additional languages: ",
         contents: languages.map(
-          (it) => TextButtonRef(
-            ref: DndRef.fromJson(it),
-            onPressed: gotoPage,
-          )
+          (it) => TextButtonRef.fromJson(it)
         ).toList()
       ));
     } 
@@ -76,7 +72,7 @@ class SubraceArticlePage extends ArticlePage {
       children += <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-          child: Text("Choose ${json['language_options']['choose'].toString()} from:"),
+          child: Text("Choose ${json['language_options']['choose'].toString()} language(s) from:"),
         ),
         annotatedLine(
           annotation: "",

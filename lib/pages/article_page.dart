@@ -5,12 +5,14 @@ import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
 import 'articles/trait_subpage.dart';
 import 'articles/spell_subpage.dart';
+import 'articles/rules_subpage.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
 import 'articles/feature_subpage.dart';
 import 'articles/subrace_subpage.dart';
 import 'articles/language_subpage.dart';
 import 'articles/equipment_subpage.dart';
+import 'articles/background_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
@@ -27,6 +29,8 @@ class ArticlePage extends DndPageBuilder {
     switch (category) {
       case "ability scores":
         return AbilityArticlePage(request: request);
+      case "backgrounds":
+        return BackgroundArticlePage(request: request);
       case "equipment":
         return EquipmentArticlePage(request: request);
       case "feats":
@@ -41,6 +45,8 @@ class ArticlePage extends DndPageBuilder {
         return ProficiencyArticlePage(request: request);
       case "races":
         return RaceArticlePage(request: request);
+      case "rules":
+        return RulesArticlePage(request: request);
       case "skills":
         return SkillArticlePage(request: request);
       case "spells":
