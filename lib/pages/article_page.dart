@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
 import 'articles/trait_subpage.dart';
+import 'articles/spell_subpage.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
 import 'articles/feature_subpage.dart';
@@ -42,6 +43,8 @@ class ArticlePage extends DndPageBuilder {
         return RaceArticlePage(request: request);
       case "skills":
         return SkillArticlePage(request: request);
+      case "spells":
+        return SpellArticlePage(request: request);
       case "subraces":
         return SubraceArticlePage(request: request);
       case "traits":
@@ -61,7 +64,11 @@ class ArticlePage extends DndPageBuilder {
         desc = json['desc'];
       } else if (json['desc'] is Iterable<dynamic>) {
         for (var s in json['desc']) {
-          desc += "${s as String}\n\n";
+          if ((s as String).contains('|')) {
+            desc += "\n$s";
+          } else {
+            desc += "$s\n\n";
+          }
         }
       }
     }

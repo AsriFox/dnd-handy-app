@@ -3,6 +3,7 @@ import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
+import 'package:dnd_handy_flutter/pages/alignments_page.dart';
 import 'desc_popup.dart';
 import 'page_screen.dart';
 
@@ -84,6 +85,9 @@ abstract class DndPageBuilder extends StatelessWidget {
     final category = getCategoryName(ref.url);
     switch (category) {
       case "api":
+        if (ref.index == "alignments") {
+          return AlignmentsPageBuilder(request: request);
+        }
         return RefListPageBuilder(request: request);
       case "equipment categories":
         return EquipmentListPageBuilder(request: request);
