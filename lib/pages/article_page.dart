@@ -72,7 +72,13 @@ class ArticlePage extends DndPageBuilder {
         }
       }
     }
-    final body = MarkdownBody(data: desc);
+    final body = MarkdownBody(
+      data: desc,
+      styleSheet: MarkdownStyleSheet(
+        tableCellsPadding: const EdgeInsets.all(4.0),
+        tableColumnWidth: const IntrinsicColumnWidth(),
+      ),
+    );
 
     final children = buildChildren(json);
 

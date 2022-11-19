@@ -27,6 +27,7 @@ class AlignmentsPageBuilder extends DndPageBuilder {
     }
     return GridView.count(
       crossAxisCount: 3,
+      childAspectRatio: 0.925,
       children: [
         descPages["LG"] ?? AlignmentTile.dummy("LG"),
         descPages["NG"] ?? AlignmentTile.dummy("NG"),
@@ -96,11 +97,14 @@ class AlignmentTile extends StatelessWidget {
           : () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("No description is avaliable for '$caption'"))
           ),
+        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2.0),
+            border: Border.all(color: Theme.of(context).hintColor),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
+          padding: const EdgeInsets.only(bottom: 24.0),
           child: Text(caption, style: theme.headline2),
         ),
       ),
