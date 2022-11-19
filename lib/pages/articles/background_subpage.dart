@@ -2,6 +2,7 @@ import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
+// TODO: Convert to standalone page
 class BackgroundArticlePage extends ArticlePage {
   const BackgroundArticlePage({
     super.key,

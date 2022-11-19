@@ -9,8 +9,10 @@ import 'articles/rules_subpage.dart';
 import 'articles/skills_subpage.dart';
 import 'articles/ability_subpage.dart';
 import 'articles/feature_subpage.dart';
+import 'articles/monster_subpage.dart';
 import 'articles/subrace_subpage.dart';
 import 'articles/language_subpage.dart';
+import 'articles/subclass_subpage.dart';
 import 'articles/equipment_subpage.dart';
 import 'articles/background_subpage.dart';
 import 'articles/magic_item_subpage.dart';
@@ -41,6 +43,8 @@ class ArticlePage extends DndPageBuilder {
         return LanguageArticlePage(request: request);
       case "magic items":
         return MagicItemArticlePage(request: request);
+      case "monsters":
+        return MonsterArticlePage(request: request);
       case "proficiencies":
         return ProficiencyArticlePage(request: request);
       case "races":
@@ -51,6 +55,8 @@ class ArticlePage extends DndPageBuilder {
         return SkillArticlePage(request: request);
       case "spells":
         return SpellArticlePage(request: request);
+      case "subclasses":
+        return SubclassArticlePage(request: request);
       case "subraces":
         return SubraceArticlePage(request: request);
       case "traits":
@@ -78,13 +84,6 @@ class ArticlePage extends DndPageBuilder {
         }
       }
     }
-    final body = MarkdownBody(
-      data: desc,
-      styleSheet: MarkdownStyleSheet(
-        tableCellsPadding: const EdgeInsets.all(4.0),
-        tableColumnWidth: const IntrinsicColumnWidth(),
-      ),
-    );
 
     final children = buildChildren(json);
 
@@ -100,6 +99,14 @@ class ArticlePage extends DndPageBuilder {
       }
       return const Center(child: Text("Empty page"));
     }
+    
+    final body = MarkdownBody(
+      data: desc,
+      styleSheet: MarkdownStyleSheet(
+        tableCellsPadding: const EdgeInsets.all(4.0),
+        tableColumnWidth: const IntrinsicColumnWidth(),
+      ),
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(10.0),
