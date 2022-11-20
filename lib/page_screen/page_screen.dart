@@ -6,17 +6,14 @@ Scaffold pageScreen(BuildContext context, DndRef ref) =>
   Scaffold(
     appBar: AppBar(
       title: Text(ref.name), 
-      leading: IconButton(
-        onPressed: () => Navigator.of(context).pop(), 
-        icon: const Icon(Icons.arrow_back),
-      ),
-      actions: [
-        IconButton(
-          onPressed: () => Navigator.of(context)
-            .popUntil((route) => route.isFirst), 
-          icon: const Icon(Icons.home),
+      leading: InkResponse(
+        onTap: () => Navigator.pop(context),
+        onDoubleTap: () => Navigator.popUntil(context, (route) => route.isFirst),
+        onTapCancel: () => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Tap the button twice to return to the home screen"))
         ),
-      ],
+        child: const Icon(Icons.arrow_back),
+      ),
     ),
     body: DndPageBuilder.request(ref),
   );
