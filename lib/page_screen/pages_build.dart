@@ -1,3 +1,5 @@
+import 'package:dnd_handy_flutter/pages/articles/multiclassing_subpage.dart';
+import 'package:dnd_handy_flutter/pages/character/background_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
@@ -82,6 +84,12 @@ abstract class DndPageBuilder extends StatelessWidget {
   factory DndPageBuilder.request(DndRef ref) {
     if (ref.url == "api") { throw "Main page requested"; }
     final request = getApiRequest(ref.url);
+
+    // TODO: Remove this debugging hack
+    if (ref.index == "multi-classing") {
+      return MulticlassingArticlePage(request: request);
+    }
+
     final category = getCategoryName(ref.url);
     switch (category) {
       case "api":
@@ -89,6 +97,8 @@ abstract class DndPageBuilder extends StatelessWidget {
           return AlignmentsPageBuilder(request: request);
         }
         return RefListPageBuilder(request: request);
+      case "backgrounds":
+        return CharBackgroundPageBuilder(request: request);
       case "equipment categories":
         return EquipmentListPageBuilder(request: request);
       default:
