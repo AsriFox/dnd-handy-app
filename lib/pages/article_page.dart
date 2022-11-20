@@ -14,7 +14,6 @@ import 'articles/subrace_subpage.dart';
 import 'articles/language_subpage.dart';
 import 'articles/subclass_subpage.dart';
 import 'articles/equipment_subpage.dart';
-import 'articles/background_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
@@ -31,8 +30,6 @@ class ArticlePage extends DndPageBuilder {
     switch (category) {
       case "ability scores":
         return AbilityArticlePage(request: request);
-      case "backgrounds":
-        return BackgroundArticlePage(request: request);
       case "equipment":
         return EquipmentArticlePage(request: request);
       case "feats":
