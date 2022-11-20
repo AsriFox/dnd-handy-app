@@ -45,6 +45,16 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(Icons.menu),
           ),
+          trailing: PopupMenuButton(
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                child: Text("Test menu item 1"),
+              ),
+              const PopupMenuItem(
+                child: Text("Test menu item 2"),
+              ),
+            ]
+          ),
         ),
         bottomNavigationBar: const TabBar(tabs: [
           Tab(icon: Icon(Icons.book)),

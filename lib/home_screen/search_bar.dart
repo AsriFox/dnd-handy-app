@@ -8,44 +8,21 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.leading,
+    this.trailing,
   });
 
   final String title;
-  final IconButton? leading;
+  final Widget? leading;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
       leading: leading,
-      actions: [
-        IconButton(
-          onPressed: () {
-            showSearch(
-              context: context, 
-              delegate: CustomSearchDelegate(),
-            ).then((query) async => 
-              query is String
-                ? DndRef(
-                  index: query.split('/').last,
-                  name: getTitle(query),
-                  url: query,
-                )
-                : query as DndRef
-            ).then(
-              (ref) => gotoPage(context, ref)
-            ).catchError((e) {
-              ScaffoldMessenger.of(context)
-                .showSnackBar(
-                  SnackBar(
-                    content: Text("Nothing found at '$e'")
-                  )
-                );
-            });
-          },
-          icon: const Icon(Icons.search),
-        ),
-      ],
+      actions: trailing != null
+        ? [ buildSearchButton(context), trailing! ]
+        : [ buildSearchButton(context) ],
     );
   }
   
@@ -53,3 +30,38 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => 
     const Size.fromHeight(kToolbarHeight);
 }
+
+IconButton buildSearchButton(BuildContext context) => 
+  IconButton(
+    onPressed: () {
+      showSearch(
+        context: context, 
+        delegate: CustomSearchDelegate(),
+      ).then((query) async {
+        if (query == null) { 
+          throw "nullQuery";
+        }
+        return query is String
+          ? DndRef(
+            index: query.split('/').last,
+            name: getTitle(query),
+            url: query,
+          )
+          : query is DndRef
+            ? query
+            : throw query;
+      }).then(
+        (ref) => gotoPage(context, ref)
+      ).catchError((e) {
+        if (e != "nullQuery") {
+          ScaffoldMessenger.of(context)
+            .showSnackBar(
+              SnackBar(
+                content: Text("Nothing found at '$e'")
+              )
+            );
+        }
+      });
+    },
+    icon: const Icon(Icons.search),
+  );
