@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/home_screen/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dnd_handy_flutter/home_screen/search_bar.dart';
@@ -35,15 +36,27 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SearchAppBar(
-        title: 'Handy DnD database', 
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: SearchAppBar(
+          title: 'Handy DnD database', 
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.menu),
+          ),
         ),
-      ),
-      body: const HomePage(),
+        bottomNavigationBar: const TabBar(tabs: [
+          Tab(icon: Icon(Icons.book)),
+          Tab(icon: Icon(Icons.account_circle)),
+          Tab(icon: Icon(Icons.settings)),
+        ]),
+        body: const TabBarView(children: [
+          HomePage(),
+          Center(child: Text("Characters")),
+          SettingsPage(),
+        ]),
+      )
     );
   }
 }
