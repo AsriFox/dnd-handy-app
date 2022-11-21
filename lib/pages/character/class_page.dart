@@ -1,4 +1,5 @@
 import 'package:dnd_handy_flutter/api_service.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/character/multiclassing_subpage.dart';
@@ -13,7 +14,7 @@ class CharClassPageBuilder extends DndPageBuilder {
   });
 
   @override
-  Widget buildPage(Map<String, dynamic> json) =>
+  Widget buildPage(JsonObject json) =>
     CharClassPage.fromJson(json);
 }
 
@@ -34,18 +35,18 @@ class CharClassPage extends StatelessWidget {
 
   final Future<dynamic> classLevels;
   final Future<dynamic>? classSpells;
-  final Map<String, dynamic>? spellcasting;
+  final JsonObject? spellcasting;
   final List<DndRef> savingThrows;
   final List<DndRef> subclasses;
   final MulticlassingArticlePage multiclassing;
   final List<DndRef> proficiencies;
-  final List<dynamic>? proficiencyChoices;
+  final JsonArray? proficiencyChoices;
   final Map<DndRef, int>? equipment;
-  final List<dynamic>? equipmentOptions;
+  final JsonArray? equipmentOptions;
 
-  factory CharClassPage.fromJson(Map<String, dynamic> json) {
+  factory CharClassPage.fromJson(JsonObject json) {
     // TODO: Deal with the choice variants
-    List<dynamic>? equipmentOptions;
+    JsonArray? equipmentOptions;
     if (json.containsKey('starting_equipment_options')) {
       equipmentOptions = json['starting_equipment_options'];
     }
@@ -55,7 +56,7 @@ class CharClassPage extends StatelessWidget {
       classSpells = getApiRequest(json['spells']);
     }
 
-    Map<String, dynamic>? spellcasting;
+    JsonObject? spellcasting;
     if (json.containsKey('spellcasting')) {
       spellcasting = json['spellcasting'];
     }
@@ -64,16 +65,23 @@ class CharClassPage extends StatelessWidget {
       classLevels: getApiRequest(json['class_levels']),
       classSpells: classSpells,
       spellcasting: spellcasting,
-      savingThrows: (json['saving_throws'] as List<dynamic>)
-        .map((it) => DndRef.fromJson(it)).toList(),
-      subclasses: (json['subclasses'] as List<dynamic>)
-        .map((it) => DndRef.fromJson(it)).toList(),
+      savingThrows: [
+        for (var it in json['saving_throws'])
+          DndRef.fromJson(it)
+      ],
+      subclasses: [
+        for (var it in json['subclasses'])
+          DndRef.fromJson(it)
+      ],
       multiclassing: MulticlassingArticlePage.fromJson(json['multi_classing']),
-      proficiencies: (json['proficiencies'] as List<dynamic>)
-        .map((it) => DndRef.fromJson(it)).toList(),
+      proficiencies: [
+        for (JsonObject it in json['proficiencies'])
+          if (!it['index'].startsWith('saving-throw'))
+            DndRef.fromJson(it)
+      ],
       proficiencyChoices: json['proficiency_choices'],
       equipment: { 
-        for (var it in (json['starting_equipment'] as List<dynamic>)) 
+        for (var it in json['starting_equipment']) 
           DndRef.fromJson(it['equipment']) : it['quantity'] as int 
       },
       equipmentOptions: equipmentOptions,
@@ -82,56 +90,26 @@ class CharClassPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bonusPageContents = [
-      annotatedLine(annotation: "Starting equipment:"),
-    ];
-    if (equipment?.isNotEmpty ?? false) {
-      bonusPageContents += equipment!.entries.map(
-          (it) => ListTileRef(
-            ref: it.key,
-            trailing: Text(
-              it.value.toString(),
-              style: const TextStyle(fontSize: 16.0),
-            ),
-          )
-        ).toList();
-    }
-    if (equipmentOptions != null) {
-      for (Map<String, dynamic> option in equipmentOptions!) {
-        bonusPageContents.add(
-          Padding(padding: pad, child: Text(
-            "Choose ${option['choose'].toString()} equipment item(s) from:"
-          ))
-        );
-        final optionSetType = option['from']['option_set_type'] as String;
-        switch (optionSetType) {
-          case 'equipment_category':
-            bonusPageContents.add(Padding(padding: pad, 
-              child: TextButtonRef.fromJson(option['from'][optionSetType]),
-            ));
-            break;
-        }
-      }
-    }
-
     var featuresPageContents = <Widget>[
       annotatedLine(
         annotation: "Saving throws: ",
-        contents: savingThrows.map(
-          (it) => TextButtonRef(ref: it)
-        ).toList(),
+        contents: [
+          for (var it in savingThrows)
+            TextButtonRef(ref: it)
+        ],
       ),
       annotatedLine(annotation: "Subclasses:"),
-    ] + subclasses.map(
-      (it) => ListTileRef(ref: it)
-    ).toList();
+      for (var it in subclasses)
+        ListTileRef(ref: it)
+    ];
 
     if (proficiencies.isNotEmpty) {
       featuresPageContents.add(annotatedLine(
         annotation: "Granted proficiencies: ",
-        contents: proficiencies.map(
-          (it) => TextButtonRef(ref: it)
-        ).toList(),
+        contents: [
+          for (var it in proficiencies)
+            TextButtonRef(ref: it)
+        ],
       ));
     } else {
       featuresPageContents.add(annotatedLine(
@@ -140,41 +118,47 @@ class CharClassPage extends StatelessWidget {
       ));
     }
         
-    if (proficiencyChoices != null) {
-      featuresPageContents.add(annotatedLine(annotation: "Additional proficiencies:"));
-      featuresPageContents+= proficiencyChoices!.map(
-          (choice) => annotatedLine(
-            annotation: "Choose ${choice['choose'].toString()} ${choice['desc']}: ",
-            contents: (choice['from']['options'] as List<dynamic>).map(
-                (it) => TextButtonRef.fromJson(it['item'])
-              ).toList(),
-          )
-        ).toList();
-    }
+    // if (proficiencyChoices != null) {
+    //   featuresPageContents += [
+    //     annotatedLine(annotation: "Additional proficiencies:"),
+
+    //     for (var choice in proficiencyChoices!)
+    //       annotatedLine(
+    //         annotation: "Choose ${choice['choose'].toString()} from: ",
+    //         contents: [
+    //           for (var it in choice['from']['options'])
+    //             TextButtonRef.fromJson(it['item'])
+    //         ],
+    //       )
+    //   ];
+    // }
 
     featuresPageContents.add(annotatedLine(annotation: "Starting equipment:"));
     if (equipment?.isNotEmpty ?? false) {
-      bonusPageContents += equipment!.entries.map(
-          (it) => ListTileRef(
-            ref: it.key,
+      equipment!.forEach(
+        (key, value) => featuresPageContents.add(
+          ListTileRef(
+            ref: key,
             trailing: Text(
-              it.value.toString(),
+              value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
           )
-        ).toList();
+        )
+      );
     }
     if (equipmentOptions != null) {
-      for (Map<String, dynamic> option in equipmentOptions!) {
-        bonusPageContents.add(
+      for (JsonObject option in equipmentOptions!) {
+        featuresPageContents.add(
           Padding(padding: pad, child: Text(
             "Choose ${option['choose'].toString()} equipment item(s) from:"
           ))
         );
+        // TODO: Understand option types
         final optionSetType = option['from']['option_set_type'] as String;
         switch (optionSetType) {
           case 'equipment_category':
-            bonusPageContents.add(Padding(padding: pad, 
+            featuresPageContents.add(Padding(padding: pad, 
               child: TextButtonRef.fromJson(option['from'][optionSetType]),
             ));
             break;
@@ -206,15 +190,14 @@ class CharClassPage extends StatelessWidget {
             annotation: "Spellcasting ability: ",
             content: TextButtonRef.fromJson(spellcasting!['spellcasting_ability']), 
           ),
-        ] + (spellcasting!['info'] as List<dynamic>).map(
-          (p) => Padding(padding: pad,
-            child: MarkdownBody(
-              data: "## ${p['name']}\n\n${(p['desc'] as List<dynamic>).map((s) => s as String).join("\n\n")}"
-            ),
-          )
-        ).toList(),
+          for (var p in spellcasting!['info'])
+            Padding(padding: pad,
+              child: MarkdownBody(
+                data: "## ${p['name']}\n\n${p['desc'].join("\n\n")}"
+              ),
+            )
+        ],
       ));
-
       tabPages.add(RefListPageBuilder(request: classSpells!));
     }
 

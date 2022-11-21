@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class ProficiencyArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Type: ",
@@ -20,21 +21,25 @@ class ProficiencyArticlePage extends ArticlePage {
         content: TextButtonRef.fromJson(json['reference']),
       ),
     ];
-    final races = json['races'] as List<dynamic>;
-    if (races.isNotEmpty) {
-      children += buildEmbeddedRefList("Races: ", races);
+    if (json['races'].isNotEmpty) {
+      children += buildEmbeddedRefList(
+        "Races: ", 
+        json['races']
+      );
     }
-    final classes = json['classes'] as List<dynamic>;
-    if (classes.isNotEmpty) {
-      children += buildEmbeddedRefList("Classes: ", classes);
+    if (json['classes'].isNotEmpty) {
+      children += buildEmbeddedRefList(
+        "Classes: ", 
+        json['classes']
+      );
     }
     return children;
   }
 }
 
-List<Widget> buildEmbeddedRefList(String title, List<dynamic> items) => 
+List<Widget> buildEmbeddedRefList(String title, JsonArray items) => 
   <Widget>[
     annotatedLine(annotation: title),
-  ] + items.map(
-      (it) => ListTileRef.fromJson(it)
-    ).toList();
+    for (var it in items)
+      ListTileRef.fromJson(it)
+  ];

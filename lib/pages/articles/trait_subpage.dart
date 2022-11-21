@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -9,31 +10,30 @@ class TraitArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[];
 
-    final races = json['races'] as List<dynamic>;
-    if (races.isNotEmpty) {
+    if (json['races'].isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Races: ",
-        contents: races.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['races'])
+            TextButtonRef.fromJson(it)
+        ],
       ));
     }
 
-    final subraces = json['subraces'] as List<dynamic>;
-    if (subraces.isNotEmpty) {
+    if (json['subraces'].isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Subraces: ",
-        contents: subraces.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['subraces'])
+            TextButtonRef.fromJson(it)
+        ],
       ));
     }
     
     if (json.containsKey('language_options')) {
-      final languageOptions = json['language_options']['from']['options'] as List<dynamic>;
       children += <Widget>[
         annotatedLine(
           annotation: "Language choices: ",
@@ -41,20 +41,21 @@ class TraitArticlePage extends ArticlePage {
         ),
         annotatedLine(
           annotation: "",
-          contents: languageOptions.map(
-              (it) => TextButtonRef.fromJson(it['item'])
-            ).toList(),
+          contents: [
+            for (var it in json['language_options']['from']['options'])
+              TextButtonRef.fromJson(it)
+          ],
         ),
       ];
     }
 
-    final proficiencies = json['proficiencies'] as List<dynamic>;
-    if (proficiencies.isNotEmpty) {
+    if (json['proficiencies'].isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Granted proficiencies: ",
-        contents: proficiencies.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['proficiencies'])
+            TextButtonRef.fromJson(it)
+        ],
       ));
     }
 
@@ -66,12 +67,12 @@ class TraitArticlePage extends ArticlePage {
     }
 
     if (json.containsKey('trait_specific')) {
-      final traitSpec = json['trait_specific'] as Map<String, dynamic>;
+      final traitSpec = json['trait_specific'] as JsonObject;
       if (traitSpec.containsKey('breath_weapon')) {
-        final breathWeapon = traitSpec['breath_weapon'] as Map<String, dynamic>;
+        final breathWeapon = traitSpec['breath_weapon'] as JsonObject;
 
         var leveledDamage = <Widget>[];
-        (breathWeapon['damage'][0]['damage_at_character_level'] as Map<String, dynamic>)
+        (breathWeapon['damage'][0]['damage_at_character_level'] as JsonObject)
           .forEach((key, value) => leveledDamage.add(
             Text(" $value at level $key;"),
           ));
@@ -124,12 +125,12 @@ class TraitArticlePage extends ArticlePage {
 
 List<Widget> buildAnnotatedOptionsList({
   required String annotation, 
-  required Map<String, dynamic> json,
-}) => <Widget>[
-    annotatedLine(
-      annotation: "Variants: ",
-      content: Text("choose ${json['choose'].toString()} from:"),
-    ),
-  ] + (json['from']['options'] as List<dynamic>).map(
-      (it) => ListTileRef.fromJson(it['item'], dense: true)
-    ).toList();
+  required JsonObject json,
+}) => [
+  annotatedLine(
+    annotation: "Variants: ",
+    content: Text("choose ${json['choose'].toString()} from:"),
+  ),
+  for (var it in json['from']['options'])
+    ListTileRef.fromJson(it['item'], dense: true)
+];

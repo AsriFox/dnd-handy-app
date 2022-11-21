@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +13,14 @@ class RefListPage extends StatelessWidget {
   final VisualDensity visualDensity;
 
   factory RefListPage.fromJsonArray(
-    List<dynamic> array, {
+    JsonArray array, {
     visualDensity = VisualDensity.comfortable,
   }) =>
     RefListPage(
-      results: array.map(
-          (it) => DndRef.fromJson(it),
-        ).toList(growable: false),
+      results: [
+        for (var it in array)
+          DndRef.fromJson(it)
+      ],
       visualDensity: visualDensity,
     );
 

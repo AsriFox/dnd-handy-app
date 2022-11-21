@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class DndRef {
   final String name;
   final String url;
 
-  factory DndRef.fromJson(Map<String, dynamic> json) =>
+  factory DndRef.fromJson(JsonObject json) =>
     DndRef(
       index: json['index'] as String,
       name: json['name'] as String,
@@ -45,7 +46,7 @@ class ListTileRef extends StatelessWidget {
   final bool dense;
 
   factory ListTileRef.fromJson(
-    Map<String, dynamic> json, {
+    JsonObject json, {
     Function(BuildContext, DndRef) onTap = gotoPage,
     VisualDensity? visualDensity,
     Widget? trailing,
@@ -82,7 +83,7 @@ class TextButtonRef extends StatelessWidget {
   final void Function(BuildContext, DndRef) onPressed;
 
   factory TextButtonRef.fromJson(
-    Map<String, dynamic> json, {
+    JsonObject json, {
     Function(BuildContext, DndRef) onPressed = gotoPage,
   }) => 
     TextButtonRef(

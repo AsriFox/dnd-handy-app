@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
@@ -11,7 +12,7 @@ class CharBackgroundPageBuilder extends DndPageBuilder {
   });
 
   @override
-  Widget buildPage(Map<String, dynamic> json) =>
+  Widget buildPage(JsonObject json) =>
     CharBackgroundPage.fromJson(json);
 }
 
@@ -35,39 +36,41 @@ class CharBackgroundPage extends StatelessWidget {
   final String featureDesc;
   final List<DndRef> proficiencies;
   final Map<DndRef, int> equipment;
-  final List<dynamic>? equipmentOptions;
+  final JsonArray? equipmentOptions;
   final List<DndRef>? languages;
-  final Map<String, dynamic>? languageOptions;
-  final Map<String, dynamic> personalityTraits;
-  final Map<String, dynamic> ideals;
-  final Map<String, dynamic> bonds;
-  final Map<String, dynamic> flaws;
+  final JsonObject? languageOptions;
+  final JsonObject personalityTraits;
+  final JsonObject ideals;
+  final JsonObject bonds;
+  final JsonObject flaws;
 
-  factory CharBackgroundPage.fromJson(Map<String, dynamic> json) {
+  factory CharBackgroundPage.fromJson(JsonObject json) {
     // TODO: Deal with the choice variants
-    List<dynamic>? equipmentOptions;
+    JsonArray? equipmentOptions;
     if (json.containsKey('starting_equipment_options')) {
       equipmentOptions = json['starting_equipment_options'];
     }
     List<DndRef>? languages;
     if (json.containsKey('languages')) {
-      languages = (json['languages'] as List<dynamic>).map(
-        (it) => DndRef.fromJson(it)
-      ).toList();
+      languages = [
+        for (var it in json['languages'])
+          DndRef.fromJson(it)
+      ];
     }
-    Map<String, dynamic>? languageOptions;
+    JsonObject? languageOptions;
     if (json.containsKey('language_options')) {
       languageOptions = json['language_options'];
     }
 
     return CharBackgroundPage(
       featureName: json['feature']['name'],
-      featureDesc: (json['feature']['desc'] as List<dynamic>)
-        .map((p) => p as String).join("\n\n"),
-      proficiencies: (json['starting_proficiencies'] as List<dynamic>)
-        .map((it) => DndRef.fromJson(it)).toList(),
+      featureDesc: json['feature']['desc'].join("\n\n"),
+      proficiencies: [
+        for (var it in json['starting_proficiencies'])
+          DndRef.fromJson(it)
+      ],
       equipment: { 
-        for (var it in (json['starting_equipment'] as List<dynamic>)) 
+        for (JsonObject it in json['starting_equipment']) 
           DndRef.fromJson(it['equipment']) : it['quantity'] as int 
       },
       equipmentOptions: equipmentOptions,
@@ -86,18 +89,20 @@ class CharBackgroundPage extends StatelessWidget {
       annotatedLine(annotation: "Starting equipment:"),
     ];
     if (equipment.isNotEmpty) {
-      bonusPageContents += equipment.entries.map(
-          (it) => ListTileRef(
-            ref: it.key,
+      equipment.forEach(
+        (key, value) => bonusPageContents.add(
+          ListTileRef(
+            ref: key,
             trailing: Text(
-              it.value.toString(),
+              value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
           )
-        ).toList();
+        )
+      );
     }
     if (equipmentOptions != null) {
-      for (Map<String, dynamic> option in equipmentOptions!) {
+      for (JsonObject option in equipmentOptions!) {
         bonusPageContents.add(
           Padding(padding: pad, child: Text(
             "Choose ${option['choose'].toString()} equipment item(s) from:"
@@ -117,14 +122,15 @@ class CharBackgroundPage extends StatelessWidget {
     if (languages != null) {
       bonusPageContents.add(annotatedLine(
         annotation: "Additional languages: ",
-        contents: languages!.map(
-          (it) => TextButtonRef(ref: it)
-        ).toList()
+        contents: [
+          for (var it in languages!)
+            TextButtonRef(ref: it)
+        ],
       ));
     }
     // TODO: Understand option types
     // if (json.containsKey('language_options')) {
-    //   final languageOptions = json['language_options']['from']['options'] as List<dynamic>;
+    //   final languageOptions = json['language_options']['from']['options'] as JsonArray;
     //   children += <Widget>[
     //     Padding(
     //       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
@@ -165,30 +171,31 @@ class CharBackgroundPage extends StatelessWidget {
           buildTabPage(contents: bonusPageContents),
           buildTabPage(
             title: "Personality traits",
-            contents: buildOptionsList(personalityTraits, title: "",
+            contents: buildOptionsList(personalityTraits,
               builder: (s) => buildOptionListTile(s['string'] as String)
             ),
           ),
           buildTabPage(
             title: "Ideals",
-            contents: buildOptionsList(ideals, title: "",
+            contents: buildOptionsList(ideals,
               builder: (it) => IdealListTile(
                   desc: it['desc'],
-                  options: (it['alignments'] as List<dynamic>).map(
-                      (a) => DndRef.fromJson(a)
-                    ).toList(), 
+                  options: [
+                    for (var a in it['alignments'])
+                      DndRef.fromJson(a)
+                  ],
                 ),
             ),
           ),
           buildTabPage(
             title: "Bonds",
-            contents: buildOptionsList(bonds, title: "",
+            contents: buildOptionsList(bonds,
               builder: (s) => buildOptionListTile(s['string'] as String)
             ),
           ),
           buildTabPage(
             title: "Flaws",
-            contents: buildOptionsList(flaws, title: "",
+            contents: buildOptionsList(flaws,
               builder: (s) => buildOptionListTile(s['string'] as String)
             ),
           ),
@@ -225,27 +232,31 @@ Widget buildTabPage({
 }
 
 List<Widget> buildOptionsList(
-  Map<String, dynamic> json, {
-  required String title,
+  JsonObject json, {
+  String title = "",
   required Widget Function(dynamic) builder,
-}) =>
-  <Widget>[
-    annotatedLine(
-      annotation: title,
-      content: Text("Choose ${json['choose'].toString()} from:"),
-    )
-  ] + (json['from']['options'] as List<dynamic>).map(builder).toList();
+}) => <Widget>[
+  annotatedLine(
+    annotation: title,
+    content: Text("Choose ${json['choose'].toString()} from:"),
+  ),
+  for (var it in json['from']['options'])
+    builder(it)
+];
 
-ListTile buildOptionListTile(String title, {Widget? trailing, Function()? onTap}) =>
-  ListTile(
-    dense: true, 
-    visualDensity: ListDensity.veryDense.d, 
-    leading: const Icon(Icons.add, size: 16.0),
-    minLeadingWidth: 0.0,
-    title: Text(title),
-    trailing: trailing,
-    onTap: onTap,
-  );
+ListTile buildOptionListTile(
+  String title, {
+  Widget? trailing, 
+  Function()? onTap
+}) => ListTile(
+  dense: true, 
+  visualDensity: ListDensity.veryDense.d, 
+  leading: const Icon(Icons.add, size: 16.0),
+  minLeadingWidth: 0.0,
+  title: Text(title),
+  trailing: trailing,
+  onTap: onTap,
+);
 
 class IdealListTile extends StatelessWidget {
   const IdealListTile({
@@ -265,13 +276,14 @@ class IdealListTile extends StatelessWidget {
         context: context, 
         builder: (ctx) => SimpleDialog(
           title: const Text("Alignments"),
-          children: options!.map(
-            (it) => ListTileRef(
-              ref: it,
-              dense: true,
-              visualDensity: ListDensity.veryDense.d,
-            )
-          ).toList(),
+          children: [
+            for (var it in options!) 
+              ListTileRef(
+                ref: it,
+                dense: true,
+                visualDensity: ListDensity.veryDense.d,
+              )
+          ]
         )
       ),
     );

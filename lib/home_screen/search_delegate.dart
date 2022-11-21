@@ -41,12 +41,12 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 
-  List<DndRef> buildMatchQuery() =>
-    searchTerms.where(
-      (cat) => cat.url.toLowerCase()
-          .contains(query.toLowerCase())
-    ).toList();
-
+  List<DndRef> buildMatchQuery() => [
+    for (DndRef cat in searchTerms)
+      if (cat.url.toLowerCase().contains(query.toLowerCase()))
+        cat
+  ];
+  
   @override
   Widget buildResults(BuildContext context) {
     final matchQuery = buildMatchQuery();

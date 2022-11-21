@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -9,26 +10,26 @@ class SpellArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[];
 
-    final classes = json['classes'] as List<dynamic>;
-    if (classes.isNotEmpty) {
+    if (json['classes'].isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Classes: ",
-        contents: classes.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['classes'])
+            TextButtonRef.fromJson(it)
+        ]
       ));
     }
 
-    final subclasses = json['subclasses'] as List<dynamic>;
-    if (subclasses.isNotEmpty) {
+    if (json['subclasses'].isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Classes: ",
-        contents: subclasses.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['subclasses'])
+            TextButtonRef.fromJson(it)
+        ],
       ));
     }
 
@@ -43,10 +44,10 @@ class SpellArticlePage extends ArticlePage {
       )
     );
     if (json.containsKey('higher_level')) {
-      final leveledDesc = json['higher_level'] as List<dynamic>;
-      children += leveledDesc.map(
-          (s) => Padding(padding: pad, child: Text(s))
-        ).toList();
+      children += [
+        for (var s in json['higher_level'])
+          Padding(padding: pad, child: Text(s))
+      ];
     }
 
     children += <Widget>[
@@ -56,9 +57,10 @@ class SpellArticlePage extends ArticlePage {
       ),
       annotatedLine(
         annotation: "Components: ",
-        contents: (json['components'] as List<dynamic>).map(
-          (s) => Text(s.toString())
-        ).toList(),
+        contents: [
+          for (var s in json['components'])
+            Text("$s")
+        ]
       ),
     ];
 
@@ -111,12 +113,12 @@ class SpellArticlePage extends ArticlePage {
     if (json.containsKey('damage')) {
       var leveledDamage = <Widget>[];
       if (json['damage'].containsKey('damage_at_slot_level')) {
-        (json['damage']['damage_at_slot_level'] as Map<String, dynamic>)
+        (json['damage']['damage_at_slot_level'] as JsonObject)
           .forEach((key, value) => leveledDamage.add(
             Text(" $value in slot level $key;"),
           ));
       } else if (json['damage'].containsKey('damage_at_character_level')) {
-        (json['damage']['damage_at_character_level'] as Map<String, dynamic>)
+        (json['damage']['damage_at_character_level'] as JsonObject)
           .forEach((key, value) => leveledDamage.add(
             Text(" $value at character level $key;"),
           ));

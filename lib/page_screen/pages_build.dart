@@ -1,11 +1,12 @@
-import 'package:dnd_handy_flutter/pages/character/background_page.dart';
-import 'package:dnd_handy_flutter/pages/character/class_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/alignments_page.dart';
+import 'package:dnd_handy_flutter/pages/character/class_page.dart';
+import 'package:dnd_handy_flutter/pages/character/background_page.dart';
 import 'desc_popup.dart';
 import 'page_screen.dart';
 
@@ -108,10 +109,10 @@ abstract class DndPageBuilder extends StatelessWidget {
       future: request,
       builder: (ctx, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is Map<String, dynamic>) {
+          if (snapshot.data is JsonObject) {
             return buildPage(snapshot.data);
           }
-          if (snapshot.data is List<dynamic>) {
+          if (snapshot.data is JsonArray) {
             return RefListPage.fromJsonArray(snapshot.data);
           }
           return Center(
@@ -129,7 +130,7 @@ abstract class DndPageBuilder extends StatelessWidget {
     );
   }
 
-  Widget buildPage(Map<String, dynamic> json);
+  Widget buildPage(JsonObject json);
 }
 
 class RefListPageBuilder extends DndPageBuilder {
@@ -139,7 +140,7 @@ class RefListPageBuilder extends DndPageBuilder {
   });
 
   @override
-  Widget buildPage(Map<String, dynamic> json) =>
+  Widget buildPage(JsonObject json) =>
     RefListPage.fromJsonArray(json['results']);
 }
 
@@ -150,6 +151,6 @@ class EquipmentListPageBuilder extends DndPageBuilder {
   });
 
   @override
-  Widget buildPage(Map<String, dynamic> json) =>
+  Widget buildPage(JsonObject json) =>
     RefListPage.fromJsonArray(json['equipment']);
 }

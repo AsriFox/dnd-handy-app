@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class EquipmentArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Category: ",
@@ -44,7 +45,7 @@ class EquipmentArticlePage extends ArticlePage {
   }
 }
 
-List<Widget> weaponEquipmentArticleSubpage(Map<String, dynamic> json) { 
+List<Widget> weaponEquipmentArticleSubpage(JsonObject json) { 
   var children = <Widget>[
     annotatedLine(
       annotation: json['category_range'] + " Weapon"
@@ -80,21 +81,21 @@ List<Widget> weaponEquipmentArticleSubpage(Map<String, dynamic> json) {
     );
   }
   if (json.containsKey('properties')) {
-    final properties = json['properties'] as List<dynamic>;
     children.add(
       annotatedLine(
         annotation: "Properties: ",
         padding: padButt,
-        contents: properties.map(
-          (it) => TextButtonRef.fromJson(it)
-        ).toList(),
+        contents: [
+          for (var it in json['properties'])
+            TextButtonRef.fromJson(it)
+        ],
       )
     );
   }
   return children;
 }
 
-List<Widget> armorEquipmentArticleSubpage(Map<String, dynamic> json) { 
+List<Widget> armorEquipmentArticleSubpage(JsonObject json) { 
   var children = <Widget>[
     annotatedLine(
       annotation: json['armor_category'] + " Armor",
@@ -112,7 +113,7 @@ List<Widget> armorEquipmentArticleSubpage(Map<String, dynamic> json) {
   return children;
 }
 
-List<Widget> gearEquipmentArticleSubpage(Map<String, dynamic> json) { 
+List<Widget> gearEquipmentArticleSubpage(JsonObject json) { 
   var children = <Widget>[
     Padding(
       padding: pad,
@@ -120,18 +121,19 @@ List<Widget> gearEquipmentArticleSubpage(Map<String, dynamic> json) {
     )
   ];
   if (json.containsKey('contents')) {
-    final contents = json['contents'] as List<dynamic>;
-    children.add(const Padding(padding: pad,
-      child: Text("Contents:", style: bold),
-    ));
-    children += contents.map((it) => 
-      ListTileRef.fromJson(it['item'],
-        trailing: Text(
-          it['quantity'].toString(),
-          style: const TextStyle(fontSize: 16.0),
-        ),
+    children += [
+      const Padding(padding: pad,
+        child: Text("Contents:", style: bold),
       ),
-    ).toList();
+      for (var it in json['contents'])
+        ListTileRef.fromJson(
+          it['item'],
+          trailing: Text(
+            it['quantity'].toString(),
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        )
+    ];
   }
   return children;
 }

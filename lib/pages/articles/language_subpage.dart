@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ class LanguageArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) => 
+  List<Widget>? buildChildren(JsonObject json) => 
     <Widget>[
       richTextBlock("Type: ", json['type']),
 
@@ -18,8 +19,7 @@ class LanguageArticlePage extends ArticlePage {
         
       richTextBlock(
         "Typical speakers: ", 
-        (json['typical_speakers'] as List<dynamic>)
-          .map((t) => t as String).join(", "),
+        json['typical_speakers'].join(", ")
       ),
     ];
 }

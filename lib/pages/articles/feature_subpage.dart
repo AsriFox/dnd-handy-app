@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class FeatureArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Level: ",
@@ -27,17 +28,17 @@ class FeatureArticlePage extends ArticlePage {
       ));
     }
 
-    final prerequisites = json['prerequisites'] as List<dynamic>;
-    if (prerequisites.isNotEmpty) {
-      children.add(annotatedLine(annotation: "Prerequisites:"));
-      children += prerequisites.map(
-          (it) => ListTileRef.fromJson(it['skill'],
+    if (json['prerequisites'].isNotEmpty) {
+      children += [
+        annotatedLine(annotation: "Prerequisites:"),
+        for (var it in json['prerequisites'])
+          ListTileRef.fromJson(it['skill'],
             trailing: Text(
               it['minimum_score'].toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
           )
-        ).toList();
+      ];
     }
     
     return children;

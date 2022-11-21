@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
@@ -10,7 +11,7 @@ class SkillArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) => [
+  List<Widget>? buildChildren(JsonObject json) => [
     annotatedLine(
       annotation: "Governing ability: ",
       content: TextButtonRef(

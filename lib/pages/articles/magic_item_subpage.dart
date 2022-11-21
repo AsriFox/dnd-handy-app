@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class MagicItemArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget>? buildChildren(JsonObject json) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Category: ",
@@ -31,12 +32,12 @@ class MagicItemArticlePage extends ArticlePage {
       ));
     }
 
-    final variants = json['variants'] as List<dynamic>;
-    if (variants.isNotEmpty) {
-      children.add(annotatedLine(annotation: "Variants:"));
-      children += variants.map(
-        (it) => ListTileRef.fromJson(it),
-      ).toList();
+    if (json['variants'].isNotEmpty) {
+      children += [
+        annotatedLine(annotation: "Variants:"),
+        for (var it in json['variants'])
+          ListTileRef.fromJson(it),
+      ];
     }
 
     return children;

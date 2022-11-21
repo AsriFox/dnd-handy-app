@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/feat_subpage.dart';
@@ -63,19 +64,21 @@ class ArticlePage extends DndPageBuilder {
     }
   }
 
-  List<Widget>? buildChildren(Map<String, dynamic> json) => null;
+  List<Widget>? buildChildren(JsonObject json) => null;
 
   @override
-  Widget buildPage(Map<String, dynamic> json) {
+  Widget buildPage(JsonObject json) {
     var desc = "";
     if (json.containsKey('desc')) {
       if (json['desc'] is String) {
         desc = json['desc'];
-      } else if (json['desc'] is Iterable<dynamic>) {
+      } else if (json['desc'] is JsonArray) {
         for (var s in json['desc']) {
           if ((s as String).contains('|')) {
+            // Build tables:
             desc += "\n$s";
           } else {
+            // Build paragraphs:
             desc += "$s\n\n";
           }
         }

@@ -1,4 +1,5 @@
 import 'package:dnd_handy_flutter/api_service.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
@@ -11,9 +12,9 @@ class AlignmentsPageBuilder extends DndPageBuilder {
   });
 
   @override
-  Widget buildPage(Map<String, dynamic> json) {
+  Widget buildPage(JsonObject json) {
     var descPages = <String, AlignmentTile>{};
-    for (var item in json['results'] as List<dynamic>) {
+    for (var item in json['results']) {
       final ref = DndRef.fromJson(item);
       final abbr = ref.name.split(" ").map((w) => w[0]).join();
       descPages.putIfAbsent(

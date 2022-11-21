@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,10 @@ class AbilityArticlePage extends ArticlePage {
   });
 
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) => 
+  List<Widget>? buildChildren(JsonObject json) => 
     <Widget>[
       annotatedLine(annotation: "Associated skills:"),
-    ] + (json['skills'] as List<dynamic>)
-      .map(
-        (it) => ListTileRef.fromJson(it)
-      ).toList();
+      for (var it in json['skills'])
+        ListTileRef.fromJson(it)
+    ];
 }

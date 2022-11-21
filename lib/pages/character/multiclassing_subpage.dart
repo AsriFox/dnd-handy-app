@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -13,25 +14,25 @@ class MulticlassingArticlePage {
   final Map<DndRef, int>? prerequisites;
   final Map<DndRef, int>? prerequisiteOptions;
   final List<DndRef> proficiencies;
-  final List<dynamic>? proficiencyChoices;
+  final JsonArray? proficiencyChoices;
 
   @override
-  factory MulticlassingArticlePage.fromJson(Map<String, dynamic> json) {
+  factory MulticlassingArticlePage.fromJson(JsonObject json) {
     Map<DndRef, int>? prerequisites, prerequisiteOptions;
     if (json.containsKey('prerequisites')) {
       prerequisites = {
-        for (Map<String, dynamic> it in (json['prerequisites'] as List<dynamic>))
+        for (JsonObject it in json['prerequisites'])
           DndRef.fromJson(it['ability_score']) : it['minimum_score'] as int          
       };
     } else if (json.containsKey('prerequisite_options')) {
       // TODO: Check different homebrew classes for needing multiple proficiency choices
       prerequisiteOptions = {
-        for (Map<String, dynamic> it in (json['prerequisite_options']['from']['options'] as List<dynamic>))
+        for (JsonObject it in (json['prerequisite_options']['from']['options']))
           DndRef.fromJson(it['ability_score']) : it['minimum_score'] as int 
       };
     }
 
-    List<dynamic>? proficiencyChoices;
+    JsonArray? proficiencyChoices;
     if (json.containsKey('proficiency_choices')) {
       proficiencyChoices = json['proficiency_choices'];
     }
@@ -39,9 +40,10 @@ class MulticlassingArticlePage {
     return MulticlassingArticlePage(
       prerequisites: prerequisites,
       prerequisiteOptions: prerequisiteOptions,
-      proficiencies: (json['proficiencies'] as List<dynamic>).map(
-          (it) => DndRef.fromJson(it)
-        ).toList(),
+      proficiencies: [
+        for (var it in json['proficiencies'])
+          DndRef.fromJson(it)
+      ],
       proficiencyChoices: proficiencyChoices,
     );
   }
@@ -51,37 +53,42 @@ class MulticlassingArticlePage {
 
     if (prerequisites != null) {
       children.add(annotatedLine(annotation: "Prerequisites:"));
-      children += prerequisites!.entries.map(
-        (it) => ListTileRef(
-          ref: it.key,
-          trailing: Text(
-            it.value.toString(),
-            style: const TextStyle(fontSize: 16.0),
-          ),
+      prerequisites!.forEach(
+        (key, value) => children.add(
+          ListTileRef(
+            ref: key,
+            trailing: Text(
+              value.toString(),
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          )
         )
-      ).toList();
+      );
     } else if (prerequisiteOptions != null) {
       children.add(annotatedLine(
         annotation: "Prerequisites: ", 
         content: const Text("one of:"),
       ));
-      children += prerequisiteOptions!.entries.map(
-        (it) => ListTileRef(
-          ref: it.key,
-          trailing: Text(
-            it.value.toString(),
-            style: const TextStyle(fontSize: 16.0),
-          ),
+      prerequisiteOptions!.forEach(
+        (key, value) => children.add(
+          ListTileRef(
+            ref: key,
+            trailing: Text(
+              value.toString(),
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          )
         )
-      ).toList();
+      );
     }
 
     if (proficiencies.isNotEmpty) {
       children.add(annotatedLine(
         annotation: "Granted proficiencies: ",
-        contents: proficiencies.map(
-          (it) => TextButtonRef(ref: it)
-        ).toList(),
+        contents: [
+          for (var it in proficiencies)
+            TextButtonRef(ref: it)
+        ],
       ));
     } else {
       children.add(annotatedLine(
@@ -91,15 +98,17 @@ class MulticlassingArticlePage {
     }
         
     if (proficiencyChoices != null) {
-      children.add(annotatedLine(annotation: "Additional proficiencies:"));
-      children += proficiencyChoices!.map(
-          (choice) => annotatedLine(
+      children += [
+        annotatedLine(annotation: "Additional proficiencies:"),
+        for (var choice in proficiencyChoices!)
+          annotatedLine(
             annotation: "Choose ${choice['choose'].toString()} ${choice['desc']}: ",
-            contents: (choice['from']['options'] as List<dynamic>).map(
-                (it) => TextButtonRef.fromJson(it['item'])
-              ).toList(),
+            contents: [
+              for (var it in choice['from']['options'])
+                TextButtonRef.fromJson(it['item'])
+            ],
           )
-        ).toList();
+      ];
     }
 
     return children;
