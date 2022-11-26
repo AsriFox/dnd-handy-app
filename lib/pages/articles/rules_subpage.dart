@@ -6,14 +6,23 @@ import 'package:flutter/material.dart';
 class RulesArticlePage extends ArticlePage {
   const RulesArticlePage({
     super.key,
-    required super.request,
+    required this.subsections,
   });
 
+  final List<DndRef> subsections;
+
+  factory RulesArticlePage.fromJson(JsonObject json) =>
+    RulesArticlePage(
+      subsections: [
+        for (var it in json['subsections'])
+          DndRef.fromJson(it)
+      ],
+    );
+
   @override
-  List<Widget>? buildChildren(JsonObject json) => 
-    <Widget>[
-      annotatedLine(annotation: "Subsections:"),
-      for (var it in json['subsections'])
-        ListTileRef.fromJson(it)
-    ];
+  List<Widget> buildChildren() => [
+    annotatedLine(annotation: "Subsections:"),
+    for (var it in subsections)
+      ListTileRef(ref: it)
+  ];
 }

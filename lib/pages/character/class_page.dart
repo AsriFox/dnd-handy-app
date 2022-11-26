@@ -44,27 +44,11 @@ class CharClassPage extends StatelessWidget {
   final Map<DndRef, int>? equipment;
   final JsonArray? equipmentOptions;
 
-  factory CharClassPage.fromJson(JsonObject json) {
-    // TODO: Deal with the choice variants
-    JsonArray? equipmentOptions;
-    if (json.containsKey('starting_equipment_options')) {
-      equipmentOptions = json['starting_equipment_options'];
-    }
-
-    Future<dynamic>? classSpells;
-    if (json.containsKey('spells')) {
-      classSpells = getApiRequest(json['spells']);
-    }
-
-    JsonObject? spellcasting;
-    if (json.containsKey('spellcasting')) {
-      spellcasting = json['spellcasting'];
-    }
-
-    return CharClassPage(
+  factory CharClassPage.fromJson(JsonObject json) =>
+    CharClassPage(
       classLevels: getApiRequest(json['class_levels']),
-      classSpells: classSpells,
-      spellcasting: spellcasting,
+      classSpells: getApiRequest(json['spells']),
+      spellcasting: json['spellcasting'],
       savingThrows: [
         for (var it in json['saving_throws'])
           DndRef.fromJson(it)
@@ -84,9 +68,9 @@ class CharClassPage extends StatelessWidget {
         for (var it in json['starting_equipment']) 
           DndRef.fromJson(it['equipment']) : it['quantity'] as int 
       },
-      equipmentOptions: equipmentOptions,
+      // TODO: Deal with the choice variants
+      equipmentOptions: json['starting_equipment_options'],
     );
-  }
 
   @override
   Widget build(BuildContext context) {

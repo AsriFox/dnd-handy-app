@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,16 @@ import 'package:flutter/material.dart';
 class MonsterArticlePage extends ArticlePage {
   const MonsterArticlePage({
     super.key,
-    required super.request,
+    required this.json,
   });
 
+  final JsonObject json;
+
+  factory MonsterArticlePage.fromJson(JsonObject json) =>
+    MonsterArticlePage(json: json);
+
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget> buildChildren() {
     var children = <Widget>[
       annotatedLine(
         annotation: "Type: ",

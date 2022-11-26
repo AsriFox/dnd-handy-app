@@ -5,21 +5,33 @@ import 'package:flutter/material.dart';
 class LanguageArticlePage extends ArticlePage {
   const LanguageArticlePage({
     super.key,
-    required super.request,
+    required this.type,
+    this.script = "none",
+    required this.typicalSpeakers,
   });
 
-  @override
-  List<Widget>? buildChildren(JsonObject json) => 
-    <Widget>[
-      richTextBlock("Type: ", json['type']),
+  final String type;
+  final String script;
+  final List<String> typicalSpeakers;
 
-      json.containsKey('script') 
-        ? richTextBlock("Script: ", json['script'])
-        : richTextBlock("Script: ", "none"),
-        
+  factory LanguageArticlePage.fromJson(JsonObject json) =>
+    LanguageArticlePage(
+      type: json['type']!,
+      script: json['script'],
+      typicalSpeakers: [
+        for (var s in json['typical_speakers'])
+          s
+      ],
+    );
+
+  @override
+  List<Widget> buildChildren() => 
+    <Widget>[
+      richTextBlock("Type: ", type),
+      richTextBlock("Script: ", script),
       richTextBlock(
         "Typical speakers: ", 
-        json['typical_speakers'].join(", ")
+        typicalSpeakers.join(", ")
       ),
     ];
 }

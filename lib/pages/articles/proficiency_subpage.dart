@@ -6,40 +6,56 @@ import 'package:flutter/material.dart';
 class ProficiencyArticlePage extends ArticlePage {
   const ProficiencyArticlePage({
     super.key,
-    required super.request,
+    required this.type,
+    required this.reference,
+    required this.races,
+    required this.classes,
   });
 
-  @override
-  List<Widget>? buildChildren(JsonObject json) {
-    var children = <Widget>[
-      annotatedLine(
-        annotation: "Type: ",
-        content: Text(json['type']),
-      ),
-      annotatedLine(
-        annotation: "Subject: ",
-        content: TextButtonRef.fromJson(json['reference']),
-      ),
-    ];
-    if (json['races'].isNotEmpty) {
-      children += buildEmbeddedRefList(
-        "Races: ", 
-        json['races']
-      );
-    }
-    if (json['classes'].isNotEmpty) {
-      children += buildEmbeddedRefList(
-        "Classes: ", 
-        json['classes']
-      );
-    }
-    return children;
-  }
-}
+  final String type;
+  final DndRef reference;
+  final List<DndRef> races;
+  final List<DndRef> classes;
 
-List<Widget> buildEmbeddedRefList(String title, JsonArray items) => 
-  <Widget>[
-    annotatedLine(annotation: title),
-    for (var it in items)
-      ListTileRef.fromJson(it)
+  factory ProficiencyArticlePage.fromJson(JsonObject json) =>
+    ProficiencyArticlePage(
+      type: json['type'],
+      reference: DndRef.fromJson(json['reference']),
+      races: [
+        for (var it in json['races'])
+          DndRef.fromJson(it)
+      ],
+      classes: [
+        for (var it in json['classes'])
+          DndRef.fromJson(it)
+      ],
+    );
+
+  @override
+  List<Widget> buildChildren() => [
+    annotatedLine(
+      annotation: "Type: ",
+      content: Text(type),
+    ),
+    annotatedLine(
+      annotation: "Subject: ",
+      content: TextButtonRef(ref: reference),
+    ),
+    if (races.isNotEmpty)
+      annotatedLine(
+        annotation: "Races: ",
+        contents: [
+          for (var it in races)
+            ListTileRef(ref: it)
+        ],
+      ),
+    if (classes.isNotEmpty)
+      annotatedLine(
+        annotation: "Classes: ",
+        contents: [
+          for (var it in classes)
+            ListTileRef(ref: it)
+        ],
+      ),
   ];
+}

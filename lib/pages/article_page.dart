@@ -18,110 +18,91 @@ import 'articles/equipment_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
-class ArticlePage extends DndPageBuilder {
+class ArticlePage extends StatelessWidget {
   const ArticlePage({
     super.key,
-    required super.request,
+    this.desc = "",
   });
 
-  factory ArticlePage.variant({
-    required Future<dynamic> request,
-    String category = ""
-  }) {
-    switch (category) {
+  final String desc;
+  List<Widget> buildChildren() => [];
+
+  factory ArticlePage.fromJson(JsonObject json, String? category) {
+    switch (category ?? getCategoryName(json['url'])) {
       case "ability scores":
-        return AbilityArticlePage(request: request);
+        return AbilityArticlePage.fromJson(json);
       case "equipment":
-        return EquipmentArticlePage(request: request);
+        return EquipmentArticlePage.fromJson(json);
       case "feats":
-        return FeatArticlePage(request: request);
+        return FeatArticlePage.fromJson(json);
       case "features":
-        return FeatureArticlePage(request: request);
+        return FeatureArticlePage.fromJson(json);
       case "languages":
-        return LanguageArticlePage(request: request);
+        return LanguageArticlePage.fromJson(json);
       case "magic items":
-        return MagicItemArticlePage(request: request);
+        return MagicItemArticlePage.fromJson(json);
       case "monsters":
-        return MonsterArticlePage(request: request);
+        return MonsterArticlePage.fromJson(json);
       case "proficiencies":
-        return ProficiencyArticlePage(request: request);
+        return ProficiencyArticlePage.fromJson(json);
       case "races":
-        return RaceArticlePage(request: request);
+        return RaceArticlePage.fromJson(json);
       case "rules":
-        return RulesArticlePage(request: request);
+        return RulesArticlePage.fromJson(json);
       case "skills":
-        return SkillArticlePage(request: request);
+        return SkillArticlePage.fromJson(json);
       case "spells":
-        return SpellArticlePage(request: request);
+        return SpellArticlePage.fromJson(json);
       case "subclasses":
-        return SubclassArticlePage(request: request);
+        return SubclassArticlePage.fromJson(json);
       case "subraces":
-        return SubraceArticlePage(request: request);
+        return SubraceArticlePage.fromJson(json);
       case "traits":
-        return TraitArticlePage(request: request);
+        return TraitArticlePage.fromJson(json);
       default:
-        return ArticlePage(request: request);
+        final dynamic desc = json['desc'];
+        return ArticlePage(
+          desc: desc is String ? desc
+            : (desc as JsonArray).join("\n\n")
+        );
     }
   }
-
-  List<Widget>? buildChildren(JsonObject json) => null;
 
   @override
-  Widget buildPage(JsonObject json) {
-    var desc = "";
-    if (json.containsKey('desc')) {
-      if (json['desc'] is String) {
-        desc = json['desc'];
-      } else if (json['desc'] is JsonArray) {
-        for (var s in json['desc']) {
-          if ((s as String).contains('|')) {
-            // Build tables:
-            desc += "\n$s";
-          } else {
-            // Build paragraphs:
-            desc += "$s\n\n";
-          }
-        }
-      }
-    }
-
-    final children = buildChildren(json);
-
-    if (desc.isEmpty) {
-      if (children != null) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
+  Widget build(BuildContext context) {
+    final children = buildChildren();
+    if (desc.isNotEmpty) {
+      children.insert(0, 
+        MarkdownBody(
+          data: desc,
+          styleSheet: MarkdownStyleSheet(
+            tableCellsPadding: const EdgeInsets.all(4.0),
+            tableColumnWidth: const IntrinsicColumnWidth(),
           ),
-        );
-      }
-      return const Center(child: Text("Empty page"));
+        )
+      );
     }
-    
-    final body = MarkdownBody(
-      data: desc,
-      styleSheet: MarkdownStyleSheet(
-        tableCellsPadding: const EdgeInsets.all(4.0),
-        tableColumnWidth: const IntrinsicColumnWidth(),
-      ),
-    );
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(10.0),
-      child: children == null ? body 
-        : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
-              child: body,
-            ),
-          ] + children
-        ),
-    );
+    return children.isNotEmpty
+      ? ListView(
+        padding: const EdgeInsets.all(10.0),
+        children: children,
+      )
+      : const Center(child: Text("Empty page"));
   }
+}
+
+class ArticlePageBuilder extends DndPageBuilder {
+  const ArticlePageBuilder({
+    super.key,
+    required super.request,
+    this.category,
+  });
+
+  final String? category;
+
+  @override
+  Widget buildPage(JsonObject json) =>
+    ArticlePage.fromJson(json, category);
 }
 
 const pad = EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0);

@@ -6,11 +6,17 @@ import 'package:flutter/material.dart';
 class SpellArticlePage extends ArticlePage {
   const SpellArticlePage({
     super.key,
-    required super.request,
+    required this.json,
   });
 
+  final JsonObject json;
+
+  // TODO: fields
+  factory SpellArticlePage.fromJson(JsonObject json) =>
+    SpellArticlePage(json: json);
+
   @override
-  List<Widget>? buildChildren(JsonObject json) {
+  List<Widget> buildChildren() {
     var children = <Widget>[];
 
     if (json['classes'].isNotEmpty) {

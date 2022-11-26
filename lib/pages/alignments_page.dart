@@ -22,7 +22,7 @@ class AlignmentsPageBuilder extends DndPageBuilder {
         () => AlignmentTile(
           caption: abbr,
           subtitle: ref.name,
-          desc: ArticlePage(request: getApiRequest(ref.url)),
+          desc: ArticlePageBuilder(request: getApiRequest(ref.url)),
         )
       );
     }
@@ -54,7 +54,7 @@ class AlignmentTile extends StatelessWidget {
 
   final String caption;
   final String? subtitle;
-  final ArticlePage? desc;
+  final ArticlePageBuilder? desc;
 
   factory AlignmentTile.dummy(String caption) =>
     AlignmentTile(caption: caption);

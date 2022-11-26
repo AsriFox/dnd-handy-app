@@ -8,38 +8,47 @@ const padButt = EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0);
 class MagicItemArticlePage extends ArticlePage {
   const MagicItemArticlePage({
     super.key,
-    required super.request,
+    required this.equipmentCategory,
+    required this.rarity,
+    this.variant = false,
+    required this.variants,
   });
 
-  @override
-  List<Widget>? buildChildren(JsonObject json) {
-    var children = <Widget>[
-      annotatedLine(
-        annotation: "Category: ",
-        padding: padButt,
-        content: TextButtonRef.fromJson(json['equipment_category']),
-      ),
-      annotatedLine(
-        annotation: "Rarity: ",
-        content: Text(json['rarity']['name'].toString()),
-      ),
-    ];
+  final DndRef equipmentCategory;
+  final String rarity;
+  final bool variant;
+  final List<DndRef> variants;
 
-    if (json['variant'] as bool) {
-      children.add(const Padding(
+  factory MagicItemArticlePage.fromJson(JsonObject json) =>
+    MagicItemArticlePage(
+      equipmentCategory: json['equipment_category'],
+      rarity: json['rarity']['name'].toString(), 
+      variant: json['variant'] ?? false,
+      variants: [
+        for (var it in json['variants'])
+          DndRef.fromJson(it)
+      ],
+    );
+
+  @override
+  List<Widget> buildChildren() => [
+    annotatedLine(
+      annotation: "Category: ",
+      padding: padButt,
+      content: TextButtonRef(ref: equipmentCategory),
+    ),
+    annotatedLine(
+      annotation: "Rarity: ",
+      content: Text(rarity),
+    ),
+    if (variant)
+      const Padding(
         padding: pad, 
         child: Text("Is a variant")
-      ));
-    }
-
-    if (json['variants'].isNotEmpty) {
-      children += [
-        annotatedLine(annotation: "Variants:"),
-        for (var it in json['variants'])
-          ListTileRef.fromJson(it),
-      ];
-    }
-
-    return children;
-  }
+      ),
+    if (variants.isNotEmpty)
+      annotatedLine(annotation: "Variants:"),
+    for (var it in variants)
+      ListTileRef(ref: it)
+  ];
 }

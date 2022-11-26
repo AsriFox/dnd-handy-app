@@ -6,39 +6,59 @@ import 'package:flutter/material.dart';
 class FeatureArticlePage extends ArticlePage {
   const FeatureArticlePage({
     super.key,
-    required super.request,
+    required this.level,
+    required this.classRef,
+    this.subclassRef,
+    this.prerequisites,
   });
 
+  final int level;
+  final DndRef classRef;
+  final DndRef? subclassRef;
+  final Map<DndRef, int>? prerequisites;
+
+  factory FeatureArticlePage.fromJson(JsonObject json) =>
+    FeatureArticlePage(
+      level: json['level'],
+      classRef: DndRef.fromJson(json['class']),
+      subclassRef: DndRef.fromJson(json['subclass']),
+      prerequisites: {
+        for (var it in json['prerequisites'])
+          DndRef.fromJson(it['skill']) : it['minimum_score']
+      },
+    );
+
   @override
-  List<Widget>? buildChildren(JsonObject json) {
+  List<Widget> buildChildren() {
     var children = <Widget>[
       annotatedLine(
         annotation: "Level: ",
-        content: Text(json['level'].toString()),
+        content: Text("$level"),
       ),
       annotatedLine(
         annotation: "Class: ",
-        content: TextButtonRef.fromJson(json['class']),
+        content: TextButtonRef(ref: classRef),
       ),
+      if (subclassRef != null) 
+        annotatedLine(
+          annotation: "Subclass: ",
+          content: TextButtonRef(ref: subclassRef!),
+        ),
     ]; 
-    if (json.containsKey('subclass')) {
-      children.add(annotatedLine(
-        annotation: "Subclass: ",
-        content: TextButtonRef.fromJson(json['subclass']),
-      ));
-    }
 
-    if (json['prerequisites'].isNotEmpty) {
-      children += [
-        annotatedLine(annotation: "Prerequisites:"),
-        for (var it in json['prerequisites'])
-          ListTileRef.fromJson(it['skill'],
+    if (prerequisites?.isNotEmpty ?? false) {
+      children.add(annotatedLine(annotation: "Prerequisites:"));
+      prerequisites!.forEach(
+        (key, value) => children.add(
+          ListTileRef(
+            ref: key,
             trailing: Text(
-              it['minimum_score'].toString(),
+              value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
           )
-      ];
+        )
+      );
     }
     
     return children;

@@ -1,3 +1,4 @@
+import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
@@ -7,11 +8,16 @@ import 'package:flutter/material.dart';
 class RaceArticlePage extends ArticlePage {
   const RaceArticlePage({
     super.key,
-    required super.request,
+    required this.json,
   });
 
+  final JsonObject json;
+
+  factory RaceArticlePage.fromJson(JsonObject json) =>
+    RaceArticlePage(json: json);
+
   @override
-  List<Widget>? buildChildren(Map<String, dynamic> json) {
+  List<Widget> buildChildren() {
     var children = <Widget>[
       annotatedLine(annotation: "Ability bonuses:"),
     ] + (json['ability_bonuses'] as List<dynamic>).map(

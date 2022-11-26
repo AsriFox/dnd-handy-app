@@ -27,6 +27,12 @@ class DndRef {
       name: json['name'] as String,
       url: json['url'] as String,
     );
+
+  static List<DndRef>? all(JsonArray? array) =>
+    array == null ? null : [
+      for (var it in array)
+        DndRef.fromJson(it)
+    ];
 }
 
 class ListTileRef extends StatelessWidget {

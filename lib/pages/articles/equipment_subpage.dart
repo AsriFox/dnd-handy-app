@@ -8,124 +8,142 @@ const padButt = EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0);
 class EquipmentArticlePage extends ArticlePage {
   const EquipmentArticlePage({
     super.key,
-    required super.request,
+    required this.equipmentCategory,
+    required this.cost,
+    this.weight,
+    this.equipmentSubpage,
   });
 
+  final DndRef equipmentCategory;
+  final String cost;
+  final String? weight;
+  final List<Widget>? equipmentSubpage;
+
+  factory EquipmentArticlePage.fromJson(JsonObject json) {
+    List<Widget>? equipmentSubpage;
+    if (json.containsKey('weapon_category')) {
+      equipmentSubpage = weaponEquipmentArticlePage(json);
+    } else if (json.containsKey('armor_category')) {
+      equipmentSubpage = armorEquipmentArticlePage(json);
+    } else if (json.containsKey('gear_category')) {
+      equipmentSubpage = gearEquipmentArticleSubpage(json);
+    }
+
+    return EquipmentArticlePage(
+      equipmentCategory: json['equipment_category']!,
+      cost: "${json['cost']['quantity']}${json['cost']['unit']}",
+      weight: json['weight']?.toString(),
+      equipmentSubpage: equipmentSubpage,
+    );
+  }
+
   @override
-  List<Widget>? buildChildren(JsonObject json) {
-    var children = <Widget>[
+  List<Widget> buildChildren() => [
       annotatedLine(
         annotation: "Category: ",
         padding: padButt,
-        content: TextButtonRef.fromJson(json['equipment_category']),
+        content: TextButtonRef(ref: equipmentCategory),
       ),
-    ];
-    if (json.containsKey('weapon_category')) {
-      children += weaponEquipmentArticleSubpage(json);
-    } else if (json.containsKey('armor_category')) {
-      children += armorEquipmentArticleSubpage(json);
-    } else if (json.containsKey('gear_category')) {
-      children += gearEquipmentArticleSubpage(json);
-    }
-    children.add(
+      if (equipmentSubpage?.isNotEmpty ?? false)
+        for (var widget in equipmentSubpage!)
+          widget,
       annotatedLine(
         annotation: "Cost: ",
-        content: Text(json['cost']['quantity'].toString() + json['cost']['unit']),
+        content: Text(cost),
       ),
-    );
-    if (json.containsKey('weight')) {
-      children.add(
+      if (weight != null) 
         annotatedLine(
           annotation: "Weight: ",
-          content: Text(json['weight'].toString()),
+          content: Text(weight!),
         ),
-      );
-    }
-    return children;
-  }
+    ];
 }
 
-List<Widget> weaponEquipmentArticleSubpage(JsonObject json) { 
-  var children = <Widget>[
+List<Widget> weaponEquipmentArticlePage(JsonObject json) {
+  final String rangeCategory = json['category_range'];
+  final String range = json['range']['long'] != null
+    ? "${json['range']['normal']} / ${json['range']['long']}"
+    : json['range']['normal'].toString();
+  final String damageDice = json['damage']['damage_dice'];
+  final DndRef damageType = DndRef.fromJson(json['damage']['damage_type']);
+
+  final String? twoHandedDamageDice = json['two_handed_damage']?['damage_dice'];
+  DndRef? twoHandedDamageType;
+  if (twoHandedDamageDice != null) {
+      twoHandedDamageType = DndRef.fromJson(json['two_handed_damage']['damage_type']);
+  }
+
+  final JsonArray? properties = json['properties'];
+
+  return [
     annotatedLine(
-      annotation: json['category_range'] + " Weapon"
+      annotation: "$rangeCategory Weapon"
     ),
     annotatedLine(
       annotation: "Range: ", 
-      content: Text(
-        json['range']['long'] != null
-          ? "${json['range']['normal']} / ${json['range']['long']}"
-          : json['range']['normal'].toString()
-      ),
+      content: Text(range),
     ),
     annotatedLine(
       annotation: "Damage: ",
       padding: padButt,
       contents: [
-        Text("${json['damage']['damage_dice']} "),
-        TextButtonRef.fromJson(json['damage']['damage_type']),
+        Text(damageDice),
+        TextButtonRef(ref: damageType),
       ],
     ),
+    if (twoHandedDamageDice != null && twoHandedDamageType != null)
+      annotatedLine(
+        annotation: "2H Damage: ",
+        contents: [
+          Text(twoHandedDamageDice),
+          TextButtonRef(ref: twoHandedDamageType),
+        ],
+      ),
+    if (properties != null)
+      annotatedLine(
+        annotation: "Properties:",
+        contents: [
+          for (var it in properties)
+            TextButtonRef.fromJson(it),
+        ],
+      ),
   ];
-  if (json.containsKey('two_handed_damage')) {
-    children.add(
-      annotatedLine(
-        annotation: "2H Damage:",
-        padding: padButt,
-        contents: [
-          const Text("2H Damage: ", style: bold),
-          Text("${json['damage']['damage_dice']} "),
-          TextButtonRef.fromJson(json['damage']['damage_type']),
-        ],
-      )
-    );
-  }
-  if (json.containsKey('properties')) {
-    children.add(
-      annotatedLine(
-        annotation: "Properties: ",
-        padding: padButt,
-        contents: [
-          for (var it in json['properties'])
-            TextButtonRef.fromJson(it)
-        ],
-      )
-    );
-  }
-  return children;
 }
 
-List<Widget> armorEquipmentArticleSubpage(JsonObject json) { 
-  var children = <Widget>[
+List<Widget> armorEquipmentArticlePage(JsonObject json) {
+  final String armorCategory = json['armor_category'];
+  final int strengthRequirement = json['str_minimum'] ?? 0;
+  final bool stealthDisadvantage = json['stealth_disadvantage'] ?? false;
+
+  return [
     annotatedLine(
-      annotation: json['armor_category'] + " Armor",
+      annotation: "$armorCategory Armor",
     ),
     annotatedLine(
       annotation: "STR requirement: ",
-      content: Text(json['str_minimum'].toString()),
+      content: Text("$strengthRequirement"),
     ),
+    if (stealthDisadvantage)
+      const Padding(padding: pad,
+        child: Text("Disadvantage on Stealth"),
+      ),
   ];
-  if (json['stealth_disadvantage']) {
-    children.add(const Padding(padding: pad,
-      child: Text("Disadvantage on Stealth"),
-    ));
-  }
-  return children;
 }
 
 List<Widget> gearEquipmentArticleSubpage(JsonObject json) { 
-  var children = <Widget>[
-    Padding(
-      padding: pad,
-      child: TextButtonRef.fromJson(json['gear_category']),
-    )
-  ];
-  if (json.containsKey('contents')) {
-    children += [
+  final DndRef gearCategory = DndRef.fromJson(json['gear_category']);
+  final JsonArray? contents = json['contents'];
+
+  return [
+    Padding(padding: pad,
+      child: TextButtonRef(ref: gearCategory),
+    ),
+    if (contents != null)
       const Padding(padding: pad,
         child: Text("Contents:", style: bold),
       ),
-      for (var it in json['contents'])
+    if (contents?.isNotEmpty ?? false)
+      for (var it in contents!)
         ListTileRef.fromJson(
           it['item'],
           trailing: Text(
@@ -133,7 +151,5 @@ List<Widget> gearEquipmentArticleSubpage(JsonObject json) {
             style: const TextStyle(fontSize: 16.0),
           ),
         )
-    ];
-  }
-  return children;
+  ];
 }

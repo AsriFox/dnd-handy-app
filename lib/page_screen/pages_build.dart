@@ -99,7 +99,7 @@ abstract class DndPageBuilder extends StatelessWidget {
       case "equipment categories":
         return EquipmentListPageBuilder(request: request);
       default:
-        return ArticlePage.variant(request: request, category: category);
+        return ArticlePageBuilder(request: request, category: category);
     }
   }
 

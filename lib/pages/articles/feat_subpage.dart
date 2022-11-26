@@ -6,18 +6,28 @@ import 'package:flutter/material.dart';
 class FeatArticlePage extends ArticlePage {
   const FeatArticlePage({
     super.key,
-    required super.request,
+    required this.prerequisites,
   });
 
+  final Map<DndRef, int> prerequisites;
+
+  factory FeatArticlePage.fromJson(JsonObject json) =>
+    FeatArticlePage(
+      prerequisites: {
+        for (var it in json['prerequisites'])
+          DndRef.fromJson(it['ability_score']) : it['minimum_score']
+      },
+    );
+
   @override
-  List<Widget>? buildChildren(JsonObject json) => 
+  List<Widget> buildChildren() => 
     <Widget>[
       annotatedLine(annotation: "Prerequisites:"),
-      for (var it in json['prerequisites'])
-        ListTileRef.fromJson(
-          it['ability_score'],
+      for (var it in prerequisites.entries)
+        ListTileRef(
+          ref: it.key,
           trailing: Text(
-            it['minimum_score'].toString(),
+            "${it.value}",
             style: const TextStyle(fontSize: 16.0),
           ),
         )
