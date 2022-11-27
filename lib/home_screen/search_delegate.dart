@@ -1,5 +1,36 @@
+import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+
+Future showSearchCustom(BuildContext context) =>
+  showSearch(
+    context: context, 
+    delegate: CustomSearchDelegate(),
+  ).then((query) async {
+    if (query == null) { 
+      throw "nullQuery";
+    }
+    return query is String
+      ? DndRef(
+        index: query.split('/').last,
+        name: getTitle(query),
+        url: query,
+      )
+      : query is DndRef
+        ? query
+        : throw query;
+  }).then(
+    (ref) => gotoPage(context, ref)
+  ).catchError((e) {
+    if (e != "nullQuery") {
+      ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: Text("Nothing found at '$e'")
+          )
+        );
+    }
+  });
 
 class CustomSearchDelegate extends SearchDelegate {
   final List<DndRef> searchTerms = [

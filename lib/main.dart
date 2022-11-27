@@ -1,18 +1,41 @@
-import 'package:dnd_handy_flutter/home_screen/settings_page.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:dnd_handy_flutter/home_screen/search_bar.dart';
-import 'package:dnd_handy_flutter/home_screen/home_page.dart';
+import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final isDesktop = 
+    defaultTargetPlatform == TargetPlatform.linux ||
+    defaultTargetPlatform == TargetPlatform.windows;
+
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
-  runApp(DndHandyApp(themeMode: savedThemeMode));
+  
+  runApp(DndHandyApp(
+    isDesktop: isDesktop,
+    themeMode: savedThemeMode,
+  ));
+
+  if (isDesktop) {
+    doWhenWindowReady(() {
+      const initialSize = Size(720, 1080);
+      appWindow.size = initialSize;
+      appWindow.show();
+    });
+  }
 }
 
 class DndHandyApp extends StatelessWidget {
-  const DndHandyApp({super.key, this.themeMode});
+  const DndHandyApp({
+    super.key,
+    this.isDesktop = false,
+    this.themeMode,
+  });
 
+  final bool isDesktop;
   final AdaptiveThemeMode? themeMode;
 
   @override
@@ -25,47 +48,9 @@ class DndHandyApp extends StatelessWidget {
         title: 'Handy DnD app',
         theme: theme,
         darkTheme: darkTheme,
-        home: const HomeScreen(),
-      )
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: SearchAppBar(
-          title: 'Handy DnD database', 
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
-          ),
-          trailing: PopupMenuButton(
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                child: Text("Test menu item 1"),
-              ),
-              const PopupMenuItem(
-                child: Text("Test menu item 2"),
-              ),
-            ]
-          ),
-        ),
-        bottomNavigationBar: const TabBar(tabs: [
-          Tab(icon: Icon(Icons.book)),
-          Tab(icon: Icon(Icons.account_circle)),
-          Tab(icon: Icon(Icons.settings)),
-        ]),
-        body: const TabBarView(children: [
-          HomePage(),
-          Center(child: Text("Characters")),
-          SettingsPage(),
-        ]),
+        home: isDesktop
+          ? const HomeScreenDesktop()
+          : const HomeScreenMobile(),
       )
     );
   }
