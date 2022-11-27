@@ -1,4 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dnd_handy_flutter/home_screen/settings_page.dart';
+import 'package:dnd_handy_flutter/home_screen/titlebar_desktop.dart';
 import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,10 @@ class DndHandyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleBar = isDesktop
+      ? buildTitlebarDesktop(context)
+      : buildTitlebarMobile(context);
+
     return AdaptiveTheme(
       light: ThemeData.light(),
       dark: ThemeData.dark(),
@@ -48,9 +54,10 @@ class DndHandyApp extends StatelessWidget {
         title: 'Handy DnD app',
         theme: theme,
         darkTheme: darkTheme,
-        home: isDesktop
-          ? const HomeScreenDesktop()
-          : const HomeScreenMobile(),
+        home: HomeScreen(titleBar: titleBar),
+        routes: {
+          "/settings": (_) => const SettingsPage(),
+        },
       )
     );
   }

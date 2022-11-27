@@ -1,4 +1,5 @@
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 

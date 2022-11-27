@@ -5,7 +5,7 @@ AppBar buildTitlebarMobile(BuildContext context) =>
   AppBar(
     title: const Text("Handy DnD database"),
     leading: IconButton(
-      onPressed: () {},
+      onPressed: () => Scaffold.of(context).openDrawer(),
       icon: const Icon(Icons.menu),
     ),
     actions: [

@@ -3,60 +3,61 @@ import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:flutter/material.dart';
 
-PreferredSizeWidget buildTitlebarDesktop(BuildContext context) {
-  const titlebarItemsWidth = 40.0;
-  const defaultElevation = 4.0;
-  const defaultShadowColor = Colors.black;
-  final appBarTheme = Theme.of(context).appBarTheme;
-  final tabBar = TabBar(
-    labelPadding: const EdgeInsets.symmetric(vertical: 4.0),
-    tabs: [
-      for (var icon in homeScreenTabs.keys)
-        Icon(icon)
-    ]
-  );
+const titleBarDefaultItemsWidth = 40.0;
+const titleBarDefaultElevation = 4.0;
+const titleBarDefaultShadowColor = Colors.black;
 
-  return PreferredSize(
-    preferredSize: Size.fromHeight(
-      appWindow.titleBarHeight
-    ),
-    child: Material(
-      shape: appBarTheme.shape,
-      color: appBarTheme.backgroundColor ?? Theme.of(context).colorScheme.surface,
-      shadowColor: appBarTheme.shadowColor ?? defaultShadowColor,
-      surfaceTintColor: appBarTheme.surfaceTintColor,
-      elevation: appBarTheme.elevation ?? defaultElevation,
+PreferredSizeWidget buildTitlebarDesktop(BuildContext context) =>
+  const DesktopTitleBar();
+
+class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
+  const DesktopTitleBar({ super.key, });
+
+  @override
+  Size get preferredSize => Size.fromHeight(appWindow.titleBarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // final itemsWidth = titleBarDefaultItemsWidth;
+    final elevation = theme.appBarTheme.elevation ?? titleBarDefaultElevation;
+    final shadowColor = theme.appBarTheme.shadowColor ?? titleBarDefaultShadowColor;
+    final backgroundColor = theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
+    final surfaceTintColor = theme.appBarTheme.surfaceTintColor;
+
+    return Material(
+      elevation: elevation,
+      color: backgroundColor,
+      shadowColor: shadowColor,
+      surfaceTintColor: surfaceTintColor,
       child: Row(children: [
-        Expanded(child: MoveWindow(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "Handy DnD database",
-                style: Theme.of(context).textTheme.titleMedium,
+        IconButtonRect(
+          width: titleBarDefaultItemsWidth,
+          child: const Icon(Icons.menu),
+          onTap: () => HomeScreen.of(context)?.toggleDrawer(),
+        ),
+        Expanded(
+          child: MoveWindow(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "Handy DnD database",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
             ),
-          ),
-        )),
-        IconButtonRect(
-          width: titlebarItemsWidth,
-          onTap: () => showSearchCustom(context),
-          child: const Icon(Icons.search),
+          )
         ),
-        SizedBox(
-          width: titlebarItemsWidth * homeScreenTabs.length,
-          child: tabBar,
-        ),
-        // homeScreenMenu,
         IconButtonRect(
-          width: titlebarItemsWidth,
-          onTap: () => appWindow.close(),
+          width: titleBarDefaultItemsWidth,
           child: const Icon(Icons.close),
-        ),
+          onTap: () => appWindow.close(),
+        )
       ]),
-    ),
-  );
+    );
+  }
 }
 
 class IconButtonRect extends StatelessWidget {
@@ -76,6 +77,7 @@ class IconButtonRect extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
     Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         child: SizedBox(
@@ -84,6 +86,5 @@ class IconButtonRect extends StatelessWidget {
           child: child,
         ),
       ),
-      color: Colors.transparent,
     );
 }
