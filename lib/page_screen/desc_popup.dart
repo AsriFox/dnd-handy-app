@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'pages_build.dart';
 
 AlertDialog descPopup(BuildContext context, DndRef it) => 
   AlertDialog(
@@ -15,7 +14,7 @@ AlertDialog descPopup(BuildContext context, DndRef it) =>
     contentPadding: const EdgeInsets.all(4.0),
     content: SizedBox(
       width: double.maxFinite,
-      child: DndPageBuilder.request(it),
+      child: const Text('data'),
     ),
     actions: [
       IconButton(

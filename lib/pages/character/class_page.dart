@@ -1,22 +1,12 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
+import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/character/multiclassing_subpage.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
+import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
-class CharClassPageBuilder extends DndPageBuilder {
-  const CharClassPageBuilder({
-    super.key,
-    required super.request,
-  });
-
-  @override
-  Widget buildPage(JsonObject json) =>
-    CharClassPage.fromJson(json);
-}
 
 class CharClassPage extends StatelessWidget {
   const CharClassPage({
@@ -182,7 +172,12 @@ class CharClassPage extends StatelessWidget {
             )
         ],
       ));
-      tabPages.add(RefListPageBuilder(request: classSpells!));
+      tabPages.add(
+        DndPageBuilder(
+          request: classSpells!,
+          onResult: (json) => RefListPage.fromJsonArray(json['results']),
+        )
+      );
     }
 
     tabs.add(const Tab(text: "Multiclassing"));

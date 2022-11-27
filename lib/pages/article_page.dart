@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
@@ -21,10 +20,10 @@ import 'articles/proficiency_subpage.dart';
 class ArticlePage extends StatelessWidget {
   const ArticlePage({
     super.key,
-    this.desc = "",
+    this.desc,
   });
 
-  final String desc;
+  final String? desc;
   List<Widget> buildChildren() => [];
 
   factory ArticlePage.fromJson(JsonObject json, String? category) {
@@ -71,10 +70,10 @@ class ArticlePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = buildChildren();
-    if (desc.isNotEmpty) {
+    if (desc?.isNotEmpty ?? false) {
       children.insert(0, 
         MarkdownBody(
-          data: desc,
+          data: desc!,
           styleSheet: MarkdownStyleSheet(
             tableCellsPadding: const EdgeInsets.all(4.0),
             tableColumnWidth: const IntrinsicColumnWidth(),
@@ -89,20 +88,6 @@ class ArticlePage extends StatelessWidget {
       )
       : const Center(child: Text("Empty page"));
   }
-}
-
-class ArticlePageBuilder extends DndPageBuilder {
-  const ArticlePageBuilder({
-    super.key,
-    required super.request,
-    this.category,
-  });
-
-  final String? category;
-
-  @override
-  Widget buildPage(JsonObject json) =>
-    ArticlePage.fromJson(json, category);
 }
 
 const pad = EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0);

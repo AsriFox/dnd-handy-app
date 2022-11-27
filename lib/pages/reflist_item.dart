@@ -1,6 +1,6 @@
-import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:flutter/material.dart';
+import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/pages/page_screen.dart';
 
 enum ListDensity {
   veryDense(VisualDensity.minimumDensity);

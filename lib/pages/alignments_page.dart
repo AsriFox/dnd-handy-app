@@ -1,18 +1,19 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
+import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
-class AlignmentsPageBuilder extends DndPageBuilder {
-  const AlignmentsPageBuilder({
+class AlignmentsPage extends StatelessWidget {
+  const AlignmentsPage({ 
     super.key,
-    required super.request,
+    required this.descPages,
   });
 
-  @override
-  Widget buildPage(JsonObject json) {
+  final Map<String, AlignmentTile> descPages;
+
+  factory AlignmentsPage.fromJson(JsonObject json) {
     var descPages = <String, AlignmentTile>{};
     for (var item in json['results']) {
       final ref = DndRef.fromJson(item);
@@ -22,11 +23,21 @@ class AlignmentsPageBuilder extends DndPageBuilder {
         () => AlignmentTile(
           caption: abbr,
           subtitle: ref.name,
-          desc: ArticlePageBuilder(request: getApiRequest(ref.url)),
+          desc: DndPageBuilder(
+            request: getApiRequest(ref.url),
+            onResult: (json) => ArticlePage.fromJson(json,
+              'alignments'
+            ),
+          ),
         )
       );
     }
-    return GridView.count(
+    return AlignmentsPage(descPages: descPages);
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+    GridView.count(
       crossAxisCount: 3,
       childAspectRatio: 0.925,
       children: [
@@ -41,7 +52,6 @@ class AlignmentsPageBuilder extends DndPageBuilder {
         descPages["CE"] ?? AlignmentTile.dummy("CE"),
       ],
     );
-  }
 }
 
 class AlignmentTile extends StatelessWidget {
@@ -54,7 +64,7 @@ class AlignmentTile extends StatelessWidget {
 
   final String caption;
   final String? subtitle;
-  final ArticlePageBuilder? desc;
+  final DndPageBuilder? desc;
 
   factory AlignmentTile.dummy(String caption) =>
     AlignmentTile(caption: caption);

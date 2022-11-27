@@ -1,20 +1,8 @@
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
-class CharBackgroundPageBuilder extends DndPageBuilder {
-  const CharBackgroundPageBuilder({
-    super.key,
-    required super.request,
-  });
-
-  @override
-  Widget buildPage(JsonObject json) =>
-    CharBackgroundPage.fromJson(json);
-}
 
 class CharBackgroundPage extends StatelessWidget {
   const CharBackgroundPage({

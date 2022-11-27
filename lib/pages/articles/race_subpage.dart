@@ -1,5 +1,4 @@
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/page_screen/pages_build.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +106,7 @@ class RaceArticlePage extends ArticlePage {
         contents: (json['languages'] as List<dynamic>).map(
           (it) => TextButtonRef(
             ref: DndRef.fromJson(it),
-            onPressed: gotoPage,
+            onPressed: (_, ref) {},
           )
         ).toList()
       ),
