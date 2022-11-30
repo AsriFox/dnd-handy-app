@@ -83,7 +83,7 @@ class AlignmentTile extends StatelessWidget {
         onTap: desc != null
           ? () => showDialog(
             context: context, 
-            builder: (_) => AlertDialog(
+            builder: (ctx) => AlertDialog(
               title: Text(
                 subtitle ?? caption,
                 style: const TextStyle(
@@ -99,7 +99,7 @@ class AlignmentTile extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(ctx).pop(),
                   icon: const Icon(Icons.close),
                 ),
               ],

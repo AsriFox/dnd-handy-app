@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/home_screen/titlebar_desktop.dart';
 import 'package:dnd_handy_flutter/main.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
@@ -7,18 +8,12 @@ import 'package:yeet/yeet.dart';
 import 'home_page.dart';
 import 'settings_page.dart';
 
-// final List<Widget> appScreens = [
-//   buildHomePage(),
-//   const Center(child: CircularProgressIndicator()),
-//   const SettingsPage(),
-// ];
-
 final appScreens = {
   const NavigationRailDestination(
     icon: Icon(Icons.book), 
     label: Text("Database"),
   ) 
-  : buildHomePage(),
+  : HomePage(request: getApiRequest('api')),
 
   const NavigationRailDestination(
     icon: Icon(Icons.account_circle), 
@@ -112,21 +107,3 @@ class HomeScreenDrawer extends StatelessWidget {
     );
   }
 }
-
-// Widget buildDrawerListTile({
-//   bool isExtended = true,
-//   required String title,
-//   required IconData icon,
-//   void Function()? onTap,
-// }) => isExtended
-//   ? ListTile(
-//     leading: Icon(icon),
-//     title: Text(title),
-//     onTap: onTap,
-//   )
-//   : ListTile(
-//     contentPadding: const EdgeInsets.all(0.0),
-//     title: Icon(icon),
-//     onTap: onTap,
-//   );
-

@@ -1,3 +1,4 @@
+import 'package:yeet/yeet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -96,7 +97,7 @@ class DndAppSettings extends State<DndHandyApp>
   });
 
   bool isExtended = false;
- 
+
   static DndAppSettings of(BuildContext context) =>
     context.findAncestorStateOfType<DndAppSettings>()!;
 
@@ -110,9 +111,21 @@ class DndAppSettings extends State<DndHandyApp>
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeMode,
-      home: HomeScreen(
-        titleBar: titleBar as PreferredSizeWidget,
+      home: WillPopScope(
+        onWillPop: () async {
+          final yeeter = yeetKey.currentState!.widget.routerDelegate as YeeterDelegate;
+          if (yeeter.currentConfiguration == "/") {
+            return true;
+          }
+          yeeter.yeet();
+          return false;
+        },
+        child: HomeScreen(
+          titleBar: titleBar as PreferredSizeWidget,
+        ),
       ),
     );
   }
 }
+
+final yeetKey = GlobalKey<State<Router<String>>>();
