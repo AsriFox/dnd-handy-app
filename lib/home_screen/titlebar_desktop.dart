@@ -1,14 +1,12 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
+import 'package:dnd_handy_flutter/main.dart';
 import 'package:flutter/material.dart';
 
-const titleBarDefaultItemsWidth = 40.0;
+const titleBarDefaultItemsWidth = 56.0;
 const titleBarDefaultElevation = 4.0;
 const titleBarDefaultShadowColor = Colors.black;
-
-PreferredSizeWidget buildTitlebarDesktop(BuildContext context) =>
-  const DesktopTitleBar();
 
 class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
   const DesktopTitleBar({ super.key, });
@@ -34,7 +32,13 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
         IconButtonRect(
           width: titleBarDefaultItemsWidth,
           child: const Icon(Icons.menu),
-          onTap: () => Scaffold.of(context).openDrawer(),
+          onTap: () {
+            Scaffold.of(context).openDrawer();
+            final state = DndAppSettings.of(context);
+            state.setState(() {
+              state.isExtended = !state.isExtended; 
+            });
+          },
         ),
         Expanded(
           child: MoveWindow(

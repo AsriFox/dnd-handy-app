@@ -7,11 +7,31 @@ import 'package:yeet/yeet.dart';
 import 'home_page.dart';
 import 'settings_page.dart';
 
-final List<Widget> appScreens = [
-  buildHomePage(),
-  const Center(child: CircularProgressIndicator()),
-  const SettingsPage(),
-];
+// final List<Widget> appScreens = [
+//   buildHomePage(),
+//   const Center(child: CircularProgressIndicator()),
+//   const SettingsPage(),
+// ];
+
+final appScreens = {
+  const NavigationRailDestination(
+    icon: Icon(Icons.book), 
+    label: Text("Database"),
+  ) 
+  : buildHomePage(),
+
+  const NavigationRailDestination(
+    icon: Icon(Icons.account_circle), 
+    label: Text("Characters"),
+  ) 
+  : const Center(child: CircularProgressIndicator()),
+
+  const NavigationRailDestination(
+    icon: Icon(Icons.settings), 
+    label: Text("Settings"),
+  ) 
+  : const SettingsPage(),
+};
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({ 
@@ -26,7 +46,8 @@ class HomeScreen extends StatelessWidget {
     final appState = DndAppSettings.of(context);
     final appScreenTabs = TabBarView(
       controller: appState.controller,
-      children: appScreens,
+      physics: const NeverScrollableScrollPhysics(),
+      children: appScreens.values.toList(),
     );
 
     return LayoutBuilder(
@@ -34,6 +55,7 @@ class HomeScreen extends StatelessWidget {
         if (constraints.maxWidth < 600) {
           return Scaffold(
             appBar: titleBar,
+            drawerEdgeDragWidth: 100.0,
             drawer: HomeScreenDrawer(
               state: appState,
             ),
@@ -45,6 +67,7 @@ class HomeScreen extends StatelessWidget {
             body: Row(children: [
               HomeScreenDrawer(
                 state: appState,
+                isExtended: appState.isExtended,
               ),
               Expanded(
                 child: appScreenTabs,
@@ -61,37 +84,31 @@ class HomeScreenDrawer extends StatelessWidget {
   const HomeScreenDrawer({
     super.key,
     required this.state,
+    this.isExtended = true,
   });
 
-  final bool isExtended = true;
+  final bool isExtended;
   final DndAppSettings state;
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      width: isExtended ? 304.0 : titleBarDefaultItemsWidth,
-      child: NavigationRail(
-        selectedIndex: state.tabIndex,
-        onDestinationSelected: (index) {
-          state.tabIndex = index;
-          Scaffold.of(context).closeDrawer();
-        },
-        extended: isExtended,
-        destinations: const [
-          NavigationRailDestination(
-            icon: Icon(Icons.book), 
-            label: Text("Database"),
+    return SafeArea(
+      child: AnimatedContainer(
+        width: isExtended ? 304.0 : titleBarDefaultItemsWidth,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.decelerate,
+        child: Drawer(
+          child: NavigationRail(
+            selectedIndex: state.tabIndex,
+            onDestinationSelected: (index) {
+              state.tabIndex = index;
+              Scaffold.of(context).closeDrawer();
+            },
+            extended: isExtended,
+            destinations: appScreens.keys.toList()
           ),
-          NavigationRailDestination(
-            icon: Icon(Icons.account_circle), 
-            label: Text("Characters"),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.settings), 
-            label: Text("Settings"),
-          ),
-        ],
-      ),
+        ),
+      )
     );
   }
 }

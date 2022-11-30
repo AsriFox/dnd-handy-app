@@ -94,6 +94,8 @@ class DndAppSettings extends State<DndHandyApp>
   set tabIndex(int index) => setState(() {
     controller.index = index;
   });
+
+  bool isExtended = false;
  
   static DndAppSettings of(BuildContext context) =>
     context.findAncestorStateOfType<DndAppSettings>()!;
@@ -101,15 +103,15 @@ class DndAppSettings extends State<DndHandyApp>
   @override
   Widget build(BuildContext context) {
     final titleBar = widget.isDesktop
-      ? buildTitlebarDesktop(context)
-      : buildTitlebarMobile(context);
+      ? const DesktopTitleBar()
+      : const MobileTitleBar();
 
     return MaterialApp(
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeMode,
       home: HomeScreen(
-        titleBar: titleBar,
+        titleBar: titleBar as PreferredSizeWidget,
       ),
     );
   }
