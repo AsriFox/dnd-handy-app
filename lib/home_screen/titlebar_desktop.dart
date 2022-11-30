@@ -34,7 +34,7 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
         IconButtonRect(
           width: titleBarDefaultItemsWidth,
           child: const Icon(Icons.menu),
-          onTap: () => HomeScreen.of(context)?.toggleDrawer(),
+          onTap: () => Scaffold.of(context).openDrawer(),
         ),
         Expanded(
           child: MoveWindow(
