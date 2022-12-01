@@ -1,15 +1,23 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
-import 'package:dnd_handy_flutter/main.dart';
+import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:flutter/material.dart';
+import 'package:yeet/yeet.dart';
 
 const titleBarDefaultItemsWidth = 56.0;
 const titleBarDefaultElevation = 4.0;
 const titleBarDefaultShadowColor = Colors.black;
 
 class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
-  const DesktopTitleBar({ super.key, });
+  const DesktopTitleBar({ 
+    super.key, 
+    this.actions,
+    this.isHomePage = false,
+  });
+
+  final bool isHomePage;
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize => Size.fromHeight(appWindow.titleBarHeight);
@@ -40,6 +48,14 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
             });
           },
         ),
+        
+        if (!isHomePage) 
+          IconButtonRect(
+            width: titleBarDefaultItemsWidth,
+            child: const Icon(Icons.arrow_back),
+            onTap: () => context.yeet(),
+          ),
+
         Expanded(
           child: MoveWindow(
             child: Align(

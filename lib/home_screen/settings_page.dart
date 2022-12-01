@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dnd_handy_flutter/main.dart';
+import 'package:dnd_handy_flutter/dnd_app.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({

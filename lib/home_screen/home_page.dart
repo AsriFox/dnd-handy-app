@@ -1,5 +1,5 @@
 import 'package:dnd_handy_flutter/api_service.dart';
-import 'package:dnd_handy_flutter/main.dart';
+import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/pages/alignments_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
@@ -9,12 +9,9 @@ import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:yeet/yeet.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({
-    super.key,
-    required this.request,
-  });
+  HomePage({ super.key });
 
-  final Future<dynamic> request;
+  final Future<dynamic> request = getApiRequest("api");
 
   late final yeet = Yeet(
     path: "/",
@@ -59,6 +56,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Router(
     key: yeetKey,
+    routeInformationParser: YeetInformationParser(),
     routerDelegate: YeeterDelegate(yeet: yeet),
   );
 }

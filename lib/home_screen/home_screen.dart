@@ -1,7 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/home_screen/titlebar_desktop.dart';
-import 'package:dnd_handy_flutter/main.dart';
+import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:yeet/yeet.dart';
@@ -13,7 +13,7 @@ final appScreens = {
     icon: Icon(Icons.book), 
     label: Text("Database"),
   ) 
-  : HomePage(request: getApiRequest('api')),
+  : HomePage(),
 
   const NavigationRailDestination(
     icon: Icon(Icons.account_circle), 
@@ -93,14 +93,34 @@ class HomeScreenDrawer extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         curve: Curves.decelerate,
         child: Drawer(
-          child: NavigationRail(
-            selectedIndex: state.tabIndex,
-            onDestinationSelected: (index) {
-              state.tabIndex = index;
-              Scaffold.of(context).closeDrawer();
-            },
-            extended: isExtended,
-            destinations: appScreens.keys.toList()
+          child: Scaffold(
+            body: NavigationRail(
+              extended: isExtended,
+              selectedIndex: state.tabIndex,
+              onDestinationSelected: (index) {
+                state.tabIndex = index;
+                Scaffold.of(context).closeDrawer();
+              },
+              destinations: appScreens.keys.toList()
+            ),
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                  icon: Icon(isExtended
+                    ? Icons.chevron_left
+                    : Icons.chevron_right),
+                  onPressed: () {
+                    Scaffold.of(context).closeDrawer();
+                    state.setState(() {
+                      state.isExtended = !state.isExtended;
+                    });
+                  }
+                )
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           ),
         ),
       )
