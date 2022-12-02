@@ -1,6 +1,8 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/pages/alignments_page.dart';
+import 'package:dnd_handy_flutter/pages/article_page.dart';
+import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
@@ -11,45 +13,33 @@ import 'package:yeet/yeet.dart';
 class HomePage extends StatelessWidget {
   HomePage({ super.key });
 
-  final Future<dynamic> request = getApiRequest("api");
 
   late final yeet = Yeet(
     path: "/",
-    builder: (_) => DndPageBuilder(
-      request: request,
-      onResult: (json) => RefListPage(
-        results: [
-          for (var entry in (json as JsonObject).entries)
-            DndRef(
-              index: entry.key,
-              url: entry.value as String,
-              name: getTitle(entry.value),
-            )
-        ] 
-      ),
-    ),
+    builder: (_) => _HomePage(),
     children: [
       Yeet(
         path: "api/alignments",
-        builder: (_) => DndPageBuilder.request(
-          url: "api/alignments",
+        builder: (_) => DndPageScreen.request(
+          path: "api/alignments",
           onResult: (json) => AlignmentsPage.fromJson(json),
         ),
       ),
       Yeet(
         path: "api/:category",
-        builder: (context) => DndPageBuilder.request(
-          url: "api/${context.params['category']!}", 
+        builder: (context) => DndPageScreen.request(
+          path: context.currentPath, 
           onResult: (json) => RefListPage.fromJsonArray(json['results']),
         ),
       ),
       Yeet(
         path: "api/equipment-categories/:name",
-        builder: (context) => DndPageBuilder.request(
-          url: "api/equipment-categories/${context.params['name']}",
+        builder: (context) => DndPageScreen.request(
+          path: context.currentPath,
           onResult: (json) => RefListPage.fromJsonArray(json['equipment'])
         ),
       ),
+      yeetArticle,
     ]
   );
 
@@ -59,4 +49,30 @@ class HomePage extends StatelessWidget {
     routeInformationParser: YeetInformationParser(),
     routerDelegate: YeeterDelegate(yeet: yeet),
   );
+}
+
+class _HomePage extends StatelessWidget {
+  _HomePage();
+
+  final Future<dynamic> request = getApiRequest("api");
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: DndAppSettings.of(context).widget.titleBar(context, true),
+      body: DndPageBuilder(
+        request: request,
+        onResult: (json) => RefListPage(
+          results: [
+            for (var entry in (json as JsonObject).entries)
+              DndRef(
+                index: entry.key,
+                url: entry.value as String,
+                name: getTitle(entry.value),
+              )
+          ] 
+        )
+      ),
+    );
+  }
 }

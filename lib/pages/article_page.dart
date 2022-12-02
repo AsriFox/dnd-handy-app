@@ -1,6 +1,8 @@
+import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:yeet/yeet.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
 import 'articles/trait_subpage.dart';
@@ -17,6 +19,70 @@ import 'articles/equipment_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
+final yeetArticle = Yeet(
+  path: "api/:category/:name",
+  builder: (context) {
+    var onResult = (json) {
+      final dynamic desc = json['desc'];
+      return ArticlePage(
+        desc: desc is String ? desc
+          : (desc as JsonArray).join("\n\n")
+      );
+    };
+    switch (context.params['category']) {
+      case "ability scores":
+        onResult = (json) => AbilityArticlePage.fromJson(json);
+        break;
+      case "equipment":
+        onResult = (json) => EquipmentArticlePage.fromJson(json);
+        break;
+      case "feats":
+        onResult = (json) => FeatArticlePage.fromJson(json);
+        break;
+      case "features":
+        onResult = (json) => FeatureArticlePage.fromJson(json);
+        break;
+      case "languages":
+        onResult = (json) => LanguageArticlePage.fromJson(json);
+        break;
+      case "magic items":
+        onResult = (json) => MagicItemArticlePage.fromJson(json);
+        break;
+      case "monsters":
+        onResult = (json) => MonsterArticlePage.fromJson(json);
+        break;
+      case "proficiencies":
+        onResult = (json) => ProficiencyArticlePage.fromJson(json);
+        break;
+      case "races":
+        onResult = (json) => RaceArticlePage.fromJson(json);
+        break;
+      case "rules":
+        onResult = (json) => RulesArticlePage.fromJson(json);
+        break;
+      case "skills":
+        onResult = (json) => SkillArticlePage.fromJson(json);
+        break;
+      case "spells":
+        onResult = (json) => SpellArticlePage.fromJson(json);
+        break;
+      case "subclasses":
+        onResult = (json) => SubclassArticlePage.fromJson(json);
+        break;
+      case "subraces":
+        onResult = (json) => SubraceArticlePage.fromJson(json);
+        break;
+      case "traits":
+        onResult = (json) => TraitArticlePage.fromJson(json);
+        break;
+    }
+    return DndPageScreen.request(
+      path: context.currentPath, 
+      onResult: onResult,
+    );
+  }
+);
+
 class ArticlePage extends StatelessWidget {
   const ArticlePage({
     super.key,
@@ -25,48 +91,7 @@ class ArticlePage extends StatelessWidget {
 
   final String? desc;
   List<Widget> buildChildren() => [];
-
-  factory ArticlePage.fromJson(JsonObject json, String? category) {
-    switch (category ?? getCategoryName(json['url'])) {
-      case "ability scores":
-        return AbilityArticlePage.fromJson(json);
-      case "equipment":
-        return EquipmentArticlePage.fromJson(json);
-      case "feats":
-        return FeatArticlePage.fromJson(json);
-      case "features":
-        return FeatureArticlePage.fromJson(json);
-      case "languages":
-        return LanguageArticlePage.fromJson(json);
-      case "magic items":
-        return MagicItemArticlePage.fromJson(json);
-      case "monsters":
-        return MonsterArticlePage.fromJson(json);
-      case "proficiencies":
-        return ProficiencyArticlePage.fromJson(json);
-      case "races":
-        return RaceArticlePage.fromJson(json);
-      case "rules":
-        return RulesArticlePage.fromJson(json);
-      case "skills":
-        return SkillArticlePage.fromJson(json);
-      case "spells":
-        return SpellArticlePage.fromJson(json);
-      case "subclasses":
-        return SubclassArticlePage.fromJson(json);
-      case "subraces":
-        return SubraceArticlePage.fromJson(json);
-      case "traits":
-        return TraitArticlePage.fromJson(json);
-      default:
-        final dynamic desc = json['desc'];
-        return ArticlePage(
-          desc: desc is String ? desc
-            : (desc as JsonArray).join("\n\n")
-        );
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     final children = buildChildren();

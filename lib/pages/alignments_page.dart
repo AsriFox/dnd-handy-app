@@ -25,8 +25,8 @@ class AlignmentsPage extends StatelessWidget {
           subtitle: ref.name,
           desc: DndPageBuilder(
             request: getApiRequest(ref.url),
-            onResult: (json) => ArticlePage.fromJson(json,
-              'alignments'
+            onResult: (json) => ArticlePage(
+              desc: json['desc'],
             ),
           ),
         )
