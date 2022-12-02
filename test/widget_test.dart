@@ -13,7 +13,11 @@ import 'package:dnd_handy_flutter/dnd_app.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const DndHandyApp());
+    await tester.pumpWidget(
+      DndHandyApp(
+        titleBar: (ctx, _) => AppBar(),
+      )
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

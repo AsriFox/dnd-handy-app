@@ -9,10 +9,10 @@ import 'home_screen/titlebar_desktop.dart';
 class DndHandyApp extends StatefulWidget {
   const DndHandyApp({
     super.key,
-    this.isDesktop = false,
+    required this.titleBar,
   });
 
-  final bool isDesktop;
+  final PreferredSizeWidget Function(BuildContext, bool) titleBar;
 
   @override
   State<StatefulWidget> createState() => DndAppSettings();
@@ -53,18 +53,21 @@ class DndAppSettings extends State<DndHandyApp>
 
   @override
   void setState(VoidCallback fn) {
+    final themeModeOld = themeMode;
     super.setState(fn);
     notifyListeners();
-    switch (themeMode) {
-      case ThemeMode.light:
-        persistent.setString('themeMode', 'light');
-        break;
-      case ThemeMode.dark:
-        persistent.setString('themeMode', 'dark');
-        break;
-      default:
-        persistent.setString('themeMode', 'system');
-        break;
+    if (themeMode != themeModeOld) {
+      switch (themeMode) {
+        case ThemeMode.light:
+          persistent.setString('themeMode', 'light');
+          break;
+        case ThemeMode.dark:
+          persistent.setString('themeMode', 'dark');
+          break;
+        default:
+          persistent.setString('themeMode', 'system');
+          break;
+      }
     }
   }
 
@@ -75,27 +78,29 @@ class DndAppSettings extends State<DndHandyApp>
   });
 
   bool isExtended = false;
+  final _drawerKey = GlobalKey<ScaffoldState>(); 
+  void toggleDrawer() {
+    final state = _drawerKey.currentState;
+    if (state != null && state.hasDrawer) {
+      // Narrow screen - use drawer:
+      if (state.isDrawerOpen) {
+        state.closeDrawer();
+      } else {
+        state.openDrawer();
+      }
+    } else {
+      // Wide screen - use sidebar:
+      setState(() {
+        isExtended = !isExtended;
+      });
+    }
+  }
 
   static DndAppSettings of(BuildContext context) =>
     context.findAncestorStateOfType<DndAppSettings>()!;
 
   @override
   Widget build(BuildContext context) {
-    final titleBar = widget.isDesktop
-      ? const DesktopTitleBar(
-        isHomePage: true,
-      )
-      : MobileTitleBar(
-        isHomePage: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => showSearchCustom(context),
-          ),
-          // homeScreenMenu,
-        ],
-      );
-
     return MaterialApp(
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
@@ -110,7 +115,7 @@ class DndAppSettings extends State<DndHandyApp>
           return false;
         },
         child: HomeScreen(
-          titleBar: titleBar as PreferredSizeWidget,
+          drawerKey: _drawerKey,
         ),
       ),
     );

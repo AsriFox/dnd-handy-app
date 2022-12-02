@@ -31,6 +31,8 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
     final backgroundColor = theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
     final surfaceTintColor = theme.appBarTheme.surfaceTintColor;
 
+    final state = DndAppSettings.of(context);
+
     return Material(
       elevation: elevation,
       color: backgroundColor,
@@ -39,14 +41,8 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
       child: Row(children: [
         IconButtonRect(
           width: titleBarDefaultItemsWidth,
+          onTap: state.toggleDrawer,
           child: const Icon(Icons.menu),
-          onTap: () {
-            Scaffold.of(context).openDrawer();
-            final state = DndAppSettings.of(context);
-            state.setState(() {
-              state.isExtended = !state.isExtended; 
-            });
-          },
         ),
         
         if (!isHomePage) 
@@ -70,6 +66,7 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           )
         ),
+        
         IconButtonRect(
           width: titleBarDefaultItemsWidth,
           child: const Icon(Icons.close),

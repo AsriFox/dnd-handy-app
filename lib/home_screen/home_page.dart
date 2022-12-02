@@ -31,22 +31,22 @@ class HomePage extends StatelessWidget {
     children: [
       Yeet(
         path: "api/alignments",
-        builder: (_) => DndPageBuilder(
-          request: getApiRequest("api/alignments"),
+        builder: (_) => DndPageBuilder.request(
+          url: "api/alignments",
           onResult: (json) => AlignmentsPage.fromJson(json),
         ),
       ),
       Yeet(
         path: "api/:category",
-        builder: (context) => DndPageBuilder(
-          request: getApiRequest("api/${context.params['category']!}"), 
+        builder: (context) => DndPageBuilder.request(
+          url: "api/${context.params['category']!}", 
           onResult: (json) => RefListPage.fromJsonArray(json['results']),
         ),
       ),
       Yeet(
         path: "api/equipment-categories/:name",
-        builder: (context) => DndPageBuilder(
-          request: getApiRequest("api/equipment-categories/${context.params['name']}"),
+        builder: (context) => DndPageBuilder.request(
+          url: "api/equipment-categories/${context.params['name']}",
           onResult: (json) => RefListPage.fromJsonArray(json['equipment'])
         ),
       ),

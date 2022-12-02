@@ -1,3 +1,5 @@
+import 'package:dnd_handy_flutter/home_screen/titlebar_desktop.dart';
+import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -10,8 +12,19 @@ void main() {
     defaultTargetPlatform == TargetPlatform.linux ||
     defaultTargetPlatform == TargetPlatform.windows;
 
+  final dynamic titleBar = isDesktop
+    ? (_, isHomePage) => 
+      DesktopTitleBar( 
+        isHomePage: isHomePage
+      )
+    : (context, isHomePage) => 
+      MobileTitleBar.build(
+        context, 
+        isHomePage: isHomePage
+      );
+
   runApp(DndHandyApp(
-    isDesktop: isDesktop,
+    titleBar: titleBar,
   ));
 
   if (isDesktop) {
