@@ -30,7 +30,7 @@ class EquipmentArticlePage extends ArticlePage {
     }
 
     return EquipmentArticlePage(
-      equipmentCategory: json['equipment_category']!,
+      equipmentCategory: DndRef.fromJson(json['equipment_category']!),
       cost: "${json['cost']['quantity']}${json['cost']['unit']}",
       weight: json['weight']?.toString(),
       equipmentSubpage: equipmentSubpage,

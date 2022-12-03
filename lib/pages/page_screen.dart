@@ -1,5 +1,4 @@
 import 'package:dnd_handy_flutter/dnd_app.dart';
-import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:flutter/material.dart';
 import 'package:yeet/yeet.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
@@ -8,7 +7,7 @@ import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 
 gotoPage(BuildContext context, DndRef ref) =>
-  context.yeet(ref.url);
+  context.push(ref.url.substring(4));
 
 class DndPageScreen extends StatelessWidget {
   const DndPageScreen({
@@ -21,11 +20,12 @@ class DndPageScreen extends StatelessWidget {
   final Widget body;
 
   factory DndPageScreen.request({
+    String? title,
     required String path,
     required Widget Function(dynamic) onResult,
   }) {
     return DndPageScreen(
-      title: getTitle(path), 
+      title: title ?? getTitle(path), 
       body: DndPageBuilder(
         request: getApiRequest(path),
         onResult: onResult,
@@ -39,7 +39,7 @@ class DndPageScreen extends StatelessWidget {
       appBar: DndAppSettings
         .of(context)
         .widget
-        .titleBar(context, false),
+        .titleBar(context, title),
       body: body,
     );
   }

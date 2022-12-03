@@ -20,7 +20,7 @@ import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
 final yeetArticle = Yeet(
-  path: "api/:category/:name",
+  path: "/:category/:name",
   builder: (context) {
     var onResult = (json) {
       final dynamic desc = json['desc'];
@@ -77,7 +77,7 @@ final yeetArticle = Yeet(
         break;
     }
     return DndPageScreen.request(
-      path: context.currentPath, 
+      path: "api${context.currentPath}", 
       onResult: onResult,
     );
   }

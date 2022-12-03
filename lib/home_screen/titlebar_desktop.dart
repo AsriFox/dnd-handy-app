@@ -1,5 +1,4 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +13,11 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
     super.key, 
     this.actions,
     this.isHomePage = false,
+    this.title = "",
   });
 
   final bool isHomePage;
+  final String title;
   final List<Widget>? actions;
 
   @override
@@ -59,7 +60,7 @@ class DesktopTitleBar extends StatelessWidget implements PreferredSizeWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "Handy DnD database",
+                  title,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),

@@ -1,7 +1,9 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
+import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/pages/alignments_page.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
+import 'package:dnd_handy_flutter/pages/character/background_page.dart';
 import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
@@ -13,29 +15,50 @@ import 'package:yeet/yeet.dart';
 class HomePage extends StatelessWidget {
   HomePage({ super.key });
 
-
-  late final yeet = Yeet(
+  final yeet = Yeet(
     path: "/",
-    builder: (_) => _HomePage(),
+    builder: (_) => HomeScreenPage(
+      title: "Database",
+      body: DndPageBuilder(
+        request: getApiRequest('api'),
+        onResult: (json) => RefListPage(
+          results: [
+            for (var entry in (json as JsonObject).entries)
+              DndRef(
+                index: entry.key,
+                url: entry.value as String,
+                name: getTitle(entry.value),
+              )
+          ] 
+        )
+      ),
+    ),
     children: [
       Yeet(
-        path: "api/alignments",
-        builder: (_) => DndPageScreen.request(
-          path: "api/alignments",
+        path: "/alignments",
+        builder: (context) => DndPageScreen.request(
+          path: "api${context.currentPath}",
           onResult: (json) => AlignmentsPage.fromJson(json),
         ),
       ),
       Yeet(
-        path: "api/:category",
+        path: "/:category",
         builder: (context) => DndPageScreen.request(
-          path: context.currentPath, 
+          path: "api${context.currentPath}", 
           onResult: (json) => RefListPage.fromJsonArray(json['results']),
         ),
       ),
       Yeet(
-        path: "api/equipment-categories/:name",
+        path: "/backgrounds/:name",
         builder: (context) => DndPageScreen.request(
-          path: context.currentPath,
+          path: "api${context.currentPath}", 
+          onResult: (json) => CharBackgroundPage.fromJson(json), 
+        ),
+      ),
+      Yeet(
+        path: "/equipment-categories/:name",
+        builder: (context) => DndPageScreen.request(
+          path: "api${context.currentPath}",
           onResult: (json) => RefListPage.fromJsonArray(json['equipment'])
         ),
       ),
@@ -49,30 +72,4 @@ class HomePage extends StatelessWidget {
     routeInformationParser: YeetInformationParser(),
     routerDelegate: YeeterDelegate(yeet: yeet),
   );
-}
-
-class _HomePage extends StatelessWidget {
-  _HomePage();
-
-  final Future<dynamic> request = getApiRequest("api");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: DndAppSettings.of(context).widget.titleBar(context, true),
-      body: DndPageBuilder(
-        request: request,
-        onResult: (json) => RefListPage(
-          results: [
-            for (var entry in (json as JsonObject).entries)
-              DndRef(
-                index: entry.key,
-                url: entry.value as String,
-                name: getTitle(entry.value),
-              )
-          ] 
-        )
-      ),
-    );
-  }
 }

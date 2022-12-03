@@ -8,19 +8,19 @@ import 'package:dnd_handy_flutter/dnd_app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final isDesktop = 
+  isDesktop = 
     defaultTargetPlatform == TargetPlatform.linux ||
     defaultTargetPlatform == TargetPlatform.windows;
 
   final dynamic titleBar = isDesktop
-    ? (_, isHomePage) => 
-      DesktopTitleBar( 
-        isHomePage: isHomePage
+    ? (_, title) => 
+      DesktopTitleBar(
+        title: title,
       )
-    : (context, isHomePage) => 
+    : (context, title) => 
       MobileTitleBar.build(
         context, 
-        isHomePage: isHomePage
+        title: title,
       );
 
   runApp(DndHandyApp(

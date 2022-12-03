@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:yeet/yeet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen/home_screen.dart';
-import 'home_screen/titlebar_mobile.dart';
-import 'home_screen/titlebar_desktop.dart';
+
+late final bool isDesktop;
 
 class DndHandyApp extends StatefulWidget {
   const DndHandyApp({
@@ -12,7 +12,7 @@ class DndHandyApp extends StatefulWidget {
     required this.titleBar,
   });
 
-  final PreferredSizeWidget Function(BuildContext, bool) titleBar;
+  final PreferredSizeWidget Function(BuildContext, String) titleBar;
 
   @override
   State<StatefulWidget> createState() => DndAppSettings();
@@ -114,8 +114,12 @@ class DndAppSettings extends State<DndHandyApp>
           yeeter.yeet();
           return false;
         },
-        child: HomeScreen(
-          drawerKey: _drawerKey,
+        child: Material(
+          child: SafeArea(
+            child: HomeScreen(
+              drawerKey: _drawerKey,
+            ),
+          ),
         ),
       ),
     );

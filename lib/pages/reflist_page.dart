@@ -1,7 +1,7 @@
 import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
-import 'package:yeet/yeet.dart';
 
 class RefListPage extends StatelessWidget {
   const RefListPage({
@@ -32,12 +32,13 @@ class RefListPage extends StatelessWidget {
         child: Text("No items"),
       );
     }
+
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (_, index) => 
         ListTileRef(
           ref: results[index],
-          onTap: (ctx, ref) => ctx.yeetOnTop(ref.url),
+          onTap: gotoPage,
         ),
     );
   }
