@@ -1,7 +1,6 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
-import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +24,7 @@ class AlignmentsPage extends StatelessWidget {
           subtitle: ref.name,
           desc: DndPageBuilder(
             request: getApiRequest(ref.url),
-            onResult: (json) => ArticlePage(
-              desc: json['desc'],
-            ),
+            onResult: (json) => Text(json['desc']),
           ),
         )
       );
@@ -74,35 +71,22 @@ class AlignmentTile extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
     return GridTile(
       footer: subtitle == null ? null
-        : Padding(padding: pad, child: Text(
-          subtitle!,
-          textAlign: TextAlign.center,
-          style: theme.subtitle1,
-        )),
+        : Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0), 
+          child: Text(
+            subtitle!,
+            textAlign: TextAlign.center,
+            style: theme.subtitle1,
+          ),
+        ),
       child: InkWell(
         onTap: desc != null
           ? () => showDialog(
             context: context, 
-            builder: (ctx) => AlertDialog(
-              title: Text(
-                subtitle ?? caption,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              titlePadding: const EdgeInsets.fromLTRB(14.0, 20.0, 14.0, 4.0),
-              contentPadding: const EdgeInsets.all(4.0),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: desc,
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
+            builder: (ctx) => buildDescDialog(
+              ctx,
+              title: subtitle ?? caption,
+              child: desc,
             ),
           )
           : () => ScaffoldMessenger.of(context).showSnackBar(
@@ -122,3 +106,31 @@ class AlignmentTile extends StatelessWidget {
     );
   }
 }
+
+Widget buildDescDialog(
+  BuildContext context, {
+  Widget? child,
+  required String title,
+}) {
+  return AlertDialog(
+    title: Text(
+      title,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    titlePadding: const EdgeInsets.fromLTRB(14.0, 20.0, 14.0, 4.0),
+    contentPadding: const EdgeInsets.all(14.0),
+    content: SizedBox(
+      width: double.maxFinite,
+      child: child,
+    ),
+    actions: [
+      IconButton(
+        onPressed: () => Navigator.of(context).pop(),
+        icon: const Icon(Icons.close),
+      ),
+    ],
+  );
+} 

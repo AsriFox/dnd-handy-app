@@ -4,6 +4,7 @@ import 'package:dnd_handy_flutter/home_screen/home_screen.dart';
 import 'package:dnd_handy_flutter/pages/alignments_page.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/character/background_page.dart';
+import 'package:dnd_handy_flutter/pages/character/class_page.dart';
 import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
@@ -41,28 +42,19 @@ class HomePage extends StatelessWidget {
           onResult: (json) => AlignmentsPage.fromJson(json),
         ),
       ),
-      Yeet(
-        path: "/:category",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}", 
-          onResult: (json) => RefListPage.fromJsonArray(json['results']),
-        ),
+      yeetCategory(
+        category: "backgrounds",
+        builder: (json) => CharBackgroundPage.fromJson(json), 
       ),
-      Yeet(
-        path: "/backgrounds/:name",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}", 
-          onResult: (json) => CharBackgroundPage.fromJson(json), 
-        ),
+      yeetCategory(
+        category: "classes",
+        builder: (json) => CharClassPage.fromJson(json),
       ),
-      Yeet(
-        path: "/equipment-categories/:name",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}",
-          onResult: (json) => RefListPage.fromJsonArray(json['equipment'])
-        ),
+      yeetCategory(
+        category: "equipment-categories",
+        builder: (json) => RefListPage.fromJsonArray(json['equipment']),
       ),
-      yeetArticle,
+      ...yeetArticles,
     ]
   );
 

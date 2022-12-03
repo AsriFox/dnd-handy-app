@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:flutter/material.dart';
 
 // TODO: Convert to standalone page
-class SubraceArticlePage extends ArticlePage {
+class SubraceArticlePage extends StatelessWidget {
   const SubraceArticlePage({
     super.key,
     required this.json,
@@ -12,15 +13,24 @@ class SubraceArticlePage extends ArticlePage {
 
   final JsonObject json;
 
+  static final yeet = yeetCategory(
+    category: "subraces",
+    builder: (json) => SubraceArticlePage.fromJson(json), 
+  );
+
   factory SubraceArticlePage.fromJson(JsonObject json) =>
     SubraceArticlePage(json: json);
 
   @override
-  List<Widget> buildChildren() {
+  Widget build(BuildContext context) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Base: ",
         content: TextButtonRef.fromJson(json['race']),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: MarkdownBody(data: json['desc']),
       ),
       annotatedLine(annotation: "Ability bonuses:"),
     ] + (json['ability_bonuses'] as List<dynamic>).map(
@@ -95,6 +105,12 @@ class SubraceArticlePage extends ArticlePage {
       ));
     }
 
-    return children;
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
   }
 }

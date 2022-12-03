@@ -2,22 +2,30 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 const padButt = EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0);
 
-class EquipmentArticlePage extends ArticlePage {
+class EquipmentArticlePage extends StatelessWidget {
   const EquipmentArticlePage({
     super.key,
     required this.equipmentCategory,
+    required this.desc,
     required this.cost,
     this.weight,
     this.equipmentSubpage,
   });
 
   final DndRef equipmentCategory;
+  final String desc;
   final String cost;
   final String? weight;
   final List<Widget>? equipmentSubpage;
+
+  static final yeet = yeetCategory(
+    category: "equipment", 
+    builder: (json) => EquipmentArticlePage.fromJson(json),
+  );
 
   factory EquipmentArticlePage.fromJson(JsonObject json) {
     List<Widget>? equipmentSubpage;
@@ -31,6 +39,7 @@ class EquipmentArticlePage extends ArticlePage {
 
     return EquipmentArticlePage(
       equipmentCategory: DndRef.fromJson(json['equipment_category']!),
+      desc: json['desc'].join("\n\n"),
       cost: "${json['cost']['quantity']}${json['cost']['unit']}",
       weight: json['weight']?.toString(),
       equipmentSubpage: equipmentSubpage,
@@ -38,25 +47,38 @@ class EquipmentArticlePage extends ArticlePage {
   }
 
   @override
-  List<Widget> buildChildren() => [
-      annotatedLine(
-        annotation: "Category: ",
-        padding: padButt,
-        content: TextButtonRef(ref: equipmentCategory),
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          annotatedLine(
+            annotation: "Category: ",
+            padding: padButt,
+            content: TextButtonRef(ref: equipmentCategory),
+          ),
+          if (desc.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: MarkdownBody(data: desc),
+            ),
+          if (equipmentSubpage?.isNotEmpty ?? false)
+            for (var widget in equipmentSubpage!)
+              widget,
+          annotatedLine(
+            annotation: "Cost: ",
+            content: Text(cost),
+          ),
+          if (weight != null) 
+            annotatedLine(
+              annotation: "Weight: ",
+              content: Text(weight!),
+            ),
+        ],
       ),
-      if (equipmentSubpage?.isNotEmpty ?? false)
-        for (var widget in equipmentSubpage!)
-          widget,
-      annotatedLine(
-        annotation: "Cost: ",
-        content: Text(cost),
-      ),
-      if (weight != null) 
-        annotatedLine(
-          annotation: "Weight: ",
-          content: Text(weight!),
-        ),
-    ];
+    );
+  }
 }
 
 List<Widget> weaponEquipmentArticlePage(JsonObject json) {
@@ -135,21 +157,21 @@ List<Widget> gearEquipmentArticleSubpage(JsonObject json) {
   final JsonArray? contents = json['contents'];
 
   return [
-    Padding(padding: pad,
-      child: TextButtonRef(ref: gearCategory),
+    annotatedLine(
+      annotation: "Gear category: ",
+      content: TextButtonRef(ref: gearCategory),
     ),
-    if (contents != null)
-      const Padding(padding: pad,
-        child: Text("Contents:", style: bold),
-      ),
     if (contents?.isNotEmpty ?? false)
-      for (var it in contents!)
-        ListTileRef.fromJson(
-          it['item'],
-          trailing: Text(
-            it['quantity'].toString(),
-            style: const TextStyle(fontSize: 16.0),
+      ...[
+        annotatedLine(annotation: "Contents:"),
+        for (var it in contents!)
+          ListTileRef.fromJson(
+            it['item'],
+            trailing: Text(
+              it['quantity'].toString(),
+              style: const TextStyle(fontSize: 16.0),
+            ),
           ),
-        )
+      ]
   ];
 }

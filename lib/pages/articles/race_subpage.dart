@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:flutter/material.dart';
 
 // TODO: Convert to standalone page
-class RaceArticlePage extends ArticlePage {
+class RaceArticlePage extends StatelessWidget {
   const RaceArticlePage({
     super.key,
     required this.json,
@@ -12,11 +12,16 @@ class RaceArticlePage extends ArticlePage {
 
   final JsonObject json;
 
+  static final yeet = yeetCategory(
+    category: "races",
+    builder: (json) => RaceArticlePage.fromJson(json),
+  );
+
   factory RaceArticlePage.fromJson(JsonObject json) =>
     RaceArticlePage(json: json);
 
   @override
-  List<Widget> buildChildren() {
+  Widget build(BuildContext context) {
     var children = <Widget>[
       annotatedLine(annotation: "Ability bonuses:"),
     ] + (json['ability_bonuses'] as List<dynamic>).map(
@@ -113,6 +118,12 @@ class RaceArticlePage extends ArticlePage {
       Padding(padding: pad, child: Text(json['language_desc'])),
     ];
 
-    return children;
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
   }
 }

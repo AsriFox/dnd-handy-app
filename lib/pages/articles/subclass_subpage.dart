@@ -1,11 +1,12 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:flutter/material.dart';
 
 // TODO: Convert to standalone page
-class SubclassArticlePage extends ArticlePage {
+class SubclassArticlePage extends StatelessWidget {
   const SubclassArticlePage({
     super.key,
     required this.json,
@@ -13,11 +14,16 @@ class SubclassArticlePage extends ArticlePage {
 
   final JsonObject json;
 
+  static final yeet = yeetCategory(
+    category: "subclasses",
+    builder: (json) => SubclassArticlePage.fromJson(json),
+  );
+
   factory SubclassArticlePage.fromJson(JsonObject json) =>
     SubclassArticlePage(json: json);
 
   @override
-  List<Widget> buildChildren() {
+  Widget build(BuildContext context) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Base: ",
@@ -26,6 +32,12 @@ class SubclassArticlePage extends ArticlePage {
       annotatedLine(
         annotation: "Flavor: ",
         content: Text(json['subclass_flavor']),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: MarkdownBody(
+          data: json['desc'].join("\n\n"),
+        ),
       ),
       annotatedLine(annotation: "Features:"),
       // TODO: Branching features (e.g. druid circles)
@@ -58,7 +70,13 @@ class SubclassArticlePage extends ArticlePage {
         ).toList();
     }
 
-    return children;
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
   }
 }
 

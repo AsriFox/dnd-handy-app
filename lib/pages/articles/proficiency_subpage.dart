@@ -3,7 +3,7 @@ import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 
-class ProficiencyArticlePage extends ArticlePage {
+class ProficiencyArticlePage extends StatelessWidget {
   const ProficiencyArticlePage({
     super.key,
     required this.type,
@@ -16,6 +16,11 @@ class ProficiencyArticlePage extends ArticlePage {
   final DndRef reference;
   final List<DndRef> races;
   final List<DndRef> classes;
+
+  static final yeet = yeetCategory(
+    category: "proficiencies", 
+    builder: (json) => ProficiencyArticlePage.fromJson(json),
+  );
 
   factory ProficiencyArticlePage.fromJson(JsonObject json) =>
     ProficiencyArticlePage(
@@ -32,30 +37,43 @@ class ProficiencyArticlePage extends ArticlePage {
     );
 
   @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          annotatedLine(
+            annotation: "Type: ",
+            content: Text(type),
+          ),
+          annotatedLine(
+            annotation: "Subject: ",
+            content: TextButtonRef(ref: reference),
+          ),
+          if (races.isNotEmpty)
+            annotatedLine(
+              annotation: "Races: ",
+              contents: [
+                for (var it in races)
+                  TextButtonRef(ref: it)
+              ],
+            ),
+          if (classes.isNotEmpty)
+            annotatedLine(
+              annotation: "Classes: ",
+              contents: [
+                for (var it in classes)
+                  TextButtonRef(ref: it)
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  @override
   List<Widget> buildChildren() => [
-    annotatedLine(
-      annotation: "Type: ",
-      content: Text(type),
-    ),
-    annotatedLine(
-      annotation: "Subject: ",
-      content: TextButtonRef(ref: reference),
-    ),
-    if (races.isNotEmpty)
-      annotatedLine(
-        annotation: "Races: ",
-        contents: [
-          for (var it in races)
-            ListTileRef(ref: it)
-        ],
-      ),
-    if (classes.isNotEmpty)
-      annotatedLine(
-        annotation: "Classes: ",
-        contents: [
-          for (var it in classes)
-            ListTileRef(ref: it)
-        ],
-      ),
+    
   ];
 }

@@ -2,8 +2,9 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
-class SpellArticlePage extends ArticlePage {
+class SpellArticlePage extends StatelessWidget {
   const SpellArticlePage({
     super.key,
     required this.json,
@@ -11,13 +12,30 @@ class SpellArticlePage extends ArticlePage {
 
   final JsonObject json;
 
+  static final yeet = yeetCategory(
+    category: "spells",
+    builder: (json) => SpellArticlePage.fromJson(json),
+  );
+
   // TODO: fields
   factory SpellArticlePage.fromJson(JsonObject json) =>
     SpellArticlePage(json: json);
 
   @override
-  List<Widget> buildChildren() {
-    var children = <Widget>[];
+  Widget build(BuildContext context) {
+    var children = <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: MarkdownBody(
+          data: [
+            for (String p in json['desc'])
+              if (p.contains('|')) p
+              else "\n$p\n"
+          ].join("\n"),
+          styleSheet: mdTableStyle,
+        ),
+      ),
+    ];
 
     if (json['classes'].isNotEmpty) {
       children.add(annotatedLine(
@@ -158,7 +176,13 @@ class SpellArticlePage extends ArticlePage {
           break;
       }
     }
-    
-    return children;
+
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
   }
 }

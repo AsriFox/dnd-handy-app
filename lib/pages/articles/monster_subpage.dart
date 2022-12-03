@@ -2,9 +2,10 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // TODO: Finish and Convert to standalone page
-class MonsterArticlePage extends ArticlePage {
+class MonsterArticlePage extends StatelessWidget {
   const MonsterArticlePage({
     super.key,
     required this.json,
@@ -12,11 +13,16 @@ class MonsterArticlePage extends ArticlePage {
 
   final JsonObject json;
 
+  static final yeet = yeetCategory(
+    category: "monsters", 
+    builder: (json) => MonsterArticlePage.fromJson(json),
+  );
+
   factory MonsterArticlePage.fromJson(JsonObject json) =>
     MonsterArticlePage(json: json);
 
   @override
-  List<Widget> buildChildren() {
+  Widget build(BuildContext context) {
     var children = <Widget>[
       annotatedLine(
         annotation: "Type: ",
@@ -106,6 +112,20 @@ class MonsterArticlePage extends ArticlePage {
       ),
     ];
 
-    return children;
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: MarkdownBody(
+              data: json['desc'].join("\n\n"),
+            ),
+          ),
+          ...children,
+        ],
+      ),
+    );
   }
 }

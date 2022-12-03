@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
-class TraitArticlePage extends ArticlePage {
+class TraitArticlePage extends StatelessWidget {
   const TraitArticlePage({
     super.key,
+    required this.desc,
     required this.races,
     required this.subraces,
     required this.proficiencies,
@@ -16,6 +20,7 @@ class TraitArticlePage extends ArticlePage {
     this.traitSpecifics,
   });
 
+  final String desc;
   final List<DndRef> races;
   final List<DndRef> subraces;
   final List<DndRef> proficiencies;
@@ -24,6 +29,11 @@ class TraitArticlePage extends ArticlePage {
   final int? languageOptionsChoiceCount;
   final List<DndRef>? languageOptions;
   final List<Widget>? traitSpecifics;
+
+  static final yeet = yeetCategory(
+    category: "traits",
+    builder: (json) => TraitArticlePage.fromJson(json),
+  );
 
   factory TraitArticlePage.fromJson(JsonObject json) {
     final int? proficiencyChoiceCount = json['proficiency_choices']?['choose'];
@@ -58,6 +68,7 @@ class TraitArticlePage extends ArticlePage {
     }
     
     return TraitArticlePage(
+      desc: json['desc'].join("\n\n"),
       races: DndRef.all(json['races'])!,
       subraces: DndRef.all(json['subraces'])!,
       proficiencies: DndRef.all(json['proficiencies'])!,
@@ -70,47 +81,59 @@ class TraitArticlePage extends ArticlePage {
   }
 
   @override
-  List<Widget> buildChildren() => [
-      if (races.isNotEmpty)
-        annotatedLine(
-          annotation: "Races: ",
-          contents: [
-            for (var it in races)
-              TextButtonRef(ref: it)
-          ],
-        ),
-      if (subraces.isNotEmpty)
-        annotatedLine(
-          annotation: "Subraces: ",
-          contents: [
-            for (var it in subraces)
-              TextButtonRef(ref: it)
-          ],
-        ),
-      if (languageOptionsChoiceCount != null)
-        annotatedLine(
-          annotation: "Language choices: ",
-          content: Text("choose $languageOptionsChoiceCount from:"),
-        ),
-      if (languageOptions?.isNotEmpty ?? false)
-        annotatedLine(annotation: "",
-          contents: [
-            for (var it in languageOptions!)
-              TextButtonRef(ref: it)
-          ],
-        ),
-      if (proficiencyChoiceCount != null)
-        annotatedLine(
-          annotation: "Variants: ",
-          content: Text("choose $proficiencyChoiceCount from:"),
-        ),
-      if (proficiencyChoices?.isNotEmpty ?? false)
-        for (var it in proficiencyChoices!)
-          ListTileRef(ref: it, dense: true),
-      if (traitSpecifics != null)
-        for (var it in traitSpecifics!)
-          it
-    ];
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: double.maxFinite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: MarkdownBody(data: desc),
+          ),
+          if (races.isNotEmpty)
+            annotatedLine(
+              annotation: "Races: ",
+              contents: [
+                for (var it in races)
+                  TextButtonRef(ref: it)
+              ],
+            ),
+          if (subraces.isNotEmpty)
+            annotatedLine(
+              annotation: "Subraces: ",
+              contents: [
+                for (var it in subraces)
+                  TextButtonRef(ref: it)
+              ],
+            ),
+          if (languageOptionsChoiceCount != null)
+            annotatedLine(
+              annotation: "Language choices: ",
+              content: Text("choose $languageOptionsChoiceCount from:"),
+            ),
+          if (languageOptions?.isNotEmpty ?? false)
+            annotatedLine(annotation: "",
+              contents: [
+                for (var it in languageOptions!)
+                  TextButtonRef(ref: it)
+              ],
+            ),
+          if (proficiencyChoiceCount != null)
+            annotatedLine(
+              annotation: "Variants: ",
+              content: Text("choose $proficiencyChoiceCount from:"),
+            ),
+          if (proficiencyChoices?.isNotEmpty ?? false)
+            for (var it in proficiencyChoices!)
+              ListTileRef(ref: it, dense: true),
+          if (traitSpecifics != null)
+            for (var it in traitSpecifics!)
+              it
+        ],
+      ),
+    );
+  }
 }
 
 List<Widget> buildBreathWeaponSubpage(JsonObject breathWeapon) => [
