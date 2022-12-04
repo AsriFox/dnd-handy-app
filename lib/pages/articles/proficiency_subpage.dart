@@ -71,9 +71,4 @@ class ProficiencyArticlePage extends StatelessWidget {
       ),
     );
   }
-
-  @override
-  List<Widget> buildChildren() => [
-    
-  ];
 }

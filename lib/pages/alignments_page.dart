@@ -23,7 +23,7 @@ class AlignmentsPage extends StatelessWidget {
           caption: abbr,
           subtitle: ref.name,
           desc: DndPageBuilder(
-            request: getRequest(ref.url),
+            request: DndApiService().getRequest(ref.url),
             onResult: (json) => Text(json['desc']),
           ),
         )

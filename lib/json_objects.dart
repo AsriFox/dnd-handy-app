@@ -1,4 +1,5 @@
-typedef JsonObject = Map<String, dynamic>;
+// TODO: Hive typed objects
+typedef JsonObject = Map<dynamic, dynamic>;
 typedef JsonArray = List<dynamic>;
 
 String getTitle(String path) {

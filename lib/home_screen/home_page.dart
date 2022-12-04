@@ -21,15 +21,16 @@ class HomePage extends StatelessWidget {
     builder: (_) => HomeScreenPage(
       title: "Database",
       body: DndPageBuilder(
-        request: getRequest('api'),
+        request: DndApiService().getRequest('api'),
         onResult: (json) => RefListPage(
           results: [
             for (var entry in (json as JsonObject).entries)
-              DndRef(
-                index: entry.key,
-                url: entry.value as String,
-                name: getTitle(entry.value),
-              )
+              if (entry.key != 'last_refresh')
+                DndRef(
+                  index: entry.key,
+                  url: entry.value as String,
+                  name: getTitle(entry.value),
+                )
           ] 
         )
       ),

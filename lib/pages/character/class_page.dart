@@ -36,8 +36,8 @@ class CharClassPage extends StatelessWidget {
 
   factory CharClassPage.fromJson(JsonObject json) =>
     CharClassPage(
-      classLevels: getRequest(json['class_levels']),
-      classSpells: getRequest(json['spells']),
+      classLevels: DndApiService().getRequest(json['class_levels']),
+      classSpells: DndApiService().getRequest(json['spells']),
       spellcasting: json['spellcasting'],
       savingThrows: [
         for (var it in json['saving_throws'])

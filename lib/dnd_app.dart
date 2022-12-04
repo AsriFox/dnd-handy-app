@@ -1,7 +1,5 @@
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:yeet/yeet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen/home_screen.dart';
@@ -26,7 +24,6 @@ class DndAppSettings extends State<DndHandyApp>
   ThemeMode? themeMode;
   late TabController controller;
   late SharedPreferences persistent;
-  late final LazyBox? cache;
 
   @override
   void initState() {
@@ -39,10 +36,6 @@ class DndAppSettings extends State<DndHandyApp>
   }
 
   void loadState() async {
-    final localDir = await getApplicationSupportDirectory();
-    Hive.init(localDir.path);
-    cache = await Hive.openLazyBox('dnd5e-bits');
-
     persistent = await SharedPreferences.getInstance();
     switch (persistent.getString('themeMode')) {
       case 'light':
@@ -130,13 +123,6 @@ class DndAppSettings extends State<DndHandyApp>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() async {
-    await cache?.compact();
-    await cache?.close();
-    super.dispose();
   }
 }
 
