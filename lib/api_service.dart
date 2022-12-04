@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
-import 'package:dnd_handy_flutter/main.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 
 // Timestamp in seconds.
 int timestamp() => DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
+final _cache = Hive.lazyBox('dnd5e-bits');
+
 Future<JsonObject?> getRequest(String? path) async {
   if (path == null) {
     return null;
   } 
-  final result = cache.get(path);
+  final result = await _cache.get(path);
   if (result == null) { 
     return await getRequestRefresh(path);
   }
@@ -30,7 +32,7 @@ Future<JsonObject> getRequestRefresh(String path) async {
     }
     : request;
   result["last_refresh"] = timestamp();
-  cache.put(path, result);
+  _cache.put(path, result);
   return result;
 }
 

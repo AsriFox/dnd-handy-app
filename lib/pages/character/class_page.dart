@@ -174,7 +174,7 @@ class CharClassPage extends StatelessWidget {
       ));
       tabPages.add(
         DndPageBuilder(
-          request: classSpells!,
+          request: classSpells,
           onResult: (json) => RefListPage.fromJsonArray(json['results']),
         )
       );
