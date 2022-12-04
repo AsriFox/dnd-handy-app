@@ -27,7 +27,7 @@ class DndPageScreen extends StatelessWidget {
     return DndPageScreen(
       title: title ?? getTitle(path), 
       body: DndPageBuilder(
-        request: getApiRequest(path),
+        request: getRequest(path),
         onResult: onResult,
       ), 
     );

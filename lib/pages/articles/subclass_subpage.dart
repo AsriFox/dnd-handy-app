@@ -81,7 +81,7 @@ class SubclassArticlePage extends StatelessWidget {
 }
 
 FutureBuilder buildListFuture({
-  required Future<dynamic> request,
+  required Future<JsonObject?> request,
   required Widget Function(dynamic) itemBuilder,
 }) =>
   FutureBuilder(
@@ -90,11 +90,10 @@ FutureBuilder buildListFuture({
       if (snapshot.hasData) {
         return SingleChildScrollView(
           child: Column(
-            children: snapshot.data is List<dynamic> 
-              ? (snapshot.data as List<dynamic>)
-                .map(itemBuilder).toList()
-              : (snapshot.data['results'] as List<dynamic>)
-                .map(itemBuilder).toList(),
+            children: [
+              for (var item in snapshot.data['results'])
+                itemBuilder(item)
+            ],
           ),
         );
       } else {
@@ -113,10 +112,10 @@ class LevelFeaturesList extends StatelessWidget {
     required this.request,
   });
 
-  final Future<dynamic> request;
+  final Future<JsonObject?> request;
 
   factory LevelFeaturesList.request(String url) =>
-    LevelFeaturesList(request: getApiRequest(url));
+    LevelFeaturesList(request: getRequest(url));
 
   @override
   Widget build(BuildContext context) {
@@ -124,9 +123,10 @@ class LevelFeaturesList extends StatelessWidget {
       request: request, 
       itemBuilder: (it) => ExpansionTile(
           title: Text("Level ${it['level']}"),
-          children: (it['features'] as List<dynamic>).map(
-              (ref) => ListTileRef.fromJson(ref)
-            ).toList(),
+          children: [
+            for (var ref in it['features'])
+              ListTileRef.fromJson(ref)
+          ],
         )
     );
   }

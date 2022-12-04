@@ -12,7 +12,7 @@ class CharClassPage extends StatelessWidget {
   const CharClassPage({
     super.key,
     required this.classLevels,
-    this.classSpells,
+    required this.classSpells,
     this.spellcasting,
     required this.savingThrows,
     required this.subclasses,
@@ -23,8 +23,8 @@ class CharClassPage extends StatelessWidget {
     this.equipmentOptions,
   });
 
-  final Future<dynamic> classLevels;
-  final Future<dynamic>? classSpells;
+  final Future<JsonObject?> classLevels;
+  final Future<JsonObject?> classSpells;
   final JsonObject? spellcasting;
   final List<DndRef> savingThrows;
   final List<DndRef> subclasses;
@@ -36,8 +36,8 @@ class CharClassPage extends StatelessWidget {
 
   factory CharClassPage.fromJson(JsonObject json) =>
     CharClassPage(
-      classLevels: getApiRequest(json['class_levels']),
-      classSpells: getApiRequest(json['spells']),
+      classLevels: getRequest(json['class_levels']),
+      classSpells: getRequest(json['spells']),
       spellcasting: json['spellcasting'],
       savingThrows: [
         for (var it in json['saving_throws'])

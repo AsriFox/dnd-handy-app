@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
     builder: (_) => HomeScreenPage(
       title: "Database",
       body: DndPageBuilder(
-        request: getApiRequest('api'),
+        request: getRequest('api'),
         onResult: (json) => RefListPage(
           results: [
             for (var entry in (json as JsonObject).entries)
