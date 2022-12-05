@@ -1,8 +1,7 @@
+import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
-import 'package:dnd_handy_flutter/home_screen/titlebar_desktop.dart';
 import 'home_page.dart';
 import 'settings_page.dart';
 
@@ -19,15 +18,16 @@ class HomeScreenPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: isDesktop
-        ? DesktopTitleBar(
-          isHomePage: true,
-          title: "Handy DnD app - $title",
-        )
-        : buildMobileHomeTitleBar(
-          title: title,
-          onMenuButtonPressed: DndAppSettings.of(context).toggleDrawer,
-        ),
+      appBar: buildMobileHomeTitleBar(
+        title: title,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => showSearchCustom(context),
+          )
+        ],
+        onMenuButtonPressed: DndAppSettings.of(context).toggleDrawer,
+      ),
       body: body,
     );
   }
@@ -102,17 +102,10 @@ class HomeScreen extends StatelessWidget {
           return SizedBox.expand(
             child: Row(children: [
               AnimatedContainer(
-                width: appState.isExtended ? 240.0 : titleBarDefaultItemsWidth,
+                width: appState.isExtended ? 240.0 : 56.0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.decelerate,
-                child: isDesktop
-                  ? DesktopSidebarFrame(
-                    drawer: drawer,
-                    isExtended: appState.isExtended,
-                  )
-                  : SafeArea(
-                    child: drawer,
-                  ),
+                child: SafeArea(child: drawer),
               ),
               Expanded(
                 child: appScreenTabs,
@@ -122,51 +115,6 @@ class HomeScreen extends StatelessWidget {
         }
       }
     );
-  }
-}
-
-class DesktopSidebarFrame extends StatelessWidget {
-  const DesktopSidebarFrame({
-    super.key,
-    this.drawer,
-    this.isExtended = true,
-  });
-
-  final Widget? drawer;
-  final bool isExtended;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        height: appWindow.titleBarHeight,
-        color: Theme.of(context).colorScheme.surface,
-        child: MoveWindow(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 5.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Wrap(
-                clipBehavior: Clip.hardEdge,
-                direction: Axis.vertical,
-                alignment: WrapAlignment.center,
-                runSpacing: 10,
-                children: [
-                  const Icon(Icons.book),
-                  if (isExtended)
-                    Text(
-                      "Handy DnD app",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    )
-                ],
-              ),
-            ),
-          )
-        ),
-      ),
-      if (drawer != null)
-        Expanded(child: drawer!),
-    ]);
   }
 }
 

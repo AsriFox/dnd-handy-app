@@ -4,15 +4,10 @@ import 'package:yeet/yeet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen/home_screen.dart';
 
-late final bool isDesktop;
-
 class DndHandyApp extends StatefulWidget {
   const DndHandyApp({
     super.key,
-    required this.titleBar,
   });
-
-  final PreferredSizeWidget Function(BuildContext, String) titleBar;
 
   @override
   State<StatefulWidget> createState() => DndAppSettings();

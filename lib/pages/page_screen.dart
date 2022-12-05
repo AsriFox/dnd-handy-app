@@ -1,4 +1,5 @@
 import 'package:dnd_handy_flutter/dnd_app.dart';
+import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:yeet/yeet.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
@@ -36,10 +37,11 @@ class DndPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DndAppSettings
-        .of(context)
-        .widget
-        .titleBar(context, title),
+      appBar: MobileTitleBar(
+        title: title,
+        appState: DndAppSettings.of(context),
+        onPressBackButton: () => context.yeet(),
+      ),
       body: body,
     );
   }
