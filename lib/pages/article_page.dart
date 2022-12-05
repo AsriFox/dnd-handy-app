@@ -26,9 +26,8 @@ Yeet yeetCategory({
 }) {
   return Yeet(
     path: "/$category",
-    builder: (_) => DndPageScreen.request(
+    builder: (_) => DndCategoryScreen.request(
       path: "api/$category",
-      onResult: (json) => RefListPage.fromJsonArray(json['results']),
     ),
     children: [
       Yeet(

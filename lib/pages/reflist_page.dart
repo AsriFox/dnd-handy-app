@@ -1,7 +1,12 @@
+import 'package:dnd_handy_flutter/api_service.dart';
+import 'package:dnd_handy_flutter/dnd_app.dart';
+import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:yeet/yeet.dart';
 
 class RefListPage extends StatelessWidget {
   const RefListPage({
@@ -40,6 +45,40 @@ class RefListPage extends StatelessWidget {
           ref: results[index],
           onTap: gotoPage,
         ),
+    );
+  }
+}
+
+class DndCategoryScreen extends StatelessWidget {
+  const DndCategoryScreen({
+    super.key,
+    required this.category,
+    required this.body,
+  });
+
+  final String category;
+  final Widget body;
+
+  factory DndCategoryScreen.request({
+    required String path,
+  }) {
+    return DndCategoryScreen(
+      category: path.split('/').last, 
+      body: DndPageBuilder(
+        request: DndApiService().getRequest(path),
+        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+      ), 
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: buildMobileCategoryTitleBar(
+        context: context,
+        title: category,
+      ),
+      body: body,
     );
   }
 }

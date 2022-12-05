@@ -35,6 +35,25 @@ class MobileTitleBar extends AppBar {
   }
 }
 
+PreferredSizeWidget buildMobileCategoryTitleBar({
+  required BuildContext context,
+  required String title,
+}) {
+  return MobileTitleBar.build(
+    context,
+    title: title,
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: () => showSearchCustom(
+          context, 
+          category: title,
+        ),
+      ),
+    ],
+  );
+}
+
 PreferredSizeWidget buildMobileHomeTitleBar({
   List<Widget>? actions,
   String? title,
