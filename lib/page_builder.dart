@@ -13,54 +13,53 @@ class DndPageBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: request,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          return onResult(snapshot.data);
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text("Error: ${snapshot.error}"),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }
-    );
+        future: request,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            return onResult(snapshot.data);
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }
 
 const descListNames = [
 // Short and simple articles:
-  "alignments", 
-  "conditions",
-  "damage types",
-  "magic schools",
-  "weapon properties",
+  'alignments',
+  'conditions',
+  'damage types',
+  'magic schools',
+  'weapon properties',
 // Short articles with small additions:
-  "ability scores",
-  "feats",
-  "languages",
-  "proficiencies",
-  "skills",
+  'ability scores',
+  'feats',
+  'languages',
+  'proficiencies',
+  'skills',
 // Complex articles:
-  // "Backgrounds",
-  "equipment",
-  "features",
-  "magic items",
-  // "Monsters",
-  // "Races",
-  // "Spells",
-  "subraces",
-  "traits",
-// Sublists for 'Equipment':
-  // "Equipment categories",
+  // 'Backgrounds',
+  'equipment',
+  'features',
+  'magic items',
+  // 'Monsters',
+  // 'Races',
+  // 'Spells',
+  'subraces',
+  'traits',
+// Sub-lists for 'Equipment':
+  // 'Equipment categories',
 // VERY complex articles:
-  // "Classes",
-  // "Subclasses",
+  // 'Classes',
+  // 'Subclasses',
 // Long text articles:
-  // "Rule sections",
-// Sublists for 'Rule sections':
-  // "Rules",
+  // 'Rule sections',
+// Sub-lists for 'Rule sections':
+  // 'Rules',
 ];

@@ -18,20 +18,16 @@ class LanguageArticlePage extends StatelessWidget {
   final List<String> typicalSpeakers;
 
   static final yeet = yeetCategory(
-    category: "languages",
+    category: 'languages',
     builder: (json) => LanguageArticlePage.fromJson(json),
   );
 
-  factory LanguageArticlePage.fromJson(JsonObject json) =>
-    LanguageArticlePage(
-      desc: json['desc'],
-      type: json['type']!,
-      script: json['script'] ?? "none",
-      typicalSpeakers: [
-        for (var s in json['typical_speakers'])
-          s
-      ],
-    );
+  factory LanguageArticlePage.fromJson(JsonObject json) => LanguageArticlePage(
+        desc: json['desc'],
+        type: json['type']!,
+        script: json['script'] ?? 'none',
+        typicalSpeakers: [for (var s in json['typical_speakers']) s],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -45,20 +41,16 @@ class LanguageArticlePage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: MarkdownBody(data: desc!),
             ),
-          _richTextBlock("Type: ", type),
-          _richTextBlock("Script: ", script),
-          _richTextBlock(
-            "Typical speakers: ", 
-            typicalSpeakers.join(", ")
-          ),
+          _richTextBlock('Type: ', type),
+          _richTextBlock('Script: ', script),
+          _richTextBlock('Typical speakers: ', typicalSpeakers.join(', ')),
         ],
       ),
     );
   }
 }
 
-Widget _richTextBlock(String boldText, String regularText) =>
-  annotatedLine(
-    annotation: boldText,
-    content: Text(regularText),
-  );
+Widget _richTextBlock(String boldText, String regularText) => annotatedLine(
+      annotation: boldText,
+      content: Text(regularText),
+    );

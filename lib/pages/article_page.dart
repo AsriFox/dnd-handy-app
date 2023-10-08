@@ -3,7 +3,7 @@ import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:yeet/yeet.dart';
+import 'package:go_router/go_router.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
 import 'articles/trait_subpage.dart';
@@ -20,27 +20,22 @@ import 'articles/equipment_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
-Yeet yeetCategory({
-  required String category, 
+GoRoute yeetCategory({
+  required String category,
   required Widget Function(dynamic) builder,
-}) {
-  return Yeet(
-    path: "/$category",
-    builder: (_) => DndPageScreen.request(
-      path: "api/$category",
-      onResult: (json) => RefListPage.fromJsonArray(json['results']),
-    ),
-    children: [
-      Yeet(
-        path: "/$category/:name",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}",
-          onResult: builder,
-        )
-      )
-    ],
-  );
-}
+}) =>
+    GoRoute(
+      path: category,
+      builder: (_, state) => DndCategoryScreen.request(path: 'api/$category'),
+      routes: [
+        GoRoute(
+            path: ':name',
+            builder: (_, state) => DndPageScreen.request(
+                  path: 'api${state.uri}',
+                  onResult: builder,
+                )),
+      ],
+    );
 
 final yeetArticles = [
   AbilityArticlePage.yeet,
@@ -58,20 +53,17 @@ final yeetArticles = [
   SubclassArticlePage.yeet,
   SubraceArticlePage.yeet,
   TraitArticlePage.yeet,
-
   yeetCategory(
-    category: "rule-sections",
-    builder: (json) => Markdown(
-      data: json['desc'],
-      styleSheet: mdTableStyle,
-    )
-  ),
-
+      category: 'rule-sections',
+      builder: (json) => Markdown(
+            data: json['desc'],
+            styleSheet: mdTableStyle,
+          )),
   for (String cat in const [
-    "conditions",
-    "damage-types",
-    "magic-schools",
-    "weapon-properties",
+    'conditions',
+    'damage-types',
+    'magic-schools',
+    'weapon-properties',
   ])
     yeetCategory(
       category: cat,
@@ -86,33 +78,32 @@ class ArticlePage extends StatelessWidget {
   });
 
   final String? desc;
+
   List<Widget> buildChildren() => [];
 
   factory ArticlePage.fromJson(JsonObject json) {
     final desc = json['desc'];
     return ArticlePage(
-      desc: desc is String 
-        ? desc 
-        : [
-          for (String p in desc)
-            if (p.contains('|')) p
-            else "\n$p\n"
-        ].join("\n"),
+      desc: desc is String
+          ? desc
+          : [
+              for (String p in desc)
+                if (p.contains('|')) p else '\n$p\n'
+            ].join('\n'),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (desc == null) {
-      return const Center(child: Text("Empty page"));
+      return const Center(child: Text('Empty page'));
     }
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: MarkdownBody(
-        data: desc!,
-        styleSheet: mdTableStyle,
-      )
-    );
+        padding: const EdgeInsets.all(10.0),
+        child: MarkdownBody(
+          data: desc!,
+          styleSheet: mdTableStyle,
+        ));
   }
 }
 
@@ -125,11 +116,11 @@ final mdTableStyle = MarkdownStyleSheet(
 );
 
 Widget annotatedLine({
-  required String annotation, 
+  required String annotation,
   Widget? content,
   List<Widget>? contents,
   EdgeInsetsGeometry padding = pad,
-}) { 
+}) {
   var children = <Widget>[
     Text(annotation, style: bold),
   ];
@@ -141,10 +132,9 @@ Widget annotatedLine({
   }
 
   return Padding(
-    padding: pad,
-    child: Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: children,
-    )
-  );
+      padding: pad,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: children,
+      ));
 }

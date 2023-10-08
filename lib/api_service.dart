@@ -10,17 +10,17 @@ class DndApiService {
   factory DndApiService() => _instance;
 
   late final Future<LazyBox> _cache;
-  
+
   Future<JsonObject?> getRequest(String? path) async {
     if (path == null) {
       return null;
-    } 
+    }
     final result = await (await _cache).get(path);
-    if (result == null) { 
+    if (result == null) {
       return await getRequestRefresh(path);
     }
     if (result is! Map<dynamic, dynamic>) {
-      throw "Unsupported: Not a JSON object";
+      throw 'Unsupported: Not a JSON object';
     }
     // Cast to JsonObject
     return result.cast<String, dynamic>();
@@ -29,12 +29,12 @@ class DndApiService {
   Future<JsonObject> getRequestRefresh(String path) async {
     final request = await _getApiRequest(path);
     final JsonObject result = request is JsonArray
-      ? {
-        'count': request.length,
-        'results': request,
-      }
-      : request;
-    result["last_refresh"] = timestamp();
+        ? {
+            'count': request.length,
+            'results': request,
+          }
+        : request;
+    result['last_refresh'] = timestamp();
     (await _cache).put(path, result);
     return result;
   }
@@ -46,7 +46,7 @@ class DndApiService {
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     } else {
-      throw "Failed to complete GET request.";
+      throw 'Failed to complete GET request.';
     }
   }
 
@@ -57,9 +57,7 @@ class DndApiService {
 
   DndApiService._internal() {
     _cache = _init();
-    _cache.then(
-      (box) => _finalizer.attach(this, box, detach: this)
-    );
+    _cache.then((box) => _finalizer.attach(this, box, detach: this));
   }
 
   static Future<LazyBox> _init() async {

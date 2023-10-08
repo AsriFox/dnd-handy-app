@@ -6,7 +6,9 @@ enum ListDensity {
   veryDense(VisualDensity.minimumDensity);
 
   const ListDensity(this.value);
+
   final double value;
+
   VisualDensity get d => VisualDensity(vertical: value);
 }
 
@@ -21,18 +23,14 @@ class DndRef {
   final String name;
   final String url;
 
-  factory DndRef.fromJson(JsonObject json) =>
-    DndRef(
-      index: json['index'] as String,
-      name: json['name'] as String,
-      url: json['url'] as String,
-    );
+  factory DndRef.fromJson(JsonObject json) => DndRef(
+        index: json['index'] as String,
+        name: json['name'] as String,
+        url: json['url'] as String,
+      );
 
   static List<DndRef>? all(JsonArray? array) =>
-    array == null ? null : [
-      for (var it in array)
-        DndRef.fromJson(it)
-    ];
+      array == null ? null : [for (var it in array) DndRef.fromJson(it)];
 }
 
 class ListTileRef extends StatelessWidget {
@@ -43,7 +41,7 @@ class ListTileRef extends StatelessWidget {
     this.visualDensity = VisualDensity.comfortable,
     this.trailing,
     this.dense = false,
-  }); 
+  });
 
   final DndRef ref;
   final void Function(BuildContext, DndRef) onTap;
@@ -58,13 +56,13 @@ class ListTileRef extends StatelessWidget {
     Widget? trailing,
     bool dense = false,
   }) =>
-    ListTileRef(
-      ref: DndRef.fromJson(json),
-      onTap: onTap,
-      trailing: trailing,
-      visualDensity: visualDensity ?? ListDensity.veryDense.d,
-      dense: dense,
-    );
+      ListTileRef(
+        ref: DndRef.fromJson(json),
+        onTap: onTap,
+        trailing: trailing,
+        visualDensity: visualDensity ?? ListDensity.veryDense.d,
+        dense: dense,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +89,11 @@ class TextButtonRef extends StatelessWidget {
   factory TextButtonRef.fromJson(
     JsonObject json, {
     Function(BuildContext, DndRef) onPressed = gotoPage,
-  }) => 
-    TextButtonRef(
-      ref: DndRef.fromJson(json),
-      onPressed: onPressed,
-    );
+  }) =>
+      TextButtonRef(
+        ref: DndRef.fromJson(json),
+        onPressed: onPressed,
+      );
 
   @override
   Widget build(BuildContext context) {

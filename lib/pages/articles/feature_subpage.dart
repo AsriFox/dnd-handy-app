@@ -21,59 +21,53 @@ class FeatureArticlePage extends StatelessWidget {
   final Map<DndRef, int>? prerequisites;
 
   static final yeet = yeetCategory(
-    category: "features",
+    category: 'features',
     builder: (json) => FeatureArticlePage.fromJson(json),
   );
 
-  factory FeatureArticlePage.fromJson(JsonObject json) =>
-    FeatureArticlePage(
-      level: json['level'],
-      desc: json['desc'].join("\n\n"),
-      classRef: DndRef.fromJson(json['class']),
-      subclassRef: json['subclass'] != null 
-        ? DndRef.fromJson(json['subclass']) 
-        : null,
-      prerequisites: {
-        for (var it in json['prerequisites'])
-          DndRef.fromJson(it['skill']) : it['minimum_score']
-      },
-    );
-    
+  factory FeatureArticlePage.fromJson(JsonObject json) => FeatureArticlePage(
+        level: json['level'],
+        desc: json['desc'].join('\n\n'),
+        classRef: DndRef.fromJson(json['class']),
+        subclassRef:
+            json['subclass'] != null ? DndRef.fromJson(json['subclass']) : null,
+        prerequisites: {
+          for (var it in json['prerequisites'])
+            DndRef.fromJson(it['skill']): it['minimum_score']
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[
       annotatedLine(
-        annotation: "Level: ",
-        content: Text("$level"),
+        annotation: 'Level: ',
+        content: Text('$level'),
       ),
       annotatedLine(
-        annotation: "Class: ",
+        annotation: 'Class: ',
         content: TextButtonRef(ref: classRef),
       ),
-      if (subclassRef != null) 
+      if (subclassRef != null)
         annotatedLine(
-          annotation: "Subclass: ",
+          annotation: 'Subclass: ',
           content: TextButtonRef(ref: subclassRef!),
         ),
       Padding(
         padding: const EdgeInsets.all(16.0),
         child: MarkdownBody(data: desc),
       ),
-    ]; 
+    ];
 
     if (prerequisites?.isNotEmpty ?? false) {
-      children.add(annotatedLine(annotation: "Prerequisites:"));
-      prerequisites!.forEach(
-        (key, value) => children.add(
-          ListTileRef(
+      children.add(annotatedLine(annotation: 'Prerequisites:'));
+      prerequisites!.forEach((key, value) => children.add(ListTileRef(
             ref: key,
             trailing: Text(
               value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
-          )
-        )
-      );
+          )));
     }
 
     return SizedBox(

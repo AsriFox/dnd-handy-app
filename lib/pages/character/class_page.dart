@@ -34,64 +34,52 @@ class CharClassPage extends StatelessWidget {
   final Map<DndRef, int>? equipment;
   final JsonArray? equipmentOptions;
 
-  factory CharClassPage.fromJson(JsonObject json) =>
-    CharClassPage(
-      classLevels: DndApiService().getRequest(json['class_levels']),
-      classSpells: DndApiService().getRequest(json['spells']),
-      spellcasting: json['spellcasting'],
-      savingThrows: [
-        for (var it in json['saving_throws'])
-          DndRef.fromJson(it)
-      ],
-      subclasses: [
-        for (var it in json['subclasses'])
-          DndRef.fromJson(it)
-      ],
-      multiclassing: MulticlassingArticlePage.fromJson(json['multi_classing']),
-      proficiencies: [
-        for (JsonObject it in json['proficiencies'])
-          if (!it['index'].startsWith('saving-throw'))
-            DndRef.fromJson(it)
-      ],
-      proficiencyChoices: json['proficiency_choices'],
-      equipment: { 
-        for (var it in json['starting_equipment']) 
-          DndRef.fromJson(it['equipment']) : it['quantity'] as int 
-      },
-      // TODO: Deal with the choice variants
-      equipmentOptions: json['starting_equipment_options'],
-    );
+  factory CharClassPage.fromJson(JsonObject json) => CharClassPage(
+        classLevels: DndApiService().getRequest(json['class_levels']),
+        classSpells: DndApiService().getRequest(json['spells']),
+        spellcasting: json['spellcasting'],
+        savingThrows: [
+          for (var it in json['saving_throws']) DndRef.fromJson(it)
+        ],
+        subclasses: [for (var it in json['subclasses']) DndRef.fromJson(it)],
+        multiclassing:
+            MulticlassingArticlePage.fromJson(json['multi_classing']),
+        proficiencies: [
+          for (JsonObject it in json['proficiencies'])
+            if (!it['index'].startsWith('saving-throw')) DndRef.fromJson(it)
+        ],
+        proficiencyChoices: json['proficiency_choices'],
+        equipment: {
+          for (var it in json['starting_equipment'])
+            DndRef.fromJson(it['equipment']): it['quantity'] as int
+        },
+        // TODO: Deal with the choice variants
+        equipmentOptions: json['starting_equipment_options'],
+      );
 
   @override
   Widget build(BuildContext context) {
     var featuresPageContents = <Widget>[
       annotatedLine(
-        annotation: "Saving throws: ",
-        contents: [
-          for (var it in savingThrows)
-            TextButtonRef(ref: it)
-        ],
+        annotation: 'Saving throws: ',
+        contents: [for (var it in savingThrows) TextButtonRef(ref: it)],
       ),
-      annotatedLine(annotation: "Subclasses:"),
-      for (var it in subclasses)
-        ListTileRef(ref: it)
+      annotatedLine(annotation: 'Subclasses:'),
+      for (var it in subclasses) ListTileRef(ref: it)
     ];
 
     if (proficiencies.isNotEmpty) {
       featuresPageContents.add(annotatedLine(
-        annotation: "Granted proficiencies: ",
-        contents: [
-          for (var it in proficiencies)
-            TextButtonRef(ref: it)
-        ],
+        annotation: 'Granted proficiencies: ',
+        contents: [for (var it in proficiencies) TextButtonRef(ref: it)],
       ));
     } else {
       featuresPageContents.add(annotatedLine(
-        annotation: "Granted proficiencies: ",
-        content: const Text("none"),
+        annotation: 'Granted proficiencies: ',
+        content: const Text('none'),
       ));
     }
-        
+
     // if (proficiencyChoices != null) {
     //   featuresPageContents += [
     //     annotatedLine(annotation: "Additional proficiencies:"),
@@ -107,32 +95,28 @@ class CharClassPage extends StatelessWidget {
     //   ];
     // }
 
-    featuresPageContents.add(annotatedLine(annotation: "Starting equipment:"));
+    featuresPageContents.add(annotatedLine(annotation: 'Starting equipment:'));
     if (equipment?.isNotEmpty ?? false) {
-      equipment!.forEach(
-        (key, value) => featuresPageContents.add(
-          ListTileRef(
+      equipment!.forEach((key, value) => featuresPageContents.add(ListTileRef(
             ref: key,
             trailing: Text(
               value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
-          )
-        )
-      );
+          )));
     }
     if (equipmentOptions != null) {
       for (JsonObject option in equipmentOptions!) {
-        featuresPageContents.add(
-          Padding(padding: pad, child: Text(
-            "Choose ${option['choose'].toString()} equipment item(s) from:"
-          ))
-        );
+        featuresPageContents.add(Padding(
+            padding: pad,
+            child: Text(
+                "Choose ${option['choose'].toString()} equipment item(s) from:")));
         // TODO: Understand option types
         final optionSetType = option['from']['option_set_type'] as String;
         switch (optionSetType) {
           case 'equipment_category':
-            featuresPageContents.add(Padding(padding: pad, 
+            featuresPageContents.add(Padding(
+              padding: pad,
               child: TextButtonRef.fromJson(option['from'][optionSetType]),
             ));
             break;
@@ -141,8 +125,8 @@ class CharClassPage extends StatelessWidget {
     }
 
     var tabs = [
-      const Tab(text: "Features"),
-      const Tab(text: "Levels"),
+      const Tab(text: 'Features'),
+      const Tab(text: 'Levels'),
     ];
 
     var tabPages = [
@@ -151,51 +135,49 @@ class CharClassPage extends StatelessWidget {
     ];
 
     if (spellcasting != null) {
-      tabs.add(const Tab(text: "Spellcasting"));
-      tabs.add(const Tab(text: "Spells"));
+      tabs.add(const Tab(text: 'Spellcasting'));
+      tabs.add(const Tab(text: 'Spells'));
       tabPages.add(buildTabPage(
-        title: "Spellcasting",
+        title: 'Spellcasting',
         contents: <Widget>[
           annotatedLine(
-            annotation: "Level: ", 
+            annotation: 'Level: ',
             content: Text(spellcasting!['level'].toString()),
           ),
           annotatedLine(
-            annotation: "Spellcasting ability: ",
-            content: TextButtonRef.fromJson(spellcasting!['spellcasting_ability']), 
+            annotation: 'Spellcasting ability: ',
+            content:
+                TextButtonRef.fromJson(spellcasting!['spellcasting_ability']),
           ),
           for (var p in spellcasting!['info'])
-            Padding(padding: pad,
+            Padding(
+              padding: pad,
               child: MarkdownBody(
-                data: "## ${p['name']}\n\n${p['desc'].join("\n\n")}"
-              ),
+                  data: "## ${p['name']}\n\n${p['desc'].join('\n\n')}"),
             )
         ],
       ));
-      tabPages.add(
-        DndPageBuilder(
-          request: classSpells,
-          onResult: (json) => RefListPage.fromJsonArray(json['results']),
-        )
-      );
+      tabPages.add(DndPageBuilder(
+        request: classSpells,
+        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+      ));
     }
 
-    tabs.add(const Tab(text: "Multiclassing"));
+    tabs.add(const Tab(text: 'Multiclassing'));
     tabPages.add(buildTabPage(
-      title: "Multiclassing",
+      title: 'Multiclassing',
       contents: multiclassing.build(),
     ));
 
     return DefaultTabController(
-      length: tabs.length,
-      child: Scaffold(
-        appBar: TabBar(
-          isScrollable: true,
-          tabs: tabs,
-        ),
-        body: TabBarView(children: tabPages),
-      )
-    );
+        length: tabs.length,
+        child: Scaffold(
+          appBar: TabBar(
+            isScrollable: true,
+            tabs: tabs,
+          ),
+          body: TabBarView(children: tabPages),
+        ));
   }
 }
 
@@ -206,20 +188,21 @@ Widget buildTabPage({
 }) {
   var children = <Widget>[];
   if (title != null) {
-    children.add(Padding(padding: pad, 
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 20.0),
-      )
-    ));
-  } 
+    children.add(Padding(
+        padding: pad,
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 20.0),
+        )));
+  }
   if (content != null) {
     children.add(content);
   }
   if (contents != null) {
     children += contents;
-  } 
-  return SingleChildScrollView(child: Column(
+  }
+  return SingleChildScrollView(
+      child: Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: children,
   ));

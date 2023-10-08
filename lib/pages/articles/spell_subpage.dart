@@ -13,13 +13,13 @@ class SpellArticlePage extends StatelessWidget {
   final JsonObject json;
 
   static final yeet = yeetCategory(
-    category: "spells",
+    category: 'spells',
     builder: (json) => SpellArticlePage.fromJson(json),
   );
 
   // TODO: fields
   factory SpellArticlePage.fromJson(JsonObject json) =>
-    SpellArticlePage(json: json);
+      SpellArticlePage(json: json);
 
   @override
   Widget build(BuildContext context) {
@@ -29,44 +29,37 @@ class SpellArticlePage extends StatelessWidget {
         child: MarkdownBody(
           data: [
             for (String p in json['desc'])
-              if (p.contains('|')) p
-              else "\n$p\n"
-          ].join("\n"),
+              if (p.contains('|')) p else '\n$p\n'
+          ].join('\n'),
           styleSheet: mdTableStyle,
         ),
       ),
     ];
 
     if (json['classes'].isNotEmpty) {
-      children.add(annotatedLine(
-        annotation: "Classes: ",
-        contents: [
-          for (var it in json['classes'])
-            TextButtonRef.fromJson(it)
-        ]
-      ));
+      children.add(annotatedLine(annotation: 'Classes: ', contents: [
+        for (var it in json['classes']) TextButtonRef.fromJson(it)
+      ]));
     }
 
     if (json['subclasses'].isNotEmpty) {
       children.add(annotatedLine(
-        annotation: "Classes: ",
+        annotation: 'Classes: ',
         contents: [
-          for (var it in json['subclasses'])
-            TextButtonRef.fromJson(it)
+          for (var it in json['subclasses']) TextButtonRef.fromJson(it)
         ],
       ));
     }
 
     children.add(json['level'] > 0
-      ? annotatedLine(
-        annotation: "Level: ",
-        content: Text(json['level'].toString()),
-      )
-      : annotatedLine(
-        annotation: "Cantrip ",
-        content: const Text("(level 0)"),
-      )
-    );
+        ? annotatedLine(
+            annotation: 'Level: ',
+            content: Text(json['level'].toString()),
+          )
+        : annotatedLine(
+            annotation: 'Cantrip ',
+            content: const Text('(level 0)'),
+          ));
     if (json.containsKey('higher_level')) {
       children += [
         for (var s in json['higher_level'])
@@ -76,16 +69,12 @@ class SpellArticlePage extends StatelessWidget {
 
     children += <Widget>[
       annotatedLine(
-        annotation: "School: ",
+        annotation: 'School: ',
         content: TextButtonRef.fromJson(json['school']),
       ),
       annotatedLine(
-        annotation: "Components: ",
-        contents: [
-          for (var s in json['components'])
-            Text("$s")
-        ]
-      ),
+          annotation: 'Components: ',
+          contents: [for (var s in json['components']) Text('$s')]),
     ];
 
     if (json.containsKey('material')) {
@@ -97,38 +86,38 @@ class SpellArticlePage extends StatelessWidget {
 
     children += <Widget>[
       annotatedLine(
-        annotation: "Casting time: ",
-        content: Text(
-          json['ritual'] as bool
-          ? "${json['casting_time']} - Ritual"
-          : json['casting_time'],
-        )
-      ),
+          annotation: 'Casting time: ',
+          content: Text(
+            json['ritual'] as bool
+                ? "${json['casting_time']} - Ritual"
+                : json['casting_time'],
+          )),
       annotatedLine(
-        annotation: "Effect duration: ",
-        content: Text(
-          json['concentration'] as bool
-          ? "Concentration, ${json['duration']}"
-          : json['duration'],
-        )
-      ),
+          annotation: "Effect duration: ",
+          content: Text(
+            json['concentration'] as bool
+                ? "Concentration, ${json['duration']}"
+                : json['duration'],
+          )),
       annotatedLine(
-        annotation: "Range: ",
+        annotation: 'Range: ',
         content: Text(json['range']),
       ),
     ];
 
     if (json.containsKey('area_of_effect')) {
       children.add(annotatedLine(
-        annotation: "Area of effect: ",
-        content: Text("${json['area_of_effect']['type']} / ${json['area_of_effect']['size']}"),
+        annotation: 'Area of effect: ',
+        content: Text(
+            "${json['area_of_effect']['type']} / ${json['area_of_effect']['size']}"),
       ));
     }
     if (json.containsKey('attack_type')) {
       switch (json['attack_type']) {
         case 'ranged':
-          children.add(const Padding(padding: pad,
-            child: Text("Ranged spell attack"),
+          children.add(const Padding(
+            padding: pad,
+            child: Text('Ranged spell attack'),
           ));
           break;
       }
@@ -138,40 +127,42 @@ class SpellArticlePage extends StatelessWidget {
       var leveledDamage = <Widget>[];
       if (json['damage'].containsKey('damage_at_slot_level')) {
         (json['damage']['damage_at_slot_level'] as JsonObject)
-          .forEach((key, value) => leveledDamage.add(
-            Text(" $value in slot level $key;"),
-          ));
+            .forEach((key, value) => leveledDamage.add(
+                  Text(' $value in slot level $key;'),
+                ));
       } else if (json['damage'].containsKey('damage_at_character_level')) {
         (json['damage']['damage_at_character_level'] as JsonObject)
-          .forEach((key, value) => leveledDamage.add(
-            Text(" $value at character level $key;"),
-          ));
+            .forEach((key, value) => leveledDamage.add(
+                  Text(' $value at character level $key;'),
+                ));
       }
-        
+
       children += <Widget>[
         annotatedLine(
-          annotation: "Damage: ",
+          annotation: 'Damage: ',
           content: TextButtonRef.fromJson(json['damage']['damage_type']),
         ),
-        annotatedLine(annotation: "", contents: leveledDamage),
+        annotatedLine(annotation: '', contents: leveledDamage),
       ];
     }
 
     if (json.containsKey('dc')) {
       children.add(annotatedLine(
-        annotation: "DC: ",
+        annotation: 'DC: ',
         content: TextButtonRef.fromJson(json['dc']['dc_type']),
       ));
 
       switch (json['dc']['dc_success']) {
         case 'half':
-          children.add(const Padding(padding: pad,
-            child: Text("Take half of the damage on successful DC."),
+          children.add(const Padding(
+            padding: pad,
+            child: Text('Take half of the damage on successful DC.'),
           ));
           break;
         case 'none':
-          children.add(const Padding(padding: pad,
-            child: Text("Suffer no effect on successful DC."),
+          children.add(const Padding(
+            padding: pad,
+            child: Text('Suffer no effect on successful DC.'),
           ));
           break;
       }
