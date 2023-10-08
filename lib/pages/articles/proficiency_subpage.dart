@@ -18,23 +18,17 @@ class ProficiencyArticlePage extends StatelessWidget {
   final List<DndRef> classes;
 
   static final yeet = yeetCategory(
-    category: "proficiencies", 
+    category: 'proficiencies',
     builder: (json) => ProficiencyArticlePage.fromJson(json),
   );
 
   factory ProficiencyArticlePage.fromJson(JsonObject json) =>
-    ProficiencyArticlePage(
-      type: json['type'],
-      reference: DndRef.fromJson(json['reference']),
-      races: [
-        for (var it in json['races'])
-          DndRef.fromJson(it)
-      ],
-      classes: [
-        for (var it in json['classes'])
-          DndRef.fromJson(it)
-      ],
-    );
+      ProficiencyArticlePage(
+        type: json['type'],
+        reference: DndRef.fromJson(json['reference']),
+        races: [for (var it in json['races']) DndRef.fromJson(it)],
+        classes: [for (var it in json['classes']) DndRef.fromJson(it)],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -44,28 +38,22 @@ class ProficiencyArticlePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           annotatedLine(
-            annotation: "Type: ",
+            annotation: 'Type: ',
             content: Text(type),
           ),
           annotatedLine(
-            annotation: "Subject: ",
+            annotation: 'Subject: ',
             content: TextButtonRef(ref: reference),
           ),
           if (races.isNotEmpty)
             annotatedLine(
-              annotation: "Races: ",
-              contents: [
-                for (var it in races)
-                  TextButtonRef(ref: it)
-              ],
+              annotation: 'Races: ',
+              contents: [for (var it in races) TextButtonRef(ref: it)],
             ),
           if (classes.isNotEmpty)
             annotatedLine(
-              annotation: "Classes: ",
-              contents: [
-                for (var it in classes)
-                  TextButtonRef(ref: it)
-              ],
+              annotation: 'Classes: ',
+              contents: [for (var it in classes) TextButtonRef(ref: it)],
             ),
         ],
       ),

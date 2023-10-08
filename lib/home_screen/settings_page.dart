@@ -9,10 +9,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = DndAppSettings.of(context);
-    
+
     return AnimatedBuilder(
       animation: appState,
-      builder: (_, child) {        
+      builder: (_, child) {
         IconData themeModeIcon = Icons.settings_brightness;
         switch (appState.themeMode) {
           case ThemeMode.light:
@@ -27,7 +27,7 @@ class SettingsPage extends StatelessWidget {
 
         final themeModeSetting = ListTile(
           leading: Icon(themeModeIcon),
-          title: const Text("Theme mode"),
+          title: const Text('Theme mode'),
           trailing: DropdownButton<ThemeMode>(
             value: appState.themeMode,
             onChanged: (value) => appState.setState(() {
@@ -36,15 +36,15 @@ class SettingsPage extends StatelessWidget {
             items: const [
               DropdownMenuItem(
                 value: ThemeMode.system,
-                child: Text("System"),
+                child: Text('System'),
               ),
               DropdownMenuItem(
                 value: ThemeMode.light,
-                child: Text("Light"),
+                child: Text('Light'),
               ),
               DropdownMenuItem(
                 value: ThemeMode.dark,
-                child: Text("Dark"),
+                child: Text('Dark'),
               ),
             ],
           ),
@@ -52,7 +52,7 @@ class SettingsPage extends StatelessWidget {
 
         return ListView(
           children: [
-            themeModeSetting,  
+            themeModeSetting,
           ],
         );
       },

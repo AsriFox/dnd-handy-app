@@ -13,20 +13,19 @@ class FeatArticlePage extends StatelessWidget {
 
   final String desc;
   final Map<DndRef, int> prerequisites;
-  
+
   static final yeet = yeetCategory(
-    category: "feats",
+    category: 'feats',
     builder: (json) => FeatArticlePage.fromJson(json),
   );
 
-  factory FeatArticlePage.fromJson(JsonObject json) =>
-    FeatArticlePage(
-      desc: json['desc'].join("\n\n"),
-      prerequisites: {
-        for (var it in json['prerequisites'])
-          DndRef.fromJson(it['ability_score']) : it['minimum_score']
-      },
-    );
+  factory FeatArticlePage.fromJson(JsonObject json) => FeatArticlePage(
+        desc: json['desc'].join('\n\n'),
+        prerequisites: {
+          for (var it in json['prerequisites'])
+            DndRef.fromJson(it['ability_score']): it['minimum_score']
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class FeatArticlePage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: MarkdownBody(data: desc),
           ),
-          annotatedLine(annotation: "Prerequisites:"),
+          annotatedLine(annotation: 'Prerequisites:'),
           for (var it in prerequisites.entries)
             ListTileRef(
               ref: it.key,

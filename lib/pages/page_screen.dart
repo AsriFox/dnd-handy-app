@@ -8,7 +8,7 @@ import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 
 gotoPage(BuildContext context, DndRef ref) =>
-  context.push(ref.url.substring(4));
+    context.push(ref.url.substring(4));
 
 class DndPageScreen extends StatelessWidget {
   const DndPageScreen({
@@ -26,11 +26,11 @@ class DndPageScreen extends StatelessWidget {
     required Widget Function(dynamic) onResult,
   }) {
     return DndPageScreen(
-      title: title ?? getTitle(path), 
+      title: title ?? getTitle(path),
       body: DndPageBuilder(
         request: DndApiService().getRequest(path),
         onResult: onResult,
-      ), 
+      ),
     );
   }
 

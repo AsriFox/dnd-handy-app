@@ -15,15 +15,14 @@ class SkillArticlePage extends StatelessWidget {
   final DndRef governingAbility;
 
   static final yeet = yeetCategory(
-    category: "skills",
+    category: 'skills',
     builder: (json) => SkillArticlePage.fromJson(json),
   );
 
-  factory SkillArticlePage.fromJson(JsonObject json) =>
-    SkillArticlePage(
-      desc: json['desc'].join("\n\n"),
-      governingAbility: DndRef.fromJson(json['ability_score']),
-    );
+  factory SkillArticlePage.fromJson(JsonObject json) => SkillArticlePage(
+        desc: json['desc'].join('\n\n'),
+        governingAbility: DndRef.fromJson(json['ability_score']),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class SkillArticlePage extends StatelessWidget {
               child: MarkdownBody(data: desc!),
             ),
           annotatedLine(
-            annotation: "Governing ability: ",
+            annotation: 'Governing ability: ',
             content: TextButtonRef(ref: governingAbility),
           ),
         ],

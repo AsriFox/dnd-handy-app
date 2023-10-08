@@ -53,20 +53,17 @@ final yeetArticles = [
   SubclassArticlePage.yeet,
   SubraceArticlePage.yeet,
   TraitArticlePage.yeet,
-
   yeetCategory(
-    category: "rule-sections",
-    builder: (json) => Markdown(
-      data: json['desc'],
-      styleSheet: mdTableStyle,
-    )
-  ),
-
+      category: 'rule-sections',
+      builder: (json) => Markdown(
+            data: json['desc'],
+            styleSheet: mdTableStyle,
+          )),
   for (String cat in const [
-    "conditions",
-    "damage-types",
-    "magic-schools",
-    "weapon-properties",
+    'conditions',
+    'damage-types',
+    'magic-schools',
+    'weapon-properties',
   ])
     yeetCategory(
       category: cat,
@@ -81,33 +78,32 @@ class ArticlePage extends StatelessWidget {
   });
 
   final String? desc;
+
   List<Widget> buildChildren() => [];
 
   factory ArticlePage.fromJson(JsonObject json) {
     final desc = json['desc'];
     return ArticlePage(
-      desc: desc is String 
-        ? desc 
-        : [
-          for (String p in desc)
-            if (p.contains('|')) p
-            else "\n$p\n"
-        ].join("\n"),
+      desc: desc is String
+          ? desc
+          : [
+              for (String p in desc)
+                if (p.contains('|')) p else '\n$p\n'
+            ].join('\n'),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (desc == null) {
-      return const Center(child: Text("Empty page"));
+      return const Center(child: Text('Empty page'));
     }
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: MarkdownBody(
-        data: desc!,
-        styleSheet: mdTableStyle,
-      )
-    );
+        padding: const EdgeInsets.all(10.0),
+        child: MarkdownBody(
+          data: desc!,
+          styleSheet: mdTableStyle,
+        ));
   }
 }
 
@@ -120,11 +116,11 @@ final mdTableStyle = MarkdownStyleSheet(
 );
 
 Widget annotatedLine({
-  required String annotation, 
+  required String annotation,
   Widget? content,
   List<Widget>? contents,
   EdgeInsetsGeometry padding = pad,
-}) { 
+}) {
   var children = <Widget>[
     Text(annotation, style: bold),
   ];
@@ -136,10 +132,9 @@ Widget annotatedLine({
   }
 
   return Padding(
-    padding: pad,
-    child: Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: children,
-    )
-  );
+      padding: pad,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: children,
+      ));
 }

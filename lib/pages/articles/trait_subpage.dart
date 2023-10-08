@@ -29,18 +29,21 @@ class TraitArticlePage extends StatelessWidget {
   final List<Widget>? traitSpecifics;
 
   static final yeet = yeetCategory(
-    category: "traits",
+    category: 'traits',
     builder: (json) => TraitArticlePage.fromJson(json),
   );
 
   factory TraitArticlePage.fromJson(JsonObject json) {
     final int? proficiencyChoiceCount = json['proficiency_choices']?['choose'];
-    final JsonArray? proficiencyChoices = json['proficiency_choices']?['from']['options'];
+    final JsonArray? proficiencyChoices =
+        json['proficiency_choices']?['from']['options'];
     final int? languageOptionsChoiceCount = json['language_options']?['choose'];
-    final JsonArray? languageOptions = json['language_options']?['from']['options'];
+    final JsonArray? languageOptions =
+        json['language_options']?['from']['options'];
 
     final JsonObject? breathWeapon = json['trait_specific']?['breath_weapon'];
-    final JsonObject? subtraitOptions = json['trait_specific']?['subtrait_options'];
+    final JsonObject? subtraitOptions =
+        json['trait_specific']?['subtrait_options'];
     final JsonObject? spellOptions = json['trait_specific']?['spell_options'];
     List<Widget>? traitSpecifics;
     if (breathWeapon != null) {
@@ -48,7 +51,7 @@ class TraitArticlePage extends StatelessWidget {
     } else if (subtraitOptions != null) {
       traitSpecifics = [
         annotatedLine(
-          annotation: "Variants: ",
+          annotation: 'Variants: ',
           content: Text("choose ${subtraitOptions['choose'].toString()} from:"),
         ),
         for (var it in subtraitOptions['from']['options'])
@@ -57,16 +60,16 @@ class TraitArticlePage extends StatelessWidget {
     } else if (spellOptions != null) {
       traitSpecifics = [
         annotatedLine(
-          annotation: "Spells: ",
+          annotation: 'Spells: ',
           content: Text("choose ${spellOptions['choose'].toString()} from:"),
         ),
         for (var it in spellOptions['from']['options'])
           ListTileRef.fromJson(it['item'], dense: true)
       ];
     }
-    
+
     return TraitArticlePage(
-      desc: json['desc'].join("\n\n"),
+      desc: json['desc'].join('\n\n'),
       races: DndRef.all(json['races'])!,
       subraces: DndRef.all(json['subraces'])!,
       proficiencies: DndRef.all(json['proficiencies'])!,
@@ -91,43 +94,36 @@ class TraitArticlePage extends StatelessWidget {
           ),
           if (races.isNotEmpty)
             annotatedLine(
-              annotation: "Races: ",
-              contents: [
-                for (var it in races)
-                  TextButtonRef(ref: it)
-              ],
+              annotation: 'Races: ',
+              contents: [for (var it in races) TextButtonRef(ref: it)],
             ),
           if (subraces.isNotEmpty)
             annotatedLine(
-              annotation: "Subraces: ",
-              contents: [
-                for (var it in subraces)
-                  TextButtonRef(ref: it)
-              ],
+              annotation: 'Subraces: ',
+              contents: [for (var it in subraces) TextButtonRef(ref: it)],
             ),
           if (languageOptionsChoiceCount != null)
             annotatedLine(
-              annotation: "Language choices: ",
-              content: Text("choose $languageOptionsChoiceCount from:"),
+              annotation: 'Language choices: ',
+              content: Text('choose $languageOptionsChoiceCount from:'),
             ),
           if (languageOptions?.isNotEmpty ?? false)
-            annotatedLine(annotation: "",
+            annotatedLine(
+              annotation: '',
               contents: [
-                for (var it in languageOptions!)
-                  TextButtonRef(ref: it)
+                for (var it in languageOptions!) TextButtonRef(ref: it)
               ],
             ),
           if (proficiencyChoiceCount != null)
             annotatedLine(
-              annotation: "Variants: ",
-              content: Text("choose $proficiencyChoiceCount from:"),
+              annotation: 'Variants: ',
+              content: Text('choose $proficiencyChoiceCount from:'),
             ),
           if (proficiencyChoices?.isNotEmpty ?? false)
             for (var it in proficiencyChoices!)
               ListTileRef(ref: it, dense: true),
           if (traitSpecifics != null)
-            for (var it in traitSpecifics!)
-              it
+            for (var it in traitSpecifics!) it
         ],
       ),
     );
@@ -135,36 +131,39 @@ class TraitArticlePage extends StatelessWidget {
 }
 
 List<Widget> buildBreathWeaponSubpage(JsonObject breathWeapon) => [
-  annotatedLine(annotation: "",
-    content: const TextButtonRef(
-      ref: DndRef(
-        index: "breath-weapon",
-        name: "Breath Weapon",
-        url: "api/traits/breath-weapon",
+      annotatedLine(
+          annotation: '',
+          content: const TextButtonRef(
+            ref: DndRef(
+              index: 'breath-weapon',
+              name: 'Breath Weapon',
+              url: 'api/traits/breath-weapon',
+            ),
+          )),
+      annotatedLine(
+        annotation: 'Area of effect: ',
+        content: Text(
+            "${breathWeapon['area_of_effect']['type']} / ${breathWeapon['area_of_effect']['size']}"),
       ),
-    )
-  ),
-  annotatedLine(
-    annotation: "Area of effect: ",
-    content: Text("${breathWeapon['area_of_effect']['type']} / ${breathWeapon['area_of_effect']['size']}"),
-  ),
-  annotatedLine(
-    annotation: "DC: ",
-    content: TextButtonRef.fromJson(breathWeapon['dc']['dc_type']),
-  ),
-  annotatedLine(
-    annotation: "Damage: ",
-    content: TextButtonRef.fromJson(breathWeapon['damage'][0]['damage_type']),
-  ),
-  annotatedLine(annotation: "", 
-    contents: [
-      for (var entry in breathWeapon['damage'][0]['damage_at_character_level'].entries)
-        Text(" ${entry.value} at level ${entry.key};")
-    ]
-  ),
-  const Padding(padding: pad, child: Text("Take half of the damage on successful DC.")),
-  annotatedLine(
-    annotation: "Usage: ",
-    content: Text("${breathWeapon['usage']['times']} times ${breathWeapon['usage']['type']}")
-  ),
-];
+      annotatedLine(
+        annotation: 'DC: ',
+        content: TextButtonRef.fromJson(breathWeapon['dc']['dc_type']),
+      ),
+      annotatedLine(
+        annotation: 'Damage: ',
+        content:
+            TextButtonRef.fromJson(breathWeapon['damage'][0]['damage_type']),
+      ),
+      annotatedLine(annotation: '', contents: [
+        for (var entry
+            in breathWeapon['damage'][0]['damage_at_character_level'].entries)
+          Text(" ${entry.value} at level ${entry.key};")
+      ]),
+      const Padding(
+          padding: pad,
+          child: Text('Take half of the damage on successful DC.')),
+      annotatedLine(
+          annotation: 'Usage: ',
+          content: Text(
+              "${breathWeapon['usage']['times']} times ${breathWeapon['usage']['type']}")),
+    ];

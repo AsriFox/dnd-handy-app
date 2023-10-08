@@ -15,18 +15,14 @@ class AbilityArticlePage extends StatelessWidget {
   final List<DndRef> skills;
 
   static final yeet = yeetCategory(
-    category: "ability-scores", 
+    category: 'ability-scores',
     builder: (json) => AbilityArticlePage.fromJson(json),
   );
 
-  factory AbilityArticlePage.fromJson(JsonObject json) =>
-    AbilityArticlePage(
-      desc: json['desc'].join("\n\n"),
-      skills: [
-        for (var it in json['skills'])
-          DndRef.fromJson(it)
-      ],
-    );
+  factory AbilityArticlePage.fromJson(JsonObject json) => AbilityArticlePage(
+        desc: json['desc'].join('\n\n'),
+        skills: [for (var it in json['skills']) DndRef.fromJson(it)],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class AbilityArticlePage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: MarkdownBody(data: desc),
           ),
-          annotatedLine(annotation: "Associated skills:"),
+          annotatedLine(annotation: 'Associated skills:'),
           for (var it in skills)
             ListTileRef(
               ref: it,

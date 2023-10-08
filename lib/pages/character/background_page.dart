@@ -40,10 +40,7 @@ class CharBackgroundPage extends StatelessWidget {
     }
     List<DndRef>? languages;
     if (json.containsKey('languages')) {
-      languages = [
-        for (var it in json['languages'])
-          DndRef.fromJson(it)
-      ];
+      languages = [for (var it in json['languages']) DndRef.fromJson(it)];
     }
     JsonObject? languageOptions;
     if (json.containsKey('language_options')) {
@@ -54,12 +51,11 @@ class CharBackgroundPage extends StatelessWidget {
       featureName: json['feature']['name'],
       featureDesc: json['feature']['desc'].join("\n\n"),
       proficiencies: [
-        for (var it in json['starting_proficiencies'])
-          DndRef.fromJson(it)
+        for (var it in json['starting_proficiencies']) DndRef.fromJson(it)
       ],
-      equipment: { 
-        for (JsonObject it in json['starting_equipment']) 
-          DndRef.fromJson(it['equipment']) : it['quantity'] as int 
+      equipment: {
+        for (JsonObject it in json['starting_equipment'])
+          DndRef.fromJson(it['equipment']): it['quantity'] as int
       },
       equipmentOptions: equipmentOptions,
       languages: languages,
@@ -74,32 +70,28 @@ class CharBackgroundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var bonusPageContents = [
-      annotatedLine(annotation: "Starting equipment:"),
+      annotatedLine(annotation: 'Starting equipment:'),
     ];
     if (equipment.isNotEmpty) {
-      equipment.forEach(
-        (key, value) => bonusPageContents.add(
-          ListTileRef(
+      equipment.forEach((key, value) => bonusPageContents.add(ListTileRef(
             ref: key,
             trailing: Text(
               value.toString(),
               style: const TextStyle(fontSize: 16.0),
             ),
-          )
-        )
-      );
+          )));
     }
     if (equipmentOptions != null) {
       for (JsonObject option in equipmentOptions!) {
-        bonusPageContents.add(
-          Padding(padding: pad, child: Text(
-            "Choose ${option['choose'].toString()} equipment item(s) from:"
-          ))
-        );
+        bonusPageContents.add(Padding(
+            padding: pad,
+            child: Text(
+                "Choose ${option['choose'].toString()} equipment item(s) from:")));
         final optionSetType = option['from']['option_set_type'] as String;
         switch (optionSetType) {
           case 'equipment_category':
-            bonusPageContents.add(Padding(padding: pad, 
+            bonusPageContents.add(Padding(
+              padding: pad,
               child: TextButtonRef.fromJson(option['from'][optionSetType]),
             ));
             break;
@@ -109,11 +101,8 @@ class CharBackgroundPage extends StatelessWidget {
 
     if (languages != null) {
       bonusPageContents.add(annotatedLine(
-        annotation: "Additional languages: ",
-        contents: [
-          for (var it in languages!)
-            TextButtonRef(ref: it)
-        ],
+        annotation: 'Additional languages: ',
+        contents: [for (var it in languages!) TextButtonRef(ref: it)],
       ));
     }
     // TODO: Understand option types
@@ -134,62 +123,53 @@ class CharBackgroundPage extends StatelessWidget {
     // }
 
     return DefaultTabController(
-      length: 6,
-      child: Scaffold(
-        appBar: const TabBar(
-          isScrollable: true,
-          tabs: [
-            Tab(text: "Feature"),
-            Tab(text: "Bonuses"),
-            Tab(text: "Personality"),
-            Tab(text: "Ideals"),
-            Tab(text: "Bonds"),
-            Tab(text: "Flaws"),
-          ]
-        ),
-        body: TabBarView(children: [
-          buildTabPage(
-            title: "Feature: $featureName",
-            content: Padding(padding: pad,
-              child: MarkdownBody(
-                data: featureDesc,
-              ),
-            )
-          ),
-          buildTabPage(contents: bonusPageContents),
-          buildTabPage(
-            title: "Personality traits",
-            contents: buildOptionsList(personalityTraits,
-              builder: (s) => buildOptionListTile(s['string'] as String)
+        length: 6,
+        child: Scaffold(
+          appBar: const TabBar(isScrollable: true, tabs: [
+            Tab(text: 'Feature'),
+            Tab(text: 'Bonuses'),
+            Tab(text: 'Personality'),
+            Tab(text: 'Ideals'),
+            Tab(text: 'Bonds'),
+            Tab(text: 'Flaws'),
+          ]),
+          body: TabBarView(children: [
+            buildTabPage(
+                title: 'Feature: $featureName',
+                content: Padding(
+                  padding: pad,
+                  child: MarkdownBody(
+                    data: featureDesc,
+                  ),
+                )),
+            buildTabPage(contents: bonusPageContents),
+            buildTabPage(
+              title: 'Personality traits',
+              contents: buildOptionsList(personalityTraits,
+                  builder: (s) => buildOptionListTile(s['string'] as String)),
             ),
-          ),
-          buildTabPage(
-            title: "Ideals",
-            contents: buildOptionsList(ideals,
-              builder: (it) => IdealListTile(
+            buildTabPage(
+              title: 'Ideals',
+              contents: buildOptionsList(
+                ideals,
+                builder: (it) => IdealListTile(
                   desc: it['desc'],
-                  options: [
-                    for (var a in it['alignments'])
-                      DndRef.fromJson(a)
-                  ],
+                  options: [for (var a in it['alignments']) DndRef.fromJson(a)],
                 ),
+              ),
             ),
-          ),
-          buildTabPage(
-            title: "Bonds",
-            contents: buildOptionsList(bonds,
-              builder: (s) => buildOptionListTile(s['string'] as String)
+            buildTabPage(
+              title: 'Bonds',
+              contents: buildOptionsList(bonds,
+                  builder: (s) => buildOptionListTile(s['string'] as String)),
             ),
-          ),
-          buildTabPage(
-            title: "Flaws",
-            contents: buildOptionsList(flaws,
-              builder: (s) => buildOptionListTile(s['string'] as String)
+            buildTabPage(
+              title: 'Flaws',
+              contents: buildOptionsList(flaws,
+                  builder: (s) => buildOptionListTile(s['string'] as String)),
             ),
-          ),
-        ]),
-      )
-    );
+          ]),
+        ));
   }
 }
 
@@ -200,20 +180,21 @@ Widget buildTabPage({
 }) {
   var children = <Widget>[];
   if (title != null) {
-    children.add(Padding(padding: pad, 
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 20.0),
-      )
-    ));
-  } 
+    children.add(Padding(
+        padding: pad,
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 20.0),
+        )));
+  }
   if (content != null) {
     children.add(content);
   }
   if (contents != null) {
     children += contents;
-  } 
-  return SingleChildScrollView(child: Column(
+  }
+  return SingleChildScrollView(
+      child: Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: children,
   ));
@@ -221,30 +202,28 @@ Widget buildTabPage({
 
 List<Widget> buildOptionsList(
   JsonObject json, {
-  String title = "",
+  String title = '',
   required Widget Function(dynamic) builder,
-}) => <Widget>[
-  annotatedLine(
-    annotation: title,
-    content: Text("Choose ${json['choose'].toString()} from:"),
-  ),
-  for (var it in json['from']['options'])
-    builder(it)
-];
+}) =>
+    <Widget>[
+      annotatedLine(
+        annotation: title,
+        content: Text("Choose ${json['choose'].toString()} from:"),
+      ),
+      for (var it in json['from']['options']) builder(it)
+    ];
 
-ListTile buildOptionListTile(
-  String title, {
-  Widget? trailing, 
-  Function()? onTap
-}) => ListTile(
-  dense: true, 
-  visualDensity: ListDensity.veryDense.d, 
-  leading: const Icon(Icons.add, size: 16.0),
-  minLeadingWidth: 0.0,
-  title: Text(title),
-  trailing: trailing,
-  onTap: onTap,
-);
+ListTile buildOptionListTile(String title,
+        {Widget? trailing, Function()? onTap}) =>
+    ListTile(
+      dense: true,
+      visualDensity: ListDensity.veryDense.d,
+      leading: const Icon(Icons.add, size: 16.0),
+      minLeadingWidth: 0.0,
+      title: Text(title),
+      trailing: trailing,
+      onTap: onTap,
+    );
 
 class IdealListTile extends StatelessWidget {
   const IdealListTile({
@@ -258,22 +237,20 @@ class IdealListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildOptionListTile(desc,
+    return buildOptionListTile(
+      desc,
       trailing: const Icon(Icons.more_horiz),
       onTap: () => showDialog(
-        context: context, 
-        builder: (ctx) => SimpleDialog(
-          title: const Text("Alignments"),
-          children: [
-            for (var it in options!) 
-              ListTileRef(
-                ref: it,
-                dense: true,
-                visualDensity: ListDensity.veryDense.d,
-              )
-          ]
-        )
-      ),
+          context: context,
+          builder: (ctx) =>
+              SimpleDialog(title: const Text('Alignments'), children: [
+                for (var it in options!)
+                  ListTileRef(
+                    ref: it,
+                    dense: true,
+                    visualDensity: ListDensity.veryDense.d,
+                  )
+              ])),
     );
   }
 }

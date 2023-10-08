@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:yeet/yeet.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:go_router/go_router.dart';
 
 class MobileTitleBar extends AppBar {
-  MobileTitleBar({ 
+  MobileTitleBar({
     super.key,
     super.actions,
     String? title,
     required this.appState,
     required void Function() onPressBackButton,
   }) : super(
-    leading: InkResponse(
-      onLongPress: appState.toggleDrawer,
-      onTap: onPressBackButton,
-      child: const Icon(Icons.arrow_back),
-    ),
-    title: Text(title ?? "???"),
-  );
+          leading: InkResponse(
+            onLongPress: appState.toggleDrawer,
+            onTap: onPressBackButton,
+            child: const Icon(Icons.arrow_back),
+          ),
+          title: Text(title ?? '???'),
+        );
 
   final DndAppSettings appState;
 
   factory MobileTitleBar.build(
     BuildContext context, {
-    List<Widget>? actions,   
+    List<Widget>? actions,
     String? title,
-  }) { 
+  }) {
     return MobileTitleBar(
       appState: DndAppSettings.of(context),
       onPressBackButton: () => context.pop(),
@@ -47,7 +46,7 @@ PreferredSizeWidget buildMobileCategoryTitleBar({
       IconButton(
         icon: const Icon(Icons.search),
         onPressed: () => showSearchCustom(
-          context, 
+          context,
           category: title,
         ),
       ),
@@ -65,7 +64,7 @@ PreferredSizeWidget buildMobileHomeTitleBar({
       onPressed: onMenuButtonPressed,
       icon: const Icon(Icons.menu),
     ),
-    title: Text(title ?? "Handy DnD app"),
+    title: Text(title ?? 'Handy DnD app'),
     actions: actions,
   );
 }

@@ -15,18 +15,14 @@ class RulesArticlePage extends StatelessWidget {
   final List<DndRef> subsections;
 
   static final yeet = yeetCategory(
-    category: "rules",
+    category: 'rules',
     builder: (json) => RulesArticlePage.fromJson(json),
   );
 
-  factory RulesArticlePage.fromJson(JsonObject json) =>
-    RulesArticlePage(
-      desc: json['desc'],
-      subsections: [
-        for (var it in json['subsections'])
-          DndRef.fromJson(it)
-      ],
-    );
+  factory RulesArticlePage.fromJson(JsonObject json) => RulesArticlePage(
+        desc: json['desc'],
+        subsections: [for (var it in json['subsections']) DndRef.fromJson(it)],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +31,13 @@ class RulesArticlePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (desc != null) 
+          if (desc != null)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: MarkdownBody(data: desc!),
             ),
-          annotatedLine(annotation: "Subsections:"),
-          for (var it in subsections)
-            ListTileRef(ref: it)
+          annotatedLine(annotation: 'Subsections:'),
+          for (var it in subsections) ListTileRef(ref: it)
         ],
       ),
     );

@@ -11,9 +11,8 @@ class DndHandyApp extends StatefulWidget {
   State<StatefulWidget> createState() => DndAppSettings();
 }
 
-class DndAppSettings extends State<DndHandyApp> 
-  with SingleTickerProviderStateMixin,
-       ChangeNotifier {
+class DndAppSettings extends State<DndHandyApp>
+    with SingleTickerProviderStateMixin, ChangeNotifier {
   ThemeMode? themeMode;
   late TabController controller;
   late SharedPreferences persistent;
@@ -67,11 +66,12 @@ class DndAppSettings extends State<DndHandyApp>
   int get tabIndex => controller.index;
 
   set tabIndex(int index) => setState(() {
-    controller.index = index;
-  });
+        controller.index = index;
+      });
 
   bool isExtended = false;
-  final _drawerKey = GlobalKey<ScaffoldState>(); 
+  final _drawerKey = GlobalKey<ScaffoldState>();
+
   void toggleDrawer() {
     final state = _drawerKey.currentState;
     if (state != null && state.hasDrawer) {
@@ -90,7 +90,7 @@ class DndAppSettings extends State<DndHandyApp>
   }
 
   static DndAppSettings of(BuildContext context) =>
-    context.findAncestorStateOfType<DndAppSettings>()!;
+      context.findAncestorStateOfType<DndAppSettings>()!;
 
   @override
   Widget build(BuildContext context) {
@@ -108,5 +108,3 @@ class DndAppSettings extends State<DndHandyApp>
     );
   }
 }
-
-final yeetKey = GlobalKey<State<Router<String>>>();

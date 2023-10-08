@@ -23,7 +23,7 @@ class EquipmentArticlePage extends StatelessWidget {
   final List<Widget>? equipmentSubpage;
 
   static final yeet = yeetCategory(
-    category: "equipment", 
+    category: 'equipment',
     builder: (json) => EquipmentArticlePage.fromJson(json),
   );
 
@@ -39,7 +39,7 @@ class EquipmentArticlePage extends StatelessWidget {
 
     return EquipmentArticlePage(
       equipmentCategory: DndRef.fromJson(json['equipment_category']!),
-      desc: json['desc'].join("\n\n"),
+      desc: json['desc'].join('\n\n'),
       cost: "${json['cost']['quantity']}${json['cost']['unit']}",
       weight: json['weight']?.toString(),
       equipmentSubpage: equipmentSubpage,
@@ -54,7 +54,7 @@ class EquipmentArticlePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           annotatedLine(
-            annotation: "Category: ",
+            annotation: 'Category: ',
             padding: padButt,
             content: TextButtonRef(ref: equipmentCategory),
           ),
@@ -64,15 +64,14 @@ class EquipmentArticlePage extends StatelessWidget {
               child: MarkdownBody(data: desc),
             ),
           if (equipmentSubpage?.isNotEmpty ?? false)
-            for (var widget in equipmentSubpage!)
-              widget,
+            for (var widget in equipmentSubpage!) widget,
           annotatedLine(
-            annotation: "Cost: ",
+            annotation: 'Cost: ',
             content: Text(cost),
           ),
-          if (weight != null) 
+          if (weight != null)
             annotatedLine(
-              annotation: "Weight: ",
+              annotation: 'Weight: ',
               content: Text(weight!),
             ),
         ],
@@ -84,29 +83,28 @@ class EquipmentArticlePage extends StatelessWidget {
 List<Widget> weaponEquipmentArticlePage(JsonObject json) {
   final String rangeCategory = json['category_range'];
   final String range = json['range']['long'] != null
-    ? "${json['range']['normal']} / ${json['range']['long']}"
-    : json['range']['normal'].toString();
+      ? "${json['range']['normal']} / ${json['range']['long']}"
+      : json['range']['normal'].toString();
   final String damageDice = json['damage']['damage_dice'];
   final DndRef damageType = DndRef.fromJson(json['damage']['damage_type']);
 
   final String? twoHandedDamageDice = json['two_handed_damage']?['damage_dice'];
   DndRef? twoHandedDamageType;
   if (twoHandedDamageDice != null) {
-      twoHandedDamageType = DndRef.fromJson(json['two_handed_damage']['damage_type']);
+    twoHandedDamageType =
+        DndRef.fromJson(json['two_handed_damage']['damage_type']);
   }
 
   final JsonArray? properties = json['properties'];
 
   return [
+    annotatedLine(annotation: '$rangeCategory Weapon'),
     annotatedLine(
-      annotation: "$rangeCategory Weapon"
-    ),
-    annotatedLine(
-      annotation: "Range: ", 
+      annotation: 'Range: ',
       content: Text(range),
     ),
     annotatedLine(
-      annotation: "Damage: ",
+      annotation: 'Damage: ',
       padding: padButt,
       contents: [
         Text(damageDice),
@@ -115,7 +113,7 @@ List<Widget> weaponEquipmentArticlePage(JsonObject json) {
     ),
     if (twoHandedDamageDice != null && twoHandedDamageType != null)
       annotatedLine(
-        annotation: "2H Damage: ",
+        annotation: '2H Damage: ',
         contents: [
           Text(twoHandedDamageDice),
           TextButtonRef(ref: twoHandedDamageType),
@@ -123,10 +121,9 @@ List<Widget> weaponEquipmentArticlePage(JsonObject json) {
       ),
     if (properties != null)
       annotatedLine(
-        annotation: "Properties:",
+        annotation: 'Properties:',
         contents: [
-          for (var it in properties)
-            TextButtonRef.fromJson(it),
+          for (var it in properties) TextButtonRef.fromJson(it),
         ],
       ),
   ];
@@ -139,39 +136,39 @@ List<Widget> armorEquipmentArticlePage(JsonObject json) {
 
   return [
     annotatedLine(
-      annotation: "$armorCategory Armor",
+      annotation: '$armorCategory Armor',
     ),
     annotatedLine(
-      annotation: "STR requirement: ",
-      content: Text("$strengthRequirement"),
+      annotation: 'STR requirement: ',
+      content: Text('$strengthRequirement'),
     ),
     if (stealthDisadvantage)
-      const Padding(padding: pad,
-        child: Text("Disadvantage on Stealth"),
+      const Padding(
+        padding: pad,
+        child: Text('Disadvantage on Stealth'),
       ),
   ];
 }
 
-List<Widget> gearEquipmentArticleSubpage(JsonObject json) { 
+List<Widget> gearEquipmentArticleSubpage(JsonObject json) {
   final DndRef gearCategory = DndRef.fromJson(json['gear_category']);
   final JsonArray? contents = json['contents'];
 
   return [
     annotatedLine(
-      annotation: "Gear category: ",
+      annotation: 'Gear category: ',
       content: TextButtonRef(ref: gearCategory),
     ),
-    if (contents?.isNotEmpty ?? false)
-      ...[
-        annotatedLine(annotation: "Contents:"),
-        for (var it in contents!)
-          ListTileRef.fromJson(
-            it['item'],
-            trailing: Text(
-              it['quantity'].toString(),
-              style: const TextStyle(fontSize: 16.0),
-            ),
+    if (contents?.isNotEmpty ?? false) ...[
+      annotatedLine(annotation: 'Contents:'),
+      for (var it in contents!)
+        ListTileRef.fromJson(
+          it['item'],
+          trailing: Text(
+            it['quantity'].toString(),
+            style: const TextStyle(fontSize: 16.0),
           ),
-      ]
+        ),
+    ]
   ];
 }

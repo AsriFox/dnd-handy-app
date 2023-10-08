@@ -21,27 +21,23 @@ class MagicItemArticlePage extends StatelessWidget {
   final String rarity;
   final bool variant;
   final List<DndRef> variants;
-  
+
   static final yeet = yeetCategory(
-    category: "magic-items",
+    category: 'magic-items',
     builder: (json) => MagicItemArticlePage.fromJson(json),
   );
 
   factory MagicItemArticlePage.fromJson(JsonObject json) =>
-    MagicItemArticlePage(
-      equipmentCategory: DndRef.fromJson(json['equipment_category']),
-      desc: [
-        for (String p in json['desc'])
-          if (p.contains('|')) p
-          else "\n$p\n"
-      ].join("\n"),
-      rarity: json['rarity']['name'].toString(), 
-      variant: json['variant'] ?? false,
-      variants: [
-        for (var it in json['variants'])
-          DndRef.fromJson(it)
-      ],
-    );
+      MagicItemArticlePage(
+        equipmentCategory: DndRef.fromJson(json['equipment_category']),
+        desc: [
+          for (String p in json['desc'])
+            if (p.contains('|')) p else '\n$p\n'
+        ].join('\n'),
+        rarity: json['rarity']['name'].toString(),
+        variant: json['variant'] ?? false,
+        variants: [for (var it in json['variants']) DndRef.fromJson(it)],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -60,23 +56,18 @@ class MagicItemArticlePage extends StatelessWidget {
               ),
             ),
             annotatedLine(
-              annotation: "Category: ",
+              annotation: 'Category: ',
               padding: padButt,
               content: TextButtonRef(ref: equipmentCategory),
             ),
             annotatedLine(
-              annotation: "Rarity: ",
+              annotation: 'Rarity: ',
               content: Text(rarity),
             ),
             if (variant)
-              const Padding(
-                padding: pad, 
-                child: Text("Is a variant")
-              ),
-            if (variants.isNotEmpty)
-              annotatedLine(annotation: "Variants:"),
-            for (var it in variants)
-              ListTileRef(ref: it)
+              const Padding(padding: pad, child: Text('Is a variant')),
+            if (variants.isNotEmpty) annotatedLine(annotation: 'Variants:'),
+            for (var it in variants) ListTileRef(ref: it)
           ],
         ),
       ),
