@@ -1,7 +1,7 @@
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:flutter/material.dart';
-import 'package:yeet/yeet.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
@@ -40,7 +40,7 @@ class DndPageScreen extends StatelessWidget {
       appBar: MobileTitleBar(
         title: title,
         appState: DndAppSettings.of(context),
-        onPressBackButton: () => context.yeet(),
+        onPressBackButton: () => context.pop(),
       ),
       body: body,
     );

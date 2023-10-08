@@ -11,58 +11,53 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
-import 'package:yeet/yeet.dart';
+import 'package:go_router/go_router.dart';
+
+final _router = GoRouter(routes: [
+  GoRoute(
+      path: '/',
+      builder: (_, __) => HomeScreenPage(
+          title: 'Database',
+          body: DndPageBuilder(
+            request: DndApiService().getRequest('api'),
+            onResult: (json) => RefListPage(results: [
+              for (var entry in (json as JsonObject).entries)
+                if (entry.key != 'last_refresh')
+                  DndRef(
+                    index: entry.key,
+                    url: entry.value,
+                    name: getTitle(entry.value),
+                  )
+            ]),
+          )),
+      routes: [
+        GoRoute(
+            path: 'alignments',
+            builder: (_, state) => DndPageScreen.request(
+                  path: 'api${state.uri}',
+                  onResult: (json) => AlignmentsPage.fromJson(json),
+                )),
+        yeetCategory(
+            category: 'backgrounds',
+            builder: (json) => CharBackgroundPage.fromJson(json)),
+        yeetCategory(
+            category: 'classes',
+            builder: (json) => CharClassPage.fromJson(json)),
+        yeetCategory(
+            category: 'equipment-categories',
+            builder: (json) => RefListPage.fromJsonArray(json['equipment'])),
+        ...yeetArticles,
+      ]),
+]);
 
 class HomePage extends StatelessWidget {
-  HomePage({ super.key });
-
-  final yeet = Yeet(
-    path: "/",
-    builder: (_) => HomeScreenPage(
-      title: "Database",
-      body: DndPageBuilder(
-        request: DndApiService().getRequest('api'),
-        onResult: (json) => RefListPage(
-          results: [
-            for (var entry in (json as JsonObject).entries)
-              if (entry.key != 'last_refresh')
-                DndRef(
-                  index: entry.key,
-                  url: entry.value as String,
-                  name: getTitle(entry.value),
-                )
-          ] 
-        )
-      ),
-    ),
-    children: [
-      Yeet(
-        path: "/alignments",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}",
-          onResult: (json) => AlignmentsPage.fromJson(json),
-        ),
-      ),
-      yeetCategory(
-        category: "backgrounds",
-        builder: (json) => CharBackgroundPage.fromJson(json), 
-      ),
-      yeetCategory(
-        category: "classes",
-        builder: (json) => CharClassPage.fromJson(json),
-      ),
-      yeetCategory(
-        category: "equipment-categories",
-        builder: (json) => RefListPage.fromJsonArray(json['equipment']),
-      ),
-      ...yeetArticles,
-    ]
-  );
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) => Router(
-    key: yeetKey,
-    routeInformationParser: YeetInformationParser(),
-    routerDelegate: YeeterDelegate(yeet: yeet),
-  );
+        routeInformationProvider: _router.routeInformationProvider,
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+        backButtonDispatcher: _router.backButtonDispatcher,
+      );
 }

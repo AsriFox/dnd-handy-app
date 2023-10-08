@@ -3,7 +3,7 @@ import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:yeet/yeet.dart';
+import 'package:go_router/go_router.dart';
 import 'articles/feat_subpage.dart';
 import 'articles/race_subpage.dart';
 import 'articles/trait_subpage.dart';
@@ -20,26 +20,22 @@ import 'articles/equipment_subpage.dart';
 import 'articles/magic_item_subpage.dart';
 import 'articles/proficiency_subpage.dart';
 
-Yeet yeetCategory({
-  required String category, 
+GoRoute yeetCategory({
+  required String category,
   required Widget Function(dynamic) builder,
-}) {
-  return Yeet(
-    path: "/$category",
-    builder: (_) => DndCategoryScreen.request(
-      path: "api/$category",
-    ),
-    children: [
-      Yeet(
-        path: "/$category/:name",
-        builder: (context) => DndPageScreen.request(
-          path: "api${context.currentPath}",
-          onResult: builder,
-        )
-      )
-    ],
-  );
-}
+}) =>
+    GoRoute(
+      path: category,
+      builder: (_, state) => DndCategoryScreen.request(path: 'api/$category'),
+      routes: [
+        GoRoute(
+            path: ':name',
+            builder: (_, state) => DndPageScreen.request(
+                  path: 'api${state.uri}',
+                  onResult: builder,
+                )),
+      ],
+    );
 
 final yeetArticles = [
   AbilityArticlePage.yeet,

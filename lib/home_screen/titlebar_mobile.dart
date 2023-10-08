@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yeet/yeet.dart';
 import 'package:dnd_handy_flutter/dnd_app.dart';
 import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
+import 'package:go_router/go_router.dart';
 
 class MobileTitleBar extends AppBar {
   MobileTitleBar({ 
@@ -28,7 +29,7 @@ class MobileTitleBar extends AppBar {
   }) { 
     return MobileTitleBar(
       appState: DndAppSettings.of(context),
-      onPressBackButton: () => context.yeet(),
+      onPressBackButton: () => context.pop(),
       actions: actions,
       title: title,
     );

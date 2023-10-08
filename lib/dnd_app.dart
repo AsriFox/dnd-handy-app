@@ -1,6 +1,4 @@
-import 'package:dnd_handy_flutter/home_screen/search_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:yeet/yeet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen/home_screen.dart';
 
@@ -100,20 +98,10 @@ class DndAppSettings extends State<DndHandyApp>
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeMode,
-      home: WillPopScope(
-        onWillPop: () async {
-          final yeeter = yeetKey.currentState!.widget.routerDelegate as YeeterDelegate;
-          if (yeeter.currentConfiguration == "/") {
-            return true;
-          }
-          yeeter.yeet();
-          return false;
-        },
-        child: Material(
-          child: SafeArea(
-            child: HomeScreen(
-              drawerKey: _drawerKey,
-            ),
+      home: Material(
+        child: SafeArea(
+          child: HomeScreen(
+            drawerKey: _drawerKey,
           ),
         ),
       ),
