@@ -39,7 +39,7 @@ class SubclassArticlePage extends StatelessWidget {
           data: json['desc'].join('\n\n'),
         ),
       ),
-      annotatedLine(annotation: "Features:"),
+      annotatedLine(annotation: 'Features:'),
       // TODO: Branching features (e.g. druid circles)
       // buildListFuture(
       //   request: getApiRequest("${json['url']}/features"),
@@ -50,7 +50,7 @@ class SubclassArticlePage extends StatelessWidget {
 
     final spells = json['spells'] as List<dynamic>;
     if (spells.isNotEmpty) {
-      children.add(annotatedLine(annotation: "Spells:"));
+      children.add(annotatedLine(annotation: 'Spells:'));
       children += spells
           .map((it) => ExpansionTile(
                 title: ListTileRef.fromJson(it['spell']),

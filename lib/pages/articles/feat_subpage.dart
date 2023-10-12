@@ -43,7 +43,7 @@ class FeatArticlePage extends StatelessWidget {
             ListTileRef(
               ref: it.key,
               trailing: Text(
-                "${it.value}",
+                '${it.value}',
                 style: const TextStyle(fontSize: 16.0),
               ),
             )

@@ -92,7 +92,7 @@ class SubraceArticlePage extends StatelessWidget {
               "Choose ${json['language_options']['choose'].toString()} language(s) from:"),
         ),
         annotatedLine(
-          annotation: "",
+          annotation: '',
           contents: languageOptions
               .map((it) => TextButtonRef.fromJson(it['item']))
               .toList(),

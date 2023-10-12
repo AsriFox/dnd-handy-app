@@ -49,7 +49,7 @@ class CharBackgroundPage extends StatelessWidget {
 
     return CharBackgroundPage(
       featureName: json['feature']['name'],
-      featureDesc: json['feature']['desc'].join("\n\n"),
+      featureDesc: json['feature']['desc'].join('\n\n'),
       proficiencies: [
         for (var it in json['starting_proficiencies']) DndRef.fromJson(it)
       ],

@@ -75,7 +75,7 @@ class AlignmentTile extends StatelessWidget {
               child: Text(
                 subtitle!,
                 textAlign: TextAlign.center,
-                style: theme.subtitle1,
+                style: theme.titleMedium,
               ),
             ),
       child: InkWell(
@@ -98,7 +98,7 @@ class AlignmentTile extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
           padding: const EdgeInsets.only(bottom: 24.0),
-          child: Text(caption, style: theme.headline2),
+          child: Text(caption, style: theme.displayMedium),
         ),
       ),
     );

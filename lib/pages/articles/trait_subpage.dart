@@ -157,7 +157,7 @@ List<Widget> buildBreathWeaponSubpage(JsonObject breathWeapon) => [
       annotatedLine(annotation: '', contents: [
         for (var entry
             in breathWeapon['damage'][0]['damage_at_character_level'].entries)
-          Text(" ${entry.value} at level ${entry.key};")
+          Text(' ${entry.value} at level ${entry.key};')
       ]),
       const Padding(
           padding: pad,

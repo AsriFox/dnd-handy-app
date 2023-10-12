@@ -93,7 +93,7 @@ class SpellArticlePage extends StatelessWidget {
                 : json['casting_time'],
           )),
       annotatedLine(
-          annotation: "Effect duration: ",
+          annotation: 'Effect duration: ',
           content: Text(
             json['concentration'] as bool
                 ? "Concentration, ${json['duration']}"
