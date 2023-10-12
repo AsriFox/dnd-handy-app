@@ -1,10 +1,10 @@
 import 'package:dnd_handy_flutter/api_service.dart';
-import 'package:dnd_handy_flutter/home_screen/titlebar_mobile.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/home_screen/title_bar.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
-import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RefListPage extends StatelessWidget {
   const RefListPage({
@@ -43,24 +43,25 @@ class RefListPage extends StatelessWidget {
   }
 }
 
-class DndCategoryScreen extends StatelessWidget {
-  const DndCategoryScreen({
+class DndPageScreen extends StatelessWidget {
+  const DndPageScreen({
     super.key,
-    required this.category,
+    required this.routerState,
     required this.body,
   });
 
-  final String category;
+  final GoRouterState routerState;
   final Widget body;
 
-  factory DndCategoryScreen.request({
-    required String path,
+  factory DndPageScreen.request({
+    required GoRouterState routerState,
+    required Widget Function(dynamic) onResult,
   }) {
-    return DndCategoryScreen(
-      category: path.split('/').last,
+    return DndPageScreen(
+      routerState: routerState,
       body: DndPageBuilder(
-        request: DndApiService().getRequest(path),
-        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+        request: DndApiService().getRequest(routerState.matchedLocation),
+        onResult: onResult,
       ),
     );
   }
@@ -68,10 +69,7 @@ class DndCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildMobileCategoryTitleBar(
-        context: context,
-        title: category,
-      ),
+      appBar: AdwTitleBar.route(routerState: routerState),
       body: body,
     );
   }

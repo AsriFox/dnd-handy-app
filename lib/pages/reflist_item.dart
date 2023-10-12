@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
-import 'package:dnd_handy_flutter/pages/page_screen.dart';
+import 'package:go_router/go_router.dart';
+
+gotoPage(BuildContext context, DndRef ref) =>
+    GoRouter.of(context).push(ref.url);
 
 enum ListDensity {
   veryDense(VisualDensity.minimumDensity);

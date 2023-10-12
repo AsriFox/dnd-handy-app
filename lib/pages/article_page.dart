@@ -1,4 +1,3 @@
-import 'package:dnd_handy_flutter/pages/page_screen.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
@@ -26,12 +25,15 @@ GoRoute yeetCategory({
 }) =>
     GoRoute(
       path: category,
-      builder: (_, state) => DndCategoryScreen.request(path: 'api/$category'),
+      builder: (_, state) => DndPageScreen.request(
+        routerState: state,
+        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+      ),
       routes: [
         GoRoute(
             path: ':name',
             builder: (_, state) => DndPageScreen.request(
-                  path: 'api${state.uri}',
+                  routerState: state,
                   onResult: builder,
                 )),
       ],
