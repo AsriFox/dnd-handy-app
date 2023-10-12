@@ -21,6 +21,8 @@ dependencies:
   flutter_markdown: ^0.6.15
   shared_preferences: ^2.1.2
   go_router: ^11.0.0
+  libadwaita: ^2.0.0
+  adwaita: ^1.1.0
 
   path_provider: ^2.1.0
   hive_flutter: ^1.1.0

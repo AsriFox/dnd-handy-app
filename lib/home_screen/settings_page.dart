@@ -1,61 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:dnd_handy_flutter/dnd_app.dart';
+import 'package:libadwaita/libadwaita.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SettingsController extends ChangeNotifier {
+  SettingsController(this._prefs);
+  final SharedPreferences _prefs;
+
+  static const _themeKey = 'themeMode';
+  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode get themeMode => _themeMode;
+  set themeMode(ThemeMode newThemeMode) {
+    if (_themeMode == newThemeMode) {
+      return;
+    }
+    _themeMode = newThemeMode;
+    _prefs.setString(_themeKey, _themeMode.toString());
+    notifyListeners();
+  }
+
+  static SettingsController of(BuildContext context) => context
+      .getInheritedWidgetOfExactType<SettingsControllerProvider>()!
+      .controller;
+}
+
+class SettingsControllerProvider extends InheritedWidget {
+  const SettingsControllerProvider({
+    super.key,
+    required this.controller,
+    required super.child,
+  });
+
+  final SettingsController controller;
+
+  @override
+  bool updateShouldNotify(SettingsControllerProvider oldWidget) =>
+      controller != oldWidget.controller;
+}
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({
-    super.key,
-  });
+  const SettingsPage({super.key});
+
+  static const _aboutRow = ExpansionTile(
+    title: Text('About'),
+    children: [
+      AdwActionRow(
+        title: 'DnD Handy App',
+        subtitle: 'Author: AsriFox',
+      ),
+      AdwActionRow(
+          title: 'GitHub',
+          subtitle: 'https://github.com/AsriFox/dnd-handy-app',
+          start: Icon(Icons.link)),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    final appState = DndAppSettings.of(context);
+    final settings = SettingsController.of(context);
 
-    return AnimatedBuilder(
-      animation: appState,
-      builder: (_, child) {
-        IconData themeModeIcon = Icons.settings_brightness;
-        switch (appState.themeMode) {
-          case ThemeMode.light:
-            themeModeIcon = Icons.light_mode;
-            break;
-          case ThemeMode.dark:
-            themeModeIcon = Icons.dark_mode;
-            break;
-          default:
-            break;
-        }
-
-        final themeModeSetting = ListTile(
-          leading: Icon(themeModeIcon),
-          title: const Text('Theme mode'),
-          trailing: DropdownButton<ThemeMode>(
-            value: appState.themeMode,
-            onChanged: (value) => appState.setState(() {
-              appState.themeMode = value;
-            }),
-            items: const [
-              DropdownMenuItem(
-                value: ThemeMode.system,
-                child: Text('System'),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 47,
+        title: const Text('Settings'),
+        centerTitle: true,
+      ),
+      body: AdwClamp.scrollable(
+        child: ListenableBuilder(
+          listenable: settings,
+          builder: (_, __) => AdwPreferencesGroup(
+            children: [
+              AdwComboRow(
+                title: 'Theme mode',
+                selectedIndex: ThemeMode.values.indexOf(settings.themeMode),
+                onSelected: (val) => settings.themeMode = ThemeMode.values[val],
+                choices: ThemeMode.values.map((e) => e.name).toList(),
               ),
-              DropdownMenuItem(
-                value: ThemeMode.light,
-                child: Text('Light'),
-              ),
-              DropdownMenuItem(
-                value: ThemeMode.dark,
-                child: Text('Dark'),
-              ),
+              _aboutRow,
             ],
           ),
-        );
-
-        return ListView(
-          children: [
-            themeModeSetting,
-          ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
