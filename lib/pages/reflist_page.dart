@@ -3,6 +3,7 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/home_screen/title_bar.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
+import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,12 +34,12 @@ class RefListPage extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (_, index) => ListTileRef(
+    return WrappedListView.builder(
+      builder: (_, index) => ListTileRef(
         ref: results[index],
         onTap: gotoPage,
       ),
+      childCount: results.length,
     );
   }
 }

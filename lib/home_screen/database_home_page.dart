@@ -82,7 +82,6 @@ final _databaseObjectsRoutes = [
     path: 'spells',
     childBuilder: (json) => SpellArticlePage.fromJson(json),
   ),
-  // TODO: lazy list builder?
   routeCategory(
     name: 'Equipment',
     path: 'equipment',
@@ -238,5 +237,9 @@ class HomePageListTile extends StatelessWidget {
             ? () => GoRouter.of(context).go('/api/$destination')
             : () {},
         enabled: enabled,
+        visualDensity: VisualDensity.comfortable,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
       );
 }

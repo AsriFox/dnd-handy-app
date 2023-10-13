@@ -72,6 +72,9 @@ class ListTileRef extends StatelessWidget {
     return ListTile(
       title: Text(ref.name),
       onTap: () => onTap(context, ref),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
       visualDensity: visualDensity,
       trailing: trailing,
       dense: dense,
