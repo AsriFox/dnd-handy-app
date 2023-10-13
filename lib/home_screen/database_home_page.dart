@@ -87,8 +87,40 @@ final _databaseObjectsRoutes = [
     path: 'equipment',
     childBuilder: (json) => EquipmentArticlePage.fromJson(json),
   ),
-  // routeCategory(name: 'Weapons', path: 'weapons', childBuilder: ),
-  // routeCategory(name: 'Armor', path: 'armor', childBuilder: ),
+  GoRoute(
+    name: 'Weapons',
+    path: 'equipment-categories/weapon',
+    builder: (_, state) => DndPageScreen.request(
+      routerState: state,
+      onResult: (json) => RefListPage.fromJsonArray(json['equipment']),
+    ),
+    routes: [
+      GoRoute(
+        path: ':name',
+        builder: (_, state) => DndPageScreen.request(
+          routerState: state,
+          onResult: (json) => EquipmentArticlePage.fromJson(json),
+        ),
+      ),
+    ],
+  ),
+  GoRoute(
+    name: 'Armor',
+    path: 'equipment-categories/armor',
+    builder: (_, state) => DndPageScreen.request(
+      routerState: state,
+      onResult: (json) => RefListPage.fromJsonArray(json['equipment']),
+    ),
+    routes: [
+      GoRoute(
+        path: ':name',
+        builder: (_, state) => DndPageScreen.request(
+          routerState: state,
+          onResult: (json) => EquipmentArticlePage.fromJson(json),
+        ),
+      ),
+    ],
+  ),
   // routeCategory(name: 'Items', path: 'items', childBuilder: ),
   routeCategory(
     name: 'Magic items',

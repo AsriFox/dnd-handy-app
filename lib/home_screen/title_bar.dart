@@ -18,7 +18,9 @@ class AdwTitleBar extends StatelessWidget implements PreferredSizeWidget {
     final path = routerState.matchedLocation;
     return AdwTitleBar(
       key: key,
-      title: routerState.name ?? path.split('/').last,
+      title: routerState.name ??
+          routerState.extra as String? ??
+          path.split('/').last,
       backButton: path.indexOf('/', 1) > 0,
       right: [
         IconButton(
