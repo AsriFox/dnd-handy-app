@@ -3,18 +3,34 @@ import 'package:libadwaita/libadwaita.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends ChangeNotifier {
-  SettingsController(this._prefs);
+  SettingsController(this._prefs)
+      : _themeMode =
+            ThemeMode.values.byName(_prefs.getString(_themeKey) ?? 'system'),
+        _isMouseDragScroll = _prefs.getBool(_mouseDragKey) ?? false;
+
   final SharedPreferences _prefs;
 
   static const _themeKey = 'themeMode';
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode;
   ThemeMode get themeMode => _themeMode;
   set themeMode(ThemeMode newThemeMode) {
     if (_themeMode == newThemeMode) {
       return;
     }
     _themeMode = newThemeMode;
-    _prefs.setString(_themeKey, _themeMode.toString());
+    _prefs.setString(_themeKey, _themeMode.name);
+    notifyListeners();
+  }
+
+  static const _mouseDragKey = 'isMouseDragScroll';
+  bool _isMouseDragScroll;
+  bool get isMouseDragScroll => _isMouseDragScroll;
+  set isMouseDragScroll(bool newValue) {
+    if (_isMouseDragScroll == newValue) {
+      return;
+    }
+    _isMouseDragScroll = newValue;
+    _prefs.setBool(_mouseDragKey, _isMouseDragScroll);
     notifyListeners();
   }
 
@@ -74,6 +90,11 @@ class SettingsPage extends StatelessWidget {
                 selectedIndex: ThemeMode.values.indexOf(settings.themeMode),
                 onSelected: (val) => settings.themeMode = ThemeMode.values[val],
                 choices: ThemeMode.values.map((e) => e.name).toList(),
+              ),
+              AdwSwitchRow(
+                title: 'Use mouse drag to scroll',
+                value: settings.isMouseDragScroll,
+                onChanged: (val) => settings.isMouseDragScroll = val,
               ),
               _aboutRow,
             ],

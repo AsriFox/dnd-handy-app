@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dnd_handy_flutter/home_screen/database_home_page.dart';
 import 'package:dnd_handy_flutter/home_screen/settings_page.dart';
 import 'package:dnd_handy_flutter/home_screen/title_bar.dart';
@@ -81,6 +83,9 @@ class DndHandyApp extends StatelessWidget {
               darkTheme: darkTheme,
               themeMode: settings.themeMode,
               routerConfig: _router,
+              scrollBehavior: settings.isMouseDragScroll
+                  ? CustomTouchScrollBehavior()
+                  : null,
             ),
           ),
         ),
@@ -124,3 +129,11 @@ class HomeScreen extends StatelessWidget {
 //       ),
 //       transitionDuration: const Duration(seconds: 2),
 //     );
+
+class CustomTouchScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.mouse,
+        ...super.dragDevices,
+      };
+}
