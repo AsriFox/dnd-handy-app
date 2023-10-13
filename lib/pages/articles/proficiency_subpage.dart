@@ -17,11 +17,6 @@ class ProficiencyArticlePage extends StatelessWidget {
   final List<DndRef> races;
   final List<DndRef> classes;
 
-  static final yeet = yeetCategory(
-    category: 'proficiencies',
-    builder: (json) => ProficiencyArticlePage.fromJson(json),
-  );
-
   factory ProficiencyArticlePage.fromJson(JsonObject json) =>
       ProficiencyArticlePage(
         type: json['type'],

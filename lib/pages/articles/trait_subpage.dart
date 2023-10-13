@@ -28,11 +28,6 @@ class TraitArticlePage extends StatelessWidget {
   final List<DndRef>? languageOptions;
   final List<Widget>? traitSpecifics;
 
-  static final yeet = yeetCategory(
-    category: 'traits',
-    builder: (json) => TraitArticlePage.fromJson(json),
-  );
-
   factory TraitArticlePage.fromJson(JsonObject json) {
     final int? proficiencyChoiceCount = json['proficiency_choices']?['choose'];
     final JsonArray? proficiencyChoices =

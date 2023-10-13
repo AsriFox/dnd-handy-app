@@ -14,11 +14,6 @@ class AbilityArticlePage extends StatelessWidget {
   final String desc;
   final List<DndRef> skills;
 
-  static final yeet = yeetCategory(
-    category: 'ability-scores',
-    builder: (json) => AbilityArticlePage.fromJson(json),
-  );
-
   factory AbilityArticlePage.fromJson(JsonObject json) => AbilityArticlePage(
         desc: json['desc'].join('\n\n'),
         skills: [for (var it in json['skills']) DndRef.fromJson(it)],

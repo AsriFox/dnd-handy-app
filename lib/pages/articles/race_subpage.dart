@@ -12,11 +12,6 @@ class RaceArticlePage extends StatelessWidget {
 
   final JsonObject json;
 
-  static final yeet = yeetCategory(
-    category: 'races',
-    builder: (json) => RaceArticlePage.fromJson(json),
-  );
-
   factory RaceArticlePage.fromJson(JsonObject json) =>
       RaceArticlePage(json: json);
 

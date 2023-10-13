@@ -17,11 +17,6 @@ class LanguageArticlePage extends StatelessWidget {
   final String script;
   final List<String> typicalSpeakers;
 
-  static final yeet = yeetCategory(
-    category: 'languages',
-    builder: (json) => LanguageArticlePage.fromJson(json),
-  );
-
   factory LanguageArticlePage.fromJson(JsonObject json) => LanguageArticlePage(
         desc: json['desc'],
         type: json['type']!,

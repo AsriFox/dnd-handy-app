@@ -12,11 +12,6 @@ class SpellArticlePage extends StatelessWidget {
 
   final JsonObject json;
 
-  static final yeet = yeetCategory(
-    category: 'spells',
-    builder: (json) => SpellArticlePage.fromJson(json),
-  );
-
   // TODO: fields
   factory SpellArticlePage.fromJson(JsonObject json) =>
       SpellArticlePage(json: json);

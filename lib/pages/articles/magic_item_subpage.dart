@@ -22,11 +22,6 @@ class MagicItemArticlePage extends StatelessWidget {
   final bool variant;
   final List<DndRef> variants;
 
-  static final yeet = yeetCategory(
-    category: 'magic-items',
-    builder: (json) => MagicItemArticlePage.fromJson(json),
-  );
-
   factory MagicItemArticlePage.fromJson(JsonObject json) =>
       MagicItemArticlePage(
         equipmentCategory: DndRef.fromJson(json['equipment_category']),

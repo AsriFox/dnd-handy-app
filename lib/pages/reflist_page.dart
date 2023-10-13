@@ -74,3 +74,26 @@ class DndPageScreen extends StatelessWidget {
     );
   }
 }
+
+GoRoute routeCategory({
+  required String name,
+  required String path,
+  required Widget Function(dynamic) childBuilder,
+}) =>
+    GoRoute(
+      name: name,
+      path: path,
+      builder: (_, state) => DndPageScreen.request(
+        routerState: state,
+        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+      ),
+      routes: [
+        GoRoute(
+          path: ':name',
+          builder: (_, state) => DndPageScreen.request(
+            routerState: state,
+            onResult: childBuilder,
+          ),
+        ),
+      ],
+    );

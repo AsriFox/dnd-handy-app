@@ -14,11 +14,6 @@ class RulesArticlePage extends StatelessWidget {
   final String? desc;
   final List<DndRef> subsections;
 
-  static final yeet = yeetCategory(
-    category: 'rules',
-    builder: (json) => RulesArticlePage.fromJson(json),
-  );
-
   factory RulesArticlePage.fromJson(JsonObject json) => RulesArticlePage(
         desc: json['desc'],
         subsections: [for (var it in json['subsections']) DndRef.fromJson(it)],

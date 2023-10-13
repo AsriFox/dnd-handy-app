@@ -22,11 +22,6 @@ class EquipmentArticlePage extends StatelessWidget {
   final String? weight;
   final List<Widget>? equipmentSubpage;
 
-  static final yeet = yeetCategory(
-    category: 'equipment',
-    builder: (json) => EquipmentArticlePage.fromJson(json),
-  );
-
   factory EquipmentArticlePage.fromJson(JsonObject json) {
     List<Widget>? equipmentSubpage;
     if (json.containsKey('weapon_category')) {

@@ -1,6 +1,168 @@
+import 'package:dnd_handy_flutter/pages/alignments_page.dart';
+import 'package:dnd_handy_flutter/pages/article_page.dart';
+import 'package:dnd_handy_flutter/pages/articles/ability_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/equipment_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/feat_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/feature_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/language_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/magic_item_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/monster_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/proficiency_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/race_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/rules_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/skills_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/spell_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/subclass_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/subrace_subpage.dart';
+import 'package:dnd_handy_flutter/pages/articles/trait_subpage.dart';
+import 'package:dnd_handy_flutter/pages/character/background_page.dart';
+import 'package:dnd_handy_flutter/pages/character/class_page.dart';
+import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
+
+final _databaseStatsRoutes = [
+  routeCategory(
+    name: 'Races',
+    path: 'races',
+    childBuilder: (json) => RaceArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Classes',
+    path: 'classes',
+    childBuilder: (json) => CharClassPage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Backgrounds',
+    path: 'backgrounds',
+    childBuilder: (json) => CharBackgroundPage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Feats',
+    path: 'feats',
+    childBuilder: (json) => FeatArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Magic schools',
+    path: 'magic-schools',
+    childBuilder: (json) => ArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Features',
+    path: 'features',
+    childBuilder: (json) => FeatureArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Traits',
+    path: 'traits',
+    childBuilder: (json) => TraitArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Subraces',
+    path: 'subraces',
+    childBuilder: (json) => SubraceArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Subclasses',
+    path: 'subclasses',
+    childBuilder: (json) => SubclassArticlePage.fromJson(json),
+  ),
+];
+
+final _databaseObjectsRoutes = [
+  routeCategory(
+    name: 'Monsters',
+    path: 'monsters',
+    childBuilder: (json) => MonsterArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Spells',
+    path: 'spells',
+    childBuilder: (json) => SpellArticlePage.fromJson(json),
+  ),
+  // TODO: lazy list builder?
+  routeCategory(
+    name: 'Equipment',
+    path: 'equipment',
+    childBuilder: (json) => EquipmentArticlePage.fromJson(json),
+  ),
+  // routeCategory(name: 'Weapons', path: 'weapons', childBuilder: ),
+  // routeCategory(name: 'Armor', path: 'armor', childBuilder: ),
+  // routeCategory(name: 'Items', path: 'items', childBuilder: ),
+  routeCategory(
+    name: 'Magic items',
+    path: 'magic-items',
+    childBuilder: (json) => MagicItemArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Equipment categories',
+    path: 'equipment-categories',
+    childBuilder: (json) => RefListPage.fromJsonArray(json['equipment']),
+  ),
+  // routeCategory(name: 'Generation lists', path: 'generation-lists', childBuilder: ),
+];
+
+final _databaseRulesRoutes = [
+  routeCategory(
+    name: 'Rules',
+    path: 'rules',
+    childBuilder: (json) => RulesArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Rule sections',
+    path: 'rule-sections',
+    childBuilder: (json) => Markdown(
+      data: json['desc'],
+      styleSheet: mdTableStyle,
+    ),
+  ),
+  routeCategory(
+    name: 'Ability scores',
+    path: 'ability-scores',
+    childBuilder: (json) => AbilityArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Skills',
+    path: 'skills',
+    childBuilder: (json) => SkillArticlePage.fromJson(json),
+  ),
+  GoRoute(
+    name: 'Alignments',
+    path: 'alignments',
+    builder: (_, state) => DndPageScreen.request(
+      routerState: state,
+      onResult: (json) => AlignmentsPage.fromJson(json),
+    ),
+  ),
+  routeCategory(
+    name: 'Conditions',
+    path: 'conditions',
+    childBuilder: (json) => ArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Damage types',
+    path: 'damage-types',
+    childBuilder: (json) => ArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Languages',
+    path: 'languages',
+    childBuilder: (json) => LanguageArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Proficiencies',
+    path: 'proficiencies',
+    childBuilder: (json) => ProficiencyArticlePage.fromJson(json),
+  ),
+];
+
+final databaseRoutes = [
+  ..._databaseStatsRoutes,
+  ..._databaseObjectsRoutes,
+  ..._databaseRulesRoutes,
+];
 
 class DatabaseHomePage extends StatelessWidget {
   const DatabaseHomePage({super.key});
@@ -23,36 +185,32 @@ class DatabaseHomePage extends StatelessWidget {
               titleTextStyle: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
-          child: const TabBarView(
+          child: TabBarView(
             children: [
-              WrappedListView(children: [
-                HomePageListTile(title: 'Races'),
-                HomePageListTile(title: 'Classes'),
-                HomePageListTile(title: 'Backgrounds'),
-                HomePageListTile(title: 'Feats'),
-                HomePageListTile(title: 'Magic schools', enabled: false),
-                HomePageListTile(title: 'Features', enabled: false),
-                HomePageListTile(title: 'Traits', enabled: false),
-              ]),
-              WrappedListView(children: [
-                HomePageListTile(title: 'Monsters'),
-                HomePageListTile(title: 'Spells'),
-                HomePageListTile(title: 'Weapons'),
-                HomePageListTile(title: 'Armor'),
-                HomePageListTile(title: 'Items'),
-                HomePageListTile(title: 'Magic items', enabled: false),
-                HomePageListTile(title: 'Equipment categories', enabled: false),
-                HomePageListTile(title: 'Generation lists', enabled: false),
-              ]),
-              WrappedListView(children: [
-                HomePageListTile(title: 'Ability scores'),
-                HomePageListTile(title: 'Skills'),
-                HomePageListTile(title: 'Alignments'),
-                HomePageListTile(title: 'Conditions'),
-                HomePageListTile(title: 'Damage types'),
-                HomePageListTile(title: 'Languages'),
-                HomePageListTile(title: 'Proficiencies', enabled: false),
-              ]),
+              WrappedListView(
+                children: _databaseStatsRoutes
+                    .map((route) => HomePageListTile(
+                          title: route.name ?? route.path,
+                          destination: route.path,
+                        ))
+                    .toList(),
+              ),
+              WrappedListView(
+                children: _databaseObjectsRoutes
+                    .map((route) => HomePageListTile(
+                          title: route.name ?? route.path,
+                          destination: route.path,
+                        ))
+                    .toList(),
+              ),
+              WrappedListView(
+                children: _databaseRulesRoutes
+                    .map((route) => HomePageListTile(
+                          title: route.name ?? route.path,
+                          destination: route.path,
+                        ))
+                    .toList(),
+              ),
             ],
           ),
         ),

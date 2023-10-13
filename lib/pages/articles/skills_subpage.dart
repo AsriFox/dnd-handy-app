@@ -14,11 +14,6 @@ class SkillArticlePage extends StatelessWidget {
   final String? desc;
   final DndRef governingAbility;
 
-  static final yeet = yeetCategory(
-    category: 'skills',
-    builder: (json) => SkillArticlePage.fromJson(json),
-  );
-
   factory SkillArticlePage.fromJson(JsonObject json) => SkillArticlePage(
         desc: json['desc'].join('\n\n'),
         governingAbility: DndRef.fromJson(json['ability_score']),

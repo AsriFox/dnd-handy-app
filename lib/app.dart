@@ -32,6 +32,7 @@ class DndHandyApp extends StatelessWidget {
                   body: const DatabaseHomePage(),
                   appBar: AdwTitleBar.route(routerState: state),
                 ),
+                routes: databaseRoutes,
               ),
             ],
           ),

@@ -14,11 +14,6 @@ class SubclassArticlePage extends StatelessWidget {
 
   final JsonObject json;
 
-  static final yeet = yeetCategory(
-    category: 'subclasses',
-    builder: (json) => SubclassArticlePage.fromJson(json),
-  );
-
   factory SubclassArticlePage.fromJson(JsonObject json) =>
       SubclassArticlePage(json: json);
 

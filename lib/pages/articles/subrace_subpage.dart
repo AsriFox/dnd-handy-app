@@ -13,11 +13,6 @@ class SubraceArticlePage extends StatelessWidget {
 
   final JsonObject json;
 
-  static final yeet = yeetCategory(
-    category: 'subraces',
-    builder: (json) => SubraceArticlePage.fromJson(json),
-  );
-
   factory SubraceArticlePage.fromJson(JsonObject json) =>
       SubraceArticlePage(json: json);
 

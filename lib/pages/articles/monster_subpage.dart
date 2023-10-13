@@ -13,11 +13,6 @@ class MonsterArticlePage extends StatelessWidget {
 
   final JsonObject json;
 
-  static final yeet = yeetCategory(
-    category: 'monsters',
-    builder: (json) => MonsterArticlePage.fromJson(json),
-  );
-
   factory MonsterArticlePage.fromJson(JsonObject json) =>
       MonsterArticlePage(json: json);
 

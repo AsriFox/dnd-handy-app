@@ -20,11 +20,6 @@ class FeatureArticlePage extends StatelessWidget {
   final DndRef? subclassRef;
   final Map<DndRef, int>? prerequisites;
 
-  static final yeet = yeetCategory(
-    category: 'features',
-    builder: (json) => FeatureArticlePage.fromJson(json),
-  );
-
   factory FeatureArticlePage.fromJson(JsonObject json) => FeatureArticlePage(
         level: json['level'],
         desc: json['desc'].join('\n\n'),
