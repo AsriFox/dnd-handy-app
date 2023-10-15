@@ -1,156 +1,50 @@
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 // TODO: Finish and Convert to standalone page
-class MonsterArticlePage extends StatelessWidget {
-  const MonsterArticlePage({
-    super.key,
-    required this.json,
-  });
+ArticlePage monsterArticlePage(JsonObject json) {
+  final abilities = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+      .map((index) => DndRef(
+            index: index,
+            name: index.toUpperCase(),
+            url: '/api/ability-scores/$index}',
+          ))
+      .map((it) => '[${it.name}](${it.url})');
 
-  final JsonObject json;
+  final List<int> abilityScores = [
+    json['strength'],
+    json['dexterity'],
+    json['constitution'],
+    json['intelligence'],
+    json['wisdom'],
+    json['charisma'],
+  ];
 
-  factory MonsterArticlePage.fromJson(JsonObject json) =>
-      MonsterArticlePage(json: json);
+  final speed = [
+    '**Speed**:',
+    for (var it in (json['speed'] as JsonObject).entries)
+      ' ${it.key} ${it.value};',
+  ].join();
 
-  @override
-  Widget build(BuildContext context) {
-    var children = <Widget>[
-      annotatedLine(
-        annotation: 'Type: ',
-        content: Text(json['type']),
-      ),
-    ];
+  // final imageLink = json.containsKey('image')
+  //     ? Uri.https('dnd5eapi.co', json['image'])
+  //     : null;
 
-    final subtype = json['subtype'];
-    if (subtype != null) {
-      children.add(annotatedLine(
-        annotation: 'Subtype: ',
-        content: Text(subtype),
-      ));
-    }
-
-    children += <Widget>[
-      annotatedLine(
-        annotation: 'Alignment: ',
-        content: Text(json['alignment']),
-      ),
-      annotatedLine(
-        annotation: 'Size: ',
-        content: Text(json['size']),
-      ),
-      annotatedLine(
-        annotation: 'Challenge rating: ',
-        content: Text("${json['challenge_rating']} (${json['xp']} xp)"),
-      ),
-      annotatedLine(
-        annotation: 'Speed:',
-        contents: (json['speed'] as Map<String, dynamic>)
-            .entries
-            .map((s) => Text(' ${s.key} ${s.value};'))
-            .toList(),
-      ),
-      annotatedLine(
-        annotation: 'Health: ',
-        content: Text("${json['hit_points_roll']} (${json['hit_points']})"),
-      ),
-      annotatedLine(
-        annotation: 'Armor class: ',
-        content: Text(json['armor_class'].toString()),
-      ),
-      Padding(
-          padding: pad,
-          child: Table(
-            children: [
-              const TableRow(children: [
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'str',
-                        name: 'STR',
-                        url: 'api/ability-scores/str')),
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'dex',
-                        name: 'DEX',
-                        url: 'api/ability-scores/dex')),
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'con',
-                        name: 'CON',
-                        url: 'api/ability-scores/con')),
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'int',
-                        name: 'INT',
-                        url: 'api/ability-scores/int')),
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'wis',
-                        name: 'WIS',
-                        url: 'api/ability-scores/wis')),
-                TextButtonRef(
-                    ref: DndRef(
-                        index: 'cha',
-                        name: 'CHA',
-                        url: 'api/ability-scores/cha')),
-              ]),
-              TableRow(children: [
-                Text(
-                  json['strength'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-                Text(
-                  json['dexterity'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-                Text(
-                  json['constitution'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-                Text(
-                  json['intelligence'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-                Text(
-                  json['wisdom'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-                Text(
-                  json['charisma'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 30.0),
-                ),
-              ]),
-            ],
-          )),
-      annotatedLine(
-        annotation: 'Languages: ',
-        content: Text(json['languages']),
-      ),
-    ];
-
-    return SizedBox(
-      height: double.maxFinite,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: MarkdownBody(
-              data: json['desc'].join('\n\n'),
-            ),
-          ),
-          ...children,
-        ],
-      ),
-    );
-  }
+  return ArticlePage.lines([
+    // if (imageLink != null) "![]($imageLink '${json['name']}')",
+    if (json['desc'] is String?) json['desc'] ?? '' else ...json['desc'],
+    "**Type**: ${json['type']}",
+    if (json.containsKey('subtype')) "**Subtype**: ${json['subtype']}",
+    "| ${abilities.join(' | ')} |",
+    '| --- | --- | --- | --- | --- | --- |',
+    "| ${abilityScores.join(' | ')} |",
+    "**Alignment**: ${json['alignment']}",
+    "**Size**: ${json['size']}",
+    "**Challenge rating**: ${json['challenge_rating']} (${json['xp']} xp)",
+    speed,
+    "**Health**: ${json['hit_points_roll']} (${json['hit_points']})",
+    "**Armor class**: ${json['armor_class']}",
+    "**Languages**: ${json['languages']}",
+  ]);
 }

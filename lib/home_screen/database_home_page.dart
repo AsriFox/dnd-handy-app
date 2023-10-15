@@ -28,7 +28,7 @@ final _databaseStatsRoutes = [
   routeCategory(
     name: 'Races',
     path: 'races',
-    childBuilder: (json) => RaceArticlePage.fromJson(json),
+    childBuilder: raceArticlePage,
   ),
   routeCategory(
     name: 'Classes',
@@ -43,7 +43,7 @@ final _databaseStatsRoutes = [
   routeCategory(
     name: 'Feats',
     path: 'feats',
-    childBuilder: (json) => FeatArticlePage.fromJson(json),
+    childBuilder: featArticlePage,
   ),
   routeCategory(
     name: 'Magic schools',
@@ -53,7 +53,7 @@ final _databaseStatsRoutes = [
   routeCategory(
     name: 'Features',
     path: 'features',
-    childBuilder: (json) => FeatureArticlePage.fromJson(json),
+    childBuilder: featureArticlePage,
   ),
   routeCategory(
     name: 'Traits',
@@ -63,7 +63,7 @@ final _databaseStatsRoutes = [
   routeCategory(
     name: 'Subraces',
     path: 'subraces',
-    childBuilder: (json) => SubraceArticlePage.fromJson(json),
+    childBuilder: subraceArticlePage,
   ),
   routeCategory(
     name: 'Subclasses',
@@ -76,17 +76,17 @@ final _databaseObjectsRoutes = [
   routeCategory(
     name: 'Monsters',
     path: 'monsters',
-    childBuilder: (json) => MonsterArticlePage.fromJson(json),
+    childBuilder: monsterArticlePage,
   ),
   routeCategory(
     name: 'Spells',
     path: 'spells',
-    childBuilder: (json) => SpellArticlePage.fromJson(json),
+    childBuilder: spellArticlePage,
   ),
   routeCategory(
     name: 'Equipment',
     path: 'equipment',
-    childBuilder: (json) => EquipmentArticlePage.fromJson(json),
+    childBuilder: equipmentArticlePage,
   ),
   GoRoute(
     name: 'Weapons',
@@ -100,7 +100,7 @@ final _databaseObjectsRoutes = [
         path: ':name',
         builder: (_, state) => DndPageScreen.request(
           routerState: state,
-          onResult: (json) => EquipmentArticlePage.fromJson(json),
+          onResult: (json) => equipmentArticlePage(json),
         ),
       ),
     ],
@@ -117,7 +117,7 @@ final _databaseObjectsRoutes = [
         path: ':name',
         builder: (_, state) => DndPageScreen.request(
           routerState: state,
-          onResult: (json) => EquipmentArticlePage.fromJson(json),
+          onResult: (json) => equipmentArticlePage(json),
         ),
       ),
     ],
@@ -126,7 +126,7 @@ final _databaseObjectsRoutes = [
   routeCategory(
     name: 'Magic items',
     path: 'magic-items',
-    childBuilder: (json) => MagicItemArticlePage.fromJson(json),
+    childBuilder: magicItemArticlePage,
   ),
   routeCategory(
     name: 'Equipment categories',
@@ -140,25 +140,25 @@ final _databaseRulesRoutes = [
   routeCategory(
     name: 'Rules',
     path: 'rules',
-    childBuilder: (json) => RulesArticlePage.fromJson(json),
+    childBuilder: rulesArticlePage,
   ),
   routeCategory(
     name: 'Rule sections',
     path: 'rule-sections',
     childBuilder: (json) => Markdown(
       data: json['desc'],
-      styleSheet: mdTableStyle,
+      styleSheet: mdArticleStyle,
     ),
   ),
   routeCategory(
     name: 'Ability scores',
     path: 'ability-scores',
-    childBuilder: (json) => AbilityArticlePage.fromJson(json),
+    childBuilder: abilityArticlePage,
   ),
   routeCategory(
     name: 'Skills',
     path: 'skills',
-    childBuilder: (json) => SkillArticlePage.fromJson(json),
+    childBuilder: skillArticlePage,
   ),
   GoRoute(
     name: 'Alignments',
@@ -181,12 +181,12 @@ final _databaseRulesRoutes = [
   routeCategory(
     name: 'Languages',
     path: 'languages',
-    childBuilder: (json) => LanguageArticlePage.fromJson(json),
+    childBuilder: languageArticlePage,
   ),
   routeCategory(
     name: 'Proficiencies',
     path: 'proficiencies',
-    childBuilder: (json) => ProficiencyArticlePage.fromJson(json),
+    childBuilder: proficiencyArticlePage,
   ),
 ];
 

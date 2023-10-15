@@ -79,7 +79,7 @@ class DndPageScreen extends StatelessWidget {
 GoRoute routeCategory({
   required String name,
   required String path,
-  required Widget Function(dynamic) childBuilder,
+  required Widget Function(JsonObject) childBuilder,
 }) =>
     GoRoute(
       name: name,
@@ -93,7 +93,7 @@ GoRoute routeCategory({
           path: ':name',
           builder: (_, state) => DndPageScreen.request(
             routerState: state,
-            onResult: childBuilder,
+            onResult: (json) => childBuilder(json),
           ),
         ),
       ],

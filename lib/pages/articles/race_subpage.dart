@@ -1,124 +1,62 @@
-import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 
-// TODO: Convert to standalone page
-class RaceArticlePage extends StatelessWidget {
-  const RaceArticlePage({
-    super.key,
-    required this.json,
-  });
+// TODO: Finish and convert to standalone page
+ArticlePage raceArticlePage(JsonObject json) {
+  final abilityBonuses = {
+    for (var it in json['ability_bonuses'])
+      DndRef.fromJson(it['ability_score']): it['bonus'] as int,
+  };
+  final traits = [for (var it in json['traits']) DndRef.fromJson(it)]
+      .map((it) => '[${it.name}](${it.url})');
+  final startProf = [
+    for (var it in json['starting_proficiencies']) DndRef.fromJson(it),
+  ].map((it) => '[${it.name}](${it.url})');
+  // TODO: starting_proficiency_options
+  // if (json.containsKey('starting_proficiency_options')) {
+  //   final options =
+  //       json['starting_proficiency_options'] as Map<String, dynamic>;
+  //   children.add(annotatedLine(
+  //     annotation: 'Proficiency options: ',
+  //     content: Text('choose ${options['choose'].toString()} from:'),
+  //   ));
+  //   children += (options['from']['options'] as List<dynamic>)
+  //       .map((it) => ListTileRef.fromJson(it['item'], dense: true))
+  //       .toList();
+  //   if (options.containsKey('desc')) {
+  //     children.add(Padding(padding: pad, child: Text(options['desc'])));
+  //   }
+  // } else if (startingProficiencies.isEmpty) {
+  //   children.add(annotatedLine(
+  //     annotation: 'Starting proficiencies: ',
+  //     content: const Text('none'),
+  //   ));
+  // }
+  final subraces = [for (var it in json['subraces']) DndRef.fromJson(it)]
+      .map((it) => '- [${it.name}](${it.url})');
+  final languages = [for (var it in json['languages']) DndRef.fromJson(it)]
+      .map((it) => '[${it.name}](${it.url})');
 
-  final JsonObject json;
-
-  factory RaceArticlePage.fromJson(JsonObject json) =>
-      RaceArticlePage(json: json);
-
-  @override
-  Widget build(BuildContext context) {
-    var children = <Widget>[
-          annotatedLine(annotation: 'Ability bonuses:'),
-        ] +
-        (json['ability_bonuses'] as List<dynamic>)
-            .map((it) => ListTileRef(
-                  ref: DndRef.fromJson(it['ability_score']),
-                  visualDensity: ListDensity.veryDense.d,
-                  trailing: Text(
-                    it['bonus'].toString(),
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                ))
-            .toList();
-
-    children += <Widget>[
-      annotatedLine(
-        annotation: 'Speed: ',
-        content: Text(json['speed'].toString()),
-      ),
-      annotatedLine(
-        annotation: 'Size: ',
-        content: Text(json['size']),
-      ),
-      Padding(padding: pad, child: Text(json['size_description'])),
-    ];
-
-    final traits = json['traits'] as List<dynamic>;
-    if (traits.isNotEmpty) {
-      children.add(annotatedLine(
-        annotation: 'Traits: ',
-        contents: traits.map((it) => TextButtonRef.fromJson(it)).toList(),
-      ));
-    } else {
-      children.add(annotatedLine(
-        annotation: 'Traits: ',
-        content: const Text('none'),
-      ));
-    }
-
-    final startingProficiencies =
-        json['starting_proficiencies'] as List<dynamic>;
-    if (startingProficiencies.isNotEmpty) {
-      children.add(annotatedLine(
-        annotation: 'Starting proficiencies: ',
-        contents: startingProficiencies
-            .map((it) => TextButtonRef.fromJson(it))
-            .toList(),
-      ));
-    }
-
-    if (json.containsKey('starting_proficiency_options')) {
-      final options =
-          json['starting_proficiency_options'] as Map<String, dynamic>;
-      children.add(annotatedLine(
-        annotation: 'Proficiency options: ',
-        content: Text('choose ${options['choose'].toString()} from:'),
-      ));
-      children += (options['from']['options'] as List<dynamic>)
-          .map((it) => ListTileRef.fromJson(it['item'], dense: true))
-          .toList();
-      if (options.containsKey('desc')) {
-        children.add(Padding(padding: pad, child: Text(options['desc'])));
-      }
-    } else if (startingProficiencies.isEmpty) {
-      children.add(annotatedLine(
-        annotation: 'Starting proficiencies: ',
-        content: const Text('none'),
-      ));
-    }
-
-    final subraces = json['subraces'] as List<dynamic>;
-    if (subraces.isNotEmpty) {
-      children.add(annotatedLine(annotation: 'Subraces:'));
-      children += (json['subraces'] as List<dynamic>)
-          .map(
-            (it) => ListTileRef.fromJson(it),
-          )
-          .toList();
-    }
-
-    children += <Widget>[
-      annotatedLine(annotation: 'Age:'),
-      Padding(padding: pad, child: Text(json['age'])),
-      annotatedLine(annotation: 'Alignment:'),
-      Padding(padding: pad, child: Text(json['alignment'])),
-      annotatedLine(
-          annotation: 'Languages: ',
-          contents: (json['languages'] as List<dynamic>)
-              .map((it) => TextButtonRef(
-                    ref: DndRef.fromJson(it),
-                    onPressed: (_, ref) {},
-                  ))
-              .toList()),
-      Padding(padding: pad, child: Text(json['language_desc'])),
-    ];
-
-    return SizedBox(
-      height: double.maxFinite,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
-      ),
-    );
-  }
+  return ArticlePage.lines([
+    "**Ability bonuses**: ${[
+      for (var it in abilityBonuses.entries)
+        '[${it.key.name}](${it.key.url}): ${it.value}',
+    ].join(', ')}",
+    "**Speed**: ${json['speed']}",
+    "**Size**: ${json['size']}",
+    json['size_description'],
+    if (traits.isNotEmpty)
+      "**Traits**: ${traits.join(', ')}"
+    else
+      '**Traits**: none',
+    if (startProf.isNotEmpty)
+      "**Starting proficiencies**: ${startProf.join(', ')}",
+    if (subraces.isNotEmpty) '**Subraces**:',
+    ...subraces,
+    "**Age**: ${json['age']}",
+    "**Alignment**: ${json['alignment']}",
+    if (languages.isNotEmpty) "**Languages**: ${languages.join(', ')}",
+    json['language_desc'],
+  ]);
 }

@@ -1,8 +1,10 @@
+import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:libadwaita/libadwaita.dart';
 
-final mdTableStyle = MarkdownStyleSheet(
+final mdArticleStyle = MarkdownStyleSheet(
   tableCellsPadding: const EdgeInsets.all(4.0),
   tableColumnWidth: const IntrinsicColumnWidth(),
 );
@@ -15,31 +17,35 @@ class ArticlePage extends StatelessWidget {
 
   final String? desc;
 
-  List<Widget> buildChildren() => [];
+  factory ArticlePage.fromJson(JsonObject json) => json['desc'] is String
+      ? ArticlePage(desc: json['desc'])
+      : ArticlePage.lines([for (String s in json['desc']) s]);
 
-  factory ArticlePage.fromJson(JsonObject json) {
-    final desc = json['desc'];
-    return ArticlePage(
-      desc: desc is String
-          ? desc
-          : [
-              for (String p in desc)
-                if (p.contains('|')) p else '\n$p\n'
-            ].join('\n'),
-    );
-  }
+  ArticlePage.lines(List<String> lines, {super.key})
+      : desc = lines
+            .map((l) =>
+                l.startsWith('-') || l.startsWith('|') ? '$l\n' : '\n$l\n')
+            .join();
 
   @override
   Widget build(BuildContext context) {
     if (desc == null) {
       return const Center(child: Text('Empty page'));
     }
-    return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: MarkdownBody(
-          data: desc!,
-          styleSheet: mdTableStyle,
-        ));
+    return AdwClamp.scrollable(
+      child: MarkdownBody(
+        data: desc!,
+        styleSheet: mdArticleStyle,
+        onTapLink: (text, href, title) => gotoPage(
+          context,
+          DndRef(
+            index: href!.split('/').last,
+            name: text,
+            url: href,
+          ),
+        ),
+      ),
+    );
   }
 }
 
