@@ -17,6 +17,7 @@ import 'package:dnd_handy_flutter/pages/articles/subrace_subpage.dart';
 import 'package:dnd_handy_flutter/pages/articles/trait_subpage.dart';
 import 'package:dnd_handy_flutter/pages/character/background_page.dart';
 import 'package:dnd_handy_flutter/pages/character/class_page.dart';
+import 'package:dnd_handy_flutter/pages/popup_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
@@ -167,7 +168,7 @@ final _databaseRulesRoutes = [
       onResult: (json) => AlignmentsPage.fromJson(json),
     ),
   ),
-  routeCategory(
+  routeCategoryPopups(
     name: 'Conditions',
     path: 'conditions',
     childBuilder: (json) => ArticlePage.fromJson(json),
