@@ -15,7 +15,7 @@ class WrappedListView extends StatelessWidget {
 
   final SliverChildDelegate childrenDelegate;
 
-  static const _maxItemWidth = 360.0;
+  static const _maxItemWidth = 450.0;
   static const _maxWidth = _maxItemWidth * 3;
   static const _padding = 20.0;
   static const _widthConstraint = _maxWidth + 2 * _padding;
@@ -32,7 +32,7 @@ class WrappedListView extends StatelessWidget {
                 )
               : const EdgeInsets.all(_padding),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 360,
+            maxCrossAxisExtent: _maxItemWidth,
             mainAxisExtent: 55,
           ),
           childrenDelegate: childrenDelegate,

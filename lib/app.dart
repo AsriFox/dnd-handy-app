@@ -101,22 +101,61 @@ class HomeScreen extends StatelessWidget {
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: shell,
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Database'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: 'Characters'),
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Adventure'),
-          ],
-          currentIndex: shell.currentIndex,
-          onTap: (index) => shell.goBranch(
-            index,
-            initialLocation: index == shell.currentIndex,
-          ),
-        ),
-      );
+  Widget build(BuildContext context) =>
+      LayoutBuilder(builder: (context, constraints) {
+        const destinations = {
+          'Database': Icons.book,
+          'Characters': Icons.person,
+          'Adventure': Icons.map,
+        };
+        if (constraints.maxWidth < 600) {
+          final destWidgets = [
+            for (var it in destinations.entries)
+              BottomNavigationBarItem(
+                icon: Icon(it.value),
+                label: it.key,
+              ),
+          ];
+          final navBar = BottomNavigationBar(
+            items: destWidgets,
+            currentIndex: shell.currentIndex,
+            onTap: (index) => shell.goBranch(
+              index,
+              initialLocation: index == shell.currentIndex,
+            ),
+          );
+          return Column(children: [Expanded(child: shell), navBar]);
+        } else {
+          final destWidgets = [
+            for (var it in destinations.entries)
+              NavigationRailDestination(
+                icon: Icon(it.value),
+                label: Text(it.key),
+              ),
+          ];
+          final navBar = NavigationRail(
+            leading: const Icon(Icons.ac_unit, size: 32),
+            trailing: const Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: SettingsButton(),
+                ),
+              ),
+            ),
+            destinations: destWidgets,
+            selectedIndex: shell.currentIndex,
+            onDestinationSelected: (index) => shell.goBranch(
+              index,
+              initialLocation: index == shell.currentIndex,
+            ),
+            minWidth: 55,
+            minExtendedWidth: 165,
+          );
+          return Row(children: [navBar, Expanded(child: shell)]);
+        }
+      });
 }
 
 // Page<dynamic> _fadeTransition({LocalKey? key, required Widget child}) =>

@@ -22,16 +22,7 @@ class AdwTitleBar extends StatelessWidget implements PreferredSizeWidget {
           routerState.extra as String? ??
           path.split('/').last,
       backButton: path.indexOf('/', 1) > 0,
-      right: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () =>
-              Navigator.of(rootNavKey.currentContext!, rootNavigator: true)
-                  .push(MaterialPageRoute(
-            builder: (_) => const SettingsPage(),
-          )),
-        ),
-      ],
+      right: const [SettingsButton()],
     );
   }
 
@@ -54,5 +45,19 @@ class AdwTitleBar extends StatelessWidget implements PreferredSizeWidget {
               )
             : null,
         actions: right,
+      );
+}
+
+class SettingsButton extends StatelessWidget {
+  const SettingsButton({super.key});
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        icon: const Icon(Icons.settings),
+        onPressed: () {
+          Navigator.of(rootNavKey.currentContext!, rootNavigator: true).push(
+            MaterialPageRoute(builder: (_) => const SettingsPage()),
+          );
+        },
       );
 }
