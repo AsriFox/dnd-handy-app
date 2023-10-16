@@ -22,10 +22,32 @@ ArticlePage monsterArticlePage(JsonObject json) {
   ];
 
   final speed = [
-    '**Speed**:',
     for (var it in (json['speed'] as JsonObject).entries)
-      ' ${it.key} ${it.value};',
-  ].join();
+      '${it.key} ${it.value}',
+  ];
+
+  armorClass(json) {
+    final value = json['value'] as int;
+    switch (json['type']) {
+      case 'dex':
+        return '$value (DEX)';
+      case 'natural':
+        return '$value (natural)';
+      case 'armor':
+        final armor = [for (var it in json['armor']) DndRef.fromJson(it)];
+        return "$value (${armor.join(', ')})";
+      case 'spell':
+        final spell = DndRef.fromJson(json['spell']);
+        return '$value ([${spell.name}](${spell.url}))';
+      case 'condition':
+        final condition = DndRef.fromJson(json['condition']);
+        return '$value ([${condition.name}](${condition.url}))';
+      default:
+        return '$value';
+    }
+  }
+
+  final armor = [for (var it in json['armor_class']) armorClass(it)];
 
   // final imageLink = json.containsKey('image')
   //     ? Uri.https('dnd5eapi.co', json['image'])
@@ -42,9 +64,9 @@ ArticlePage monsterArticlePage(JsonObject json) {
     "**Alignment**: ${json['alignment']}",
     "**Size**: ${json['size']}",
     "**Challenge rating**: ${json['challenge_rating']} (${json['xp']} xp)",
-    speed,
+    "**Speed**: ${speed.join('; ')}",
     "**Health**: ${json['hit_points_roll']} (${json['hit_points']})",
-    "**Armor class**: ${json['armor_class']}",
+    '**Armor**: ${armor.join('; ')}',
     "**Languages**: ${json['languages']}",
   ]);
 }

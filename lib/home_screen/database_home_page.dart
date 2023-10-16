@@ -44,7 +44,7 @@ final _databaseStatsRoutes = [
     path: 'feats',
     childBuilder: featArticlePage,
   ),
-  routeCategory(
+  routeCategoryPopups(
     name: 'Magic schools',
     path: 'magic-schools',
     childBuilder: (json) => ArticlePage.fromJson(json),

@@ -33,6 +33,7 @@ GoRoute routeCategoryPopups({
               opacity: CurveTween(curve: Curves.easeInCirc).animate(animation),
               child: child,
             ),
+            transitionDuration: const Duration(milliseconds: 100),
             opaque: false,
             barrierDismissible: true,
             barrierColor: Colors.black.withAlpha(127),

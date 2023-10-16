@@ -39,10 +39,9 @@ ArticlePage raceArticlePage(JsonObject json) {
       .map((it) => '[${it.name}](${it.url})');
 
   return ArticlePage.lines([
-    "**Ability bonuses**: ${[
-      for (var it in abilityBonuses.entries)
-        '[${it.key.name}](${it.key.url}): ${it.value}',
-    ].join(', ')}",
+    '**Ability bonuses**:',
+    for (var it in abilityBonuses.entries)
+      '- +${it.value} [${it.key.name}](${it.key.url})',
     "**Speed**: ${json['speed']}",
     "**Size**: ${json['size']}",
     json['size_description'],
