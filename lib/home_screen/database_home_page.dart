@@ -169,17 +169,17 @@ final _databaseRulesRoutes = [
     path: 'conditions',
     childBuilder: (json) => ArticlePage.fromJson(json),
   ),
-  routeCategory(
+  routeCategoryPopups(
     name: 'Damage types',
     path: 'damage-types',
     childBuilder: (json) => ArticlePage.fromJson(json),
   ),
-  routeCategory(
+  routeCategoryPopups(
     name: 'Languages',
     path: 'languages',
     childBuilder: languageArticlePage,
   ),
-  routeCategory(
+  routeCategoryPopups(
     name: 'Proficiencies',
     path: 'proficiencies',
     childBuilder: proficiencyArticlePage,

@@ -1,9 +1,7 @@
 import 'package:dnd_handy_flutter/api_service.dart';
 import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
-import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
-import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:libadwaita/libadwaita.dart';
@@ -18,32 +16,29 @@ GoRoute routeCategoryPopups({
       path: path,
       builder: (_, state) => DndPageScreen.request(
         routerState: state,
-        onResult: (json) {
-          final results = json['results'] as JsonArray;
-          if (results.isEmpty) {
-            return const Center(
-              child: Text('No items'),
-            );
-          }
-
-          return WrappedListView.builder(
-            builder: (_, index) => ListTileRef(
-              ref: DndRef.fromJson(results[index]),
-              onTap: (context, ref) => showDialog(
-                context: context,
-                builder: (_) => DescPopup(
-                  title: ref.name,
-                  child: DndPageBuilder(
-                    request: DndApiService().getRequest(ref.url),
-                    onResult: (json) => childBuilder(json),
-                  ),
-                ),
+        onResult: (json) => RefListPage.fromJsonArray(json['results']),
+      ),
+      routes: [
+        GoRoute(
+          path: ':name',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            child: DescPopup(
+              title: state.extra as String? ?? state.pathParameters['name']!,
+              child: DndPageBuilder(
+                request: DndApiService().getRequest(state.matchedLocation),
+                onResult: (json) => childBuilder(json),
               ),
             ),
-            childCount: results.length,
-          );
-        },
-      ),
+            transitionsBuilder: (_, animation, __, child) => FadeTransition(
+              opacity: CurveTween(curve: Curves.easeInCirc).animate(animation),
+              child: child,
+            ),
+            opaque: false,
+            barrierDismissible: true,
+            barrierColor: Colors.black.withAlpha(127),
+          ),
+        ),
+      ],
     );
 
 const borderRadius = BorderRadius.all(Radius.circular(12));
