@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
+import 'package:libadwaita/libadwaita.dart';
 
 // TODO: Convert to standalone page
 class SubclassArticlePage extends StatelessWidget {
@@ -65,8 +66,7 @@ class SubclassArticlePage extends StatelessWidget {
           .toList();
     }
 
-    return SizedBox(
-      height: double.maxFinite,
+    return AdwClamp.scrollable(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: children,

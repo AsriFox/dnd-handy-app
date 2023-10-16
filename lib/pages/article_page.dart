@@ -4,11 +4,6 @@ import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:libadwaita/libadwaita.dart';
 
-final mdArticleStyle = MarkdownStyleSheet(
-  tableCellsPadding: const EdgeInsets.all(4.0),
-  tableColumnWidth: const IntrinsicColumnWidth(),
-);
-
 class ArticlePage extends StatelessWidget {
   const ArticlePage({
     super.key,
@@ -35,7 +30,10 @@ class ArticlePage extends StatelessWidget {
     return AdwClamp.scrollable(
       child: MarkdownBody(
         data: desc!,
-        styleSheet: mdArticleStyle,
+        styleSheet: MarkdownStyleSheet(
+          tableCellsPadding: const EdgeInsets.all(4.0),
+          tableColumnWidth: const IntrinsicColumnWidth(),
+        ),
         onTapLink: (text, href, title) => gotoPage(
           context,
           DndRef(

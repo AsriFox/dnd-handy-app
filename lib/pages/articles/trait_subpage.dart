@@ -3,6 +3,7 @@ import 'package:dnd_handy_flutter/pages/article_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:libadwaita/libadwaita.dart';
 
 class TraitArticlePage extends StatelessWidget {
   const TraitArticlePage({
@@ -78,8 +79,7 @@ class TraitArticlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.maxFinite,
+    return AdwClamp.scrollable(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

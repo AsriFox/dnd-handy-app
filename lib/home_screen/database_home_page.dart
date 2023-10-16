@@ -21,7 +21,6 @@ import 'package:dnd_handy_flutter/pages/popup_page.dart';
 import 'package:dnd_handy_flutter/pages/reflist_page.dart';
 import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 
 final _databaseStatsRoutes = [
@@ -145,10 +144,7 @@ final _databaseRulesRoutes = [
   routeCategory(
     name: 'Rule sections',
     path: 'rule-sections',
-    childBuilder: (json) => Markdown(
-      data: json['desc'],
-      styleSheet: mdArticleStyle,
-    ),
+    childBuilder: (json) => ArticlePage.fromJson(json),
   ),
   routeCategory(
     name: 'Ability scores',
