@@ -1,8 +1,7 @@
 import 'package:dnd_handy_flutter/api_service.dart';
-import 'package:dnd_handy_flutter/json_objects.dart';
+import 'package:dnd_handy_flutter/models/common.dart';
 import 'package:dnd_handy_flutter/page_builder.dart';
 import 'package:dnd_handy_flutter/pages/popup_page.dart';
-import 'package:dnd_handy_flutter/pages/reflist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:libadwaita/libadwaita.dart';
 
@@ -12,25 +11,21 @@ class AlignmentsPage extends StatelessWidget {
     required this.descPages,
   });
 
-  final Map<String, AlignmentTile> descPages;
+  final Map<String, DndPageBuilder> descPages;
 
-  factory AlignmentsPage.fromJson(JsonObject json) {
-    var descPages = <String, AlignmentTile>{};
-    for (var item in json['results']) {
-      final ref = DndRef.fromJson(item);
-      final abbr = ref.name.split(' ').map((w) => w[0]).join();
-      descPages.putIfAbsent(
-          abbr,
-          () => AlignmentTile(
-                caption: abbr,
-                subtitle: ref.name,
-                desc: DndPageBuilder(
-                  request: DndApiService().getRequest(ref.url),
-                  onResult: (json) => Text(json['desc']),
-                ),
-              ));
-    }
-    return AlignmentsPage(descPages: descPages);
+  factory AlignmentsPage.fromJson(Json json) {
+    final refs = DndAPIReferenceList.fromJson(json).results;
+    return AlignmentsPage(descPages: {
+      for (var it in refs)
+        it.index: DndPageBuilder(
+          request: DndApiService().getRequest(it.url),
+          onResult: (json) => AlignmentTile(
+            caption: json['abbreviation'],
+            subtitle: json['name'],
+            desc: json['desc'],
+          ),
+        ),
+    });
   }
 
   @override
@@ -41,15 +36,15 @@ class AlignmentsPage extends StatelessWidget {
           crossAxisCount: 3,
           childAspectRatio: 0.925,
           children: [
-            descPages['LG'] ?? const AlignmentTile(caption: 'LG'),
-            descPages['NG'] ?? const AlignmentTile(caption: 'NG'),
-            descPages['CG'] ?? const AlignmentTile(caption: 'CG'),
-            descPages['LN'] ?? const AlignmentTile(caption: 'LN'),
-            descPages['N'] ?? const AlignmentTile(caption: 'N'),
-            descPages['CN'] ?? const AlignmentTile(caption: 'CN'),
-            descPages['LE'] ?? const AlignmentTile(caption: 'LE'),
-            descPages['NE'] ?? const AlignmentTile(caption: 'NE'),
-            descPages['CE'] ?? const AlignmentTile(caption: 'CE'),
+            descPages['lawful-good'] ?? const AlignmentTile(caption: 'LG'),
+            descPages['neutral-good'] ?? const AlignmentTile(caption: 'NG'),
+            descPages['chaotic-good'] ?? const AlignmentTile(caption: 'CG'),
+            descPages['lawful-neutral'] ?? const AlignmentTile(caption: 'LN'),
+            descPages['neutral'] ?? const AlignmentTile(caption: 'N'),
+            descPages['chaotic-neutral'] ?? const AlignmentTile(caption: 'CN'),
+            descPages['lawful-evil'] ?? const AlignmentTile(caption: 'LE'),
+            descPages['neutral-evil'] ?? const AlignmentTile(caption: 'NE'),
+            descPages['chaotic-evil'] ?? const AlignmentTile(caption: 'CE'),
           ],
         ),
       );
@@ -67,7 +62,7 @@ class AlignmentTile extends StatelessWidget {
 
   final String caption;
   final String? subtitle;
-  final DndPageBuilder? desc;
+  final String? desc;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +76,7 @@ class AlignmentTile extends StatelessWidget {
                   title: subtitle ?? caption,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: desc,
+                    child: Text(desc!),
                   ),
                 ),
               )

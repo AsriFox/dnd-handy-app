@@ -1,7 +1,8 @@
 import 'dart:convert';
+
+import 'package:dnd_handy_flutter/models/common.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
-import 'package:dnd_handy_flutter/json_objects.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DndApiService {
@@ -11,47 +12,49 @@ class DndApiService {
 
   late final Future<LazyBox> _cache;
 
-  Future<JsonObject?> getRequest(String? path) async {
+  Future<Json?> getRequest(String? path) async {
     if (path == null) {
       return null;
     }
-    final result = await (await _cache).get(path);
-    if (result == null) {
+    final Map? result = await (await _cache).get(path);
+    if (result == null ||
+        timestamp() - result['last_refresh'] >= refreshPeriod) {
       return await getRequestRefresh(path);
     }
-    if (result is! Map<dynamic, dynamic>) {
-      throw 'Unsupported: Not a JSON object';
-    }
-    // Cast to JsonObject
-    return result.cast<String, dynamic>();
+    return result is Json ? result : result.cast<String, dynamic>();
   }
 
-  Future<JsonObject> getRequestRefresh(String path) async {
-    final request = await _getApiRequest(path);
-    final JsonObject result = request is JsonArray
-        ? {
-            'count': request.length,
-            'results': request,
-          }
-        : request;
+  Future<Json> getRequestRefresh(String path) async {
+    final result = await _getApiRequest(path);
     result['last_refresh'] = timestamp();
     (await _cache).put(path, result);
     return result;
   }
 
-  Future<dynamic> _getApiRequest(String path) async {
+  Future<Json> _getApiRequest(String path) async {
     Response res = await get(
       Uri.https('dnd5eapi.co', path),
     );
-    if (res.statusCode == 200) {
-      return jsonDecode(res.body);
-    } else {
+    if (res.statusCode != 200) {
       throw 'Failed to complete GET request.';
     }
+    final json = jsonDecode(
+      res.body,
+      reviver: (_, v) => v is Map ? v.cast<String, dynamic>() : v,
+    );
+    return json is List
+        ? {
+            'count': json.length,
+            'results': json.cast<Json>(),
+          }
+        : json;
   }
 
   /// Timestamp in seconds.
   static int timestamp() => DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+  /// Refresh period in seconds (1 day).
+  static const int refreshPeriod = 3600 * 24;
 
   static final Finalizer<LazyBox> _finalizer = Finalizer(_closeBox);
 
