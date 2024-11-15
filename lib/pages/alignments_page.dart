@@ -18,7 +18,7 @@ class AlignmentsPage extends StatelessWidget {
     return AlignmentsPage(descPages: {
       for (var it in refs)
         it.index: DndPageBuilder(
-          request: DndApiService().getRequest(it.url),
+          request: getRequest(it.url),
           onResult: (json) => AlignmentTile(
             caption: json['abbreviation'],
             subtitle: json['name'],

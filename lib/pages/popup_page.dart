@@ -25,7 +25,7 @@ GoRoute routeCategoryPopups({
             child: DescPopup(
               title: state.extra as String? ?? state.pathParameters['name']!,
               child: DndPageBuilder(
-                request: DndApiService().getRequest(state.matchedLocation),
+                request: getRequest(state.matchedLocation),
                 onResult: (json) => childBuilder(json),
               ),
             ),

@@ -9,10 +9,10 @@ Future showSearchCustom(BuildContext context, {String? category}) => showSearch(
       delegate: category != null
           ? CategorySearchDelegate(
               category: category,
-              request: DndApiService().getRequest('api/$category'),
+              request: getRequest('api/$category'),
             )
           : CustomSearchDelegate(
-              request: DndApiService().getRequest('api'),
+              request: getRequest('api'),
             ),
     )
         .then((query) async {

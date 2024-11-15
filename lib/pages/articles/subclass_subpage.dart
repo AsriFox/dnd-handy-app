@@ -108,7 +108,7 @@ class LevelFeaturesList extends StatelessWidget {
   final Future<JsonObject?> request;
 
   factory LevelFeaturesList.request(String url) =>
-      LevelFeaturesList(request: DndApiService().getRequest(url));
+      LevelFeaturesList(request: getRequest(url));
 
   @override
   Widget build(BuildContext context) {

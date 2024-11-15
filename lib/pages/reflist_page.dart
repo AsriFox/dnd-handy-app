@@ -61,7 +61,7 @@ class DndPageScreen extends StatelessWidget {
     return DndPageScreen(
       routerState: routerState,
       body: DndPageBuilder(
-        request: DndApiService().getRequest(routerState.matchedLocation),
+        request: getRequest(routerState.matchedLocation),
         onResult: onResult,
       ),
     );

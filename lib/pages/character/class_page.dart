@@ -35,8 +35,8 @@ class CharClassPage extends StatelessWidget {
   final JsonArray? equipmentOptions;
 
   factory CharClassPage.fromJson(JsonObject json) => CharClassPage(
-        classLevels: DndApiService().getRequest(json['class_levels']),
-        classSpells: DndApiService().getRequest(json['spells']),
+        classLevels: getRequest(json['class_levels']),
+        classSpells: getRequest(json['spells']),
         spellcasting: json['spellcasting'],
         savingThrows: [
           for (var it in json['saving_throws']) DndRef.fromJson(it)
