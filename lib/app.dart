@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:dnd_handy_flutter/home_screen/database_home_page.dart';
+import 'package:dnd_handy_flutter/home_screen/rules_home_page.dart';
 import 'package:dnd_handy_flutter/home_screen/settings_page.dart';
 import 'package:dnd_handy_flutter/home_screen/title_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,18 @@ class DndHandyApp extends StatelessWidget {
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeScreen(shell: shell),
         branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                name: 'Game rules',
+                path: '/rules',
+                builder: (_, state) => Scaffold(
+                  body: const RulesHomePage(),
+                  appBar: AdwTitleBar.route(routerState: state),
+                ),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -104,6 +117,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) =>
       LayoutBuilder(builder: (context, constraints) {
         const destinations = {
+          'Rules': Icons.menu_book,
           'Database': Icons.book,
           'Characters': Icons.person,
           'Adventure': Icons.map,

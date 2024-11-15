@@ -23,7 +23,7 @@ import 'package:dnd_handy_flutter/wrapped_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final _databaseStatsRoutes = [
+final _databasePublicRoutes = [
   routeCategory(
     name: 'Races',
     path: 'races',
@@ -44,34 +44,6 @@ final _databaseStatsRoutes = [
     path: 'feats',
     childBuilder: featArticlePage,
   ),
-  routeCategoryPopups(
-    name: 'Magic schools',
-    path: 'magic-schools',
-    childBuilder: (json) => ArticlePage.fromJson(json),
-  ),
-  routeCategory(
-    name: 'Features',
-    path: 'features',
-    childBuilder: featureArticlePage,
-  ),
-  routeCategory(
-    name: 'Traits',
-    path: 'traits',
-    childBuilder: (json) => TraitArticlePage.fromJson(json),
-  ),
-  routeCategory(
-    name: 'Subraces',
-    path: 'subraces',
-    childBuilder: subraceArticlePage,
-  ),
-  routeCategory(
-    name: 'Subclasses',
-    path: 'subclasses',
-    childBuilder: (json) => SubclassArticlePage.fromJson(json),
-  ),
-];
-
-final _databaseObjectsRoutes = [
   routeCategory(
     name: 'Monsters',
     path: 'monsters',
@@ -133,19 +105,7 @@ final _databaseObjectsRoutes = [
     childBuilder: (json) => RefListPage.fromJsonArray(json['equipment']),
   ),
   // routeCategory(name: 'Generation lists', path: 'generation-lists', childBuilder: ),
-];
 
-final _databaseRulesRoutes = [
-  routeCategory(
-    name: 'Rules',
-    path: 'rules',
-    childBuilder: rulesArticlePage,
-  ),
-  routeCategory(
-    name: 'Rule sections',
-    path: 'rule-sections',
-    childBuilder: (json) => ArticlePage.fromJson(json),
-  ),
   routeCategory(
     name: 'Ability scores',
     path: 'ability-scores',
@@ -179,72 +139,76 @@ final _databaseRulesRoutes = [
     path: 'languages',
     childBuilder: languageArticlePage,
   ),
+];
+
+final _databasePrivateRoutes = [
+  routeCategoryPopups(
+    name: 'Magic schools',
+    path: 'magic-schools',
+    childBuilder: (json) => ArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Features',
+    path: 'features',
+    childBuilder: featureArticlePage,
+  ),
+  routeCategory(
+    name: 'Traits',
+    path: 'traits',
+    childBuilder: (json) => TraitArticlePage.fromJson(json),
+  ),
+  routeCategory(
+    name: 'Subraces',
+    path: 'subraces',
+    childBuilder: subraceArticlePage,
+  ),
+  routeCategory(
+    name: 'Subclasses',
+    path: 'subclasses',
+    childBuilder: (json) => SubclassArticlePage.fromJson(json),
+  ),
   routeCategoryPopups(
     name: 'Proficiencies',
     path: 'proficiencies',
     childBuilder: proficiencyArticlePage,
   ),
+  routeCategory(
+    name: 'Rules',
+    path: 'rules',
+    childBuilder: rulesArticlePage,
+  ),
+  routeCategory(
+    name: 'Rule sections',
+    path: 'rule-sections',
+    childBuilder: (json) => ArticlePage.fromJson(json),
+  ),
 ];
 
 final databaseRoutes = [
-  ..._databaseStatsRoutes,
-  ..._databaseObjectsRoutes,
-  ..._databaseRulesRoutes,
+  ..._databasePrivateRoutes,
+  ..._databasePublicRoutes,
 ];
 
 class DatabaseHomePage extends StatelessWidget {
   const DatabaseHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: const TabBar(
-          tabs: [
-            Tab(text: 'Stats'),
-            Tab(text: 'Objects'),
-            Tab(text: 'Rules'),
+  Widget build(BuildContext context) => Theme(
+        data: Theme.of(context).copyWith(
+          listTileTheme: ListTileThemeData(
+            titleTextStyle: Theme.of(context).textTheme.headlineSmall,
+          ),
+        ),
+        child: WrappedListView(
+          children: [
+            for (final route in _databasePublicRoutes)
+              HomePageListTile(
+                title: route.name ?? route.path,
+                destination: route.path,
+              ),
           ],
         ),
-        body: Theme(
-          data: Theme.of(context).copyWith(
-            listTileTheme: ListTileThemeData(
-              titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-            ),
-          ),
-          child: TabBarView(
-            children: [
-              WrappedListView(
-                children: _databaseStatsRoutes
-                    .map((route) => HomePageListTile(
-                          title: route.name ?? route.path,
-                          destination: route.path,
-                        ))
-                    .toList(),
-              ),
-              WrappedListView(
-                children: _databaseObjectsRoutes
-                    .map((route) => HomePageListTile(
-                          title: route.name ?? route.path,
-                          destination: route.path,
-                        ))
-                    .toList(),
-              ),
-              WrappedListView(
-                children: _databaseRulesRoutes
-                    .map((route) => HomePageListTile(
-                          title: route.name ?? route.path,
-                          destination: route.path,
-                        ))
-                    .toList(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      );
 }
 
 class HomePageListTile extends StatelessWidget {
